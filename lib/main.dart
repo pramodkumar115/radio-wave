@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:orbit_radio/home.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
-void main() {
+Future<void> main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_audio_channel',
+    androidNotificationChannelName: 'Background audio playback',
+    androidNotificationOngoing: true,
+  );
   runApp(const MyApp());
 }
 
@@ -15,8 +21,8 @@ class MyApp extends StatelessWidget {
       title: 'Orbit Radio',
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(
-              Theme.of(context).textTheme,
-            ),
+          Theme.of(context).textTheme,
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
