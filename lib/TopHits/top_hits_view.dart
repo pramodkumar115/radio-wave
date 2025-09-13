@@ -45,11 +45,17 @@ class _TopHitsViewState extends State<TopHitsView> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack([
-      const Text("Top Hit Radio Stations").text.scale(1.4).bold.make(),
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+        child: VStack([
+      const Text("World's Top 10 Voted Radio Stations")
+          .text
+          .scale(1.2)
+          .bold
+          .make(),
       topHitStations.isNotEmpty
           ? RadioStationListView(stationList: topHitStations)
           : GFShimmer(child: emptyBlock)
-    ]);
+    ]));
   }
 }
