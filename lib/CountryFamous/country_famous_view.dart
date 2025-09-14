@@ -60,7 +60,7 @@ class _CountryFamousStationsViewState extends State<CountryFamousStationsView> {
     return Container(
         margin: const EdgeInsets.only(top: 20),
         child: VStack([
-          Text("${widget.countryName}'s famous station")
+          const Text("Famous stations near you")
               .text
               .scale(1.2)
               .bold

@@ -5,7 +5,7 @@ import '../commons/constants.dart' as constants;
 
 getCountryFamousStationDetails(country) async {
   return await http
-      .get(Uri.parse('${constants.BASE_URL}stations/search?country=$country'));
+      .get(Uri.parse('${constants.BASE_URL}stations/bycountry/$country?limit=10'));
 }
 
 getUserCurrentCountry() async {

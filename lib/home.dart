@@ -30,14 +30,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> loadData() async {
+    setState(() {
+      favoritesData = null;
+    });
+
     var country = await getUserCurrentCountry();
     var favoritesDataFromFile = await getFavoritesFromFile();
-    print("favorites - $favoritesDataFromFile");
+    print("favorites in home page - $favoritesDataFromFile");
     // var platListInfo = getPlayListDataFromFile();
     
     setState(() {
       userCurrentCountry = country;
-      favoritesData = favoritesDataFromFile;
+      favoritesData = [...favoritesDataFromFile];
     });
     print("Came here in loaddata - $country");
     
@@ -88,6 +92,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             : const Text("User has not permitted us to use location details")
       ]).p12()),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.grey.shade200,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -103,7 +108,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.red,
         onTap: _onItemTapped,
       ),
     );

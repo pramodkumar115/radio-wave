@@ -25,7 +25,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
       print("size: ${widget.stationList.length}");
     }
     return SizedBox(
-        height: 220,
+        height: 250,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: widget.stationList
@@ -54,7 +54,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                             color: Colors.white,
                             elevation: 2,
                             child: Container(
-                                    padding: const EdgeInsets.all(24),
+                                    padding: const EdgeInsets.all(12),
                                     child: Image.network(
                                       s.favicon!,
                                       height: 100,

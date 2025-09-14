@@ -20,8 +20,7 @@ class RadioPlayerView extends StatefulWidget {
   final List<RadioStation> radioStationsList;
   final String selectedRadioId;
   final List<dynamic> favoritesData;
-      final Function loadAllData;
-
+  final Function loadAllData;
 
   @override
   State<RadioPlayerView> createState() => _RadioPlayerViewState();
@@ -115,20 +114,30 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
   }
 
   Future<void> _addToFavorites() async {
-    if (favoritesUUIDs.isNotEmpty) {
-      var message = "";
-      if (favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
-        favoritesUUIDs.add(selectedRadioStation!.stationUuid!);
-        message = 'Station added to favorites';
-      } else {
-        favoritesUUIDs
-            .where((element) => element == selectedRadioStation!.stationUuid!);
-            message = 'Station removed from favorites';
-      }
-      await writeData("favorites.json", json.encode(favoritesUUIDs));
-      await widget.loadAllData();
-      
+    print("In favorites data - $favoritesUUIDs");
+    // if (favoritesUUIDs.isNotEmpty) {
+    var message = "";
+    print("favoritesUUIDs - $favoritesUUIDs");
+    print(
+        "selectedRadioStation!.stationUuid! ${selectedRadioStation!.stationUuid!}");
+    if (!favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
+      favoritesUUIDs = [...favoritesUUIDs, selectedRadioStation!.stationUuid!];
+      print("came in if - $favoritesUUIDs");
+      message = 'Station added to favorites';
+    } else {
+      favoritesUUIDs = favoritesUUIDs
+          .where((element) => element != selectedRadioStation!.stationUuid!)
+          .toList();
+      print("came in else - $favoritesUUIDs");
+      message = 'Station removed from favorites';
     }
+    setState(() {
+      favoritesUUIDs;
+    });
+    await writeData("favorites.json", json.encode(favoritesUUIDs));
+    await widget.loadAllData();
+
+    //}
   }
 
   Future<void> _addToPlayList() async {
