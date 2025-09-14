@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
@@ -16,11 +17,11 @@ class RadioStationListView extends StatefulWidget {
 class _RadioStationListViewState extends State<RadioStationListView> {
   @override
   Widget build(BuildContext context) {
-    print("size: ${widget.stationList.length}");
-
+    if (kDebugMode) {
+      print("size: ${widget.stationList.length}");
+    }
     return SizedBox(
         height: 350,
-        // scrollDirection: Axis.horizontal,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: widget.stationList
@@ -31,6 +32,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                       isScrollControlled: true,
                       isDismissible: true,
                       scrollControlDisabledMaxHeightRatio: 1,
+                      backgroundColor: Colors.grey.shade100,
                       builder: (BuildContext context) {
                         return RadioPlayerView(
                             radioStationsList: widget.stationList, selectedRadioId: s.stationUuid!);
@@ -43,7 +45,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                         Card(
                             margin: const EdgeInsets.all(8),
                             color: Colors.white,
-                            elevation: 4,
+                            elevation: 2,
                             child: Container(
                                     padding: const EdgeInsets.all(24),
                                     child: Image.network(
@@ -60,20 +62,22 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                                               Image.asset("assets/music.jpg",
                                                   width: 75, height: 75),
                                     ).w15(context).h10(context))
-                                .w32(context)
-                                .h15(context)),
-                        Text("${s.name!}", softWrap: true)
+                                .w24(context)
+                                .h10(context)),
+                        Text(s.name!, softWrap: true)
                             .text
+                            .sm
                             .semiBold
                             .align(TextAlign.center)
                             .make()
-                            .w32(context),
+                            .w24(context),
                         Text("(${s.country})", softWrap: true)
                             .text
+                            .sm
                             .semiBold
                             .align(TextAlign.center)
                             .make()
-                            .w32(context),
+                            .w24(context),
                       ])))
               .toList(),
         ));
