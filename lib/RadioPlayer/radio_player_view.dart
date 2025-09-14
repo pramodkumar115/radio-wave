@@ -18,7 +18,7 @@ class RadioPlayerView extends StatefulWidget {
 }
 
 class _RadioPlayerViewState extends State<RadioPlayerView> {
-  final GFBottomSheetController _controller = GFBottomSheetController();
+  // final GFBottomSheetController _controller = GFBottomSheetController();
   static final AudioPlayer _audioPlayer = AudioPlayer();
   late RadioStation? selectedRadioStation;
   PlayerState stateOfPlayer = PlayerState.stopped;
@@ -26,7 +26,7 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
   @override
   void initState() {
     super.initState();
-    _controller.showBottomSheet();
+    // _controller.showBottomSheet();
     setState(() {
       selectedRadioStation = getSelectedRadioStation(
           widget.radioStationsList, widget.selectedRadioId);
