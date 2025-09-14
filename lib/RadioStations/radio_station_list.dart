@@ -8,7 +8,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class RadioStationListView extends StatefulWidget {
   final List<RadioStation> stationList;
-  const RadioStationListView({super.key, required this.stationList});
+  final List<dynamic>? favoritesData;
+  final Function loadAllData;
+
+  const RadioStationListView(
+      {super.key, required this.stationList, required this.favoritesData, required this.loadAllData});
 
   @override
   State<RadioStationListView> createState() => _RadioStationListViewState();
@@ -21,7 +25,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
       print("size: ${widget.stationList.length}");
     }
     return SizedBox(
-        height: 350,
+        height: 220,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: widget.stationList
@@ -35,7 +39,10 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                       backgroundColor: Colors.grey.shade100,
                       builder: (BuildContext context) {
                         return RadioPlayerView(
-                            radioStationsList: widget.stationList, selectedRadioId: s.stationUuid!);
+                            radioStationsList: widget.stationList,
+                            selectedRadioId: s.stationUuid!,
+                            favoritesData: widget.favoritesData!,
+                            loadAllData: widget.loadAllData);
                       },
                     );
                   },

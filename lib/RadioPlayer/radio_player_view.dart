@@ -1,8 +1,12 @@
 // import 'package:audioplayers/audioplayers.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
+import 'package:orbit_radio/commons/file-helper-util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -10,9 +14,15 @@ class RadioPlayerView extends StatefulWidget {
   const RadioPlayerView(
       {super.key,
       required this.radioStationsList,
-      required this.selectedRadioId});
+      required this.selectedRadioId,
+      required this.favoritesData,
+      required this.loadAllData});
   final List<RadioStation> radioStationsList;
   final String selectedRadioId;
+  final List<dynamic> favoritesData;
+      final Function loadAllData;
+
+
   @override
   State<RadioPlayerView> createState() => _RadioPlayerViewState();
 }
@@ -22,6 +32,7 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
   static final AudioPlayer _audioPlayer = AudioPlayer();
   late RadioStation? selectedRadioStation;
   bool _isPlaying = false;
+  List<String> favoritesUUIDs = List.empty(growable: true);
   late bool _isLoading;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
@@ -33,6 +44,9 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
       selectedRadioStation = getSelectedRadioStation(
           widget.radioStationsList, widget.selectedRadioId);
       _initAudioPlayer(station: selectedRadioStation);
+      if (widget.favoritesData.isNotEmpty) {
+        favoritesUUIDs = widget.favoritesData.map((d) => d.toString()).toList();
+      }
     });
   }
 
@@ -101,7 +115,20 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
   }
 
   Future<void> _addToFavorites() async {
-    await _audioPlayer.stop(); // For assets
+    if (favoritesUUIDs.isNotEmpty) {
+      var message = "";
+      if (favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
+        favoritesUUIDs.add(selectedRadioStation!.stationUuid!);
+        message = 'Station added to favorites';
+      } else {
+        favoritesUUIDs
+            .where((element) => element == selectedRadioStation!.stationUuid!);
+            message = 'Station removed from favorites';
+      }
+      await writeData("favorites.json", json.encode(favoritesUUIDs));
+      await widget.loadAllData();
+      
+    }
   }
 
   Future<void> _addToPlayList() async {
@@ -255,7 +282,10 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
                                 10), // Adjust padding as needed
                           ),
                           onPressed: () => _addToFavorites(),
-                          child: const Icon(Icons.favorite_outline),
+                          child: favoritesUUIDs
+                                  .contains(selectedRadioStation!.stationUuid!)
+                              ? const Icon(Icons.favorite)
+                              : const Icon(Icons.favorite_outline),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
