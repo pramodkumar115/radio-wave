@@ -1,9 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class RadioPlayerView extends StatefulWidget {
@@ -21,37 +21,83 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
   // final GFBottomSheetController _controller = GFBottomSheetController();
   static final AudioPlayer _audioPlayer = AudioPlayer();
   late RadioStation? selectedRadioStation;
-  PlayerState stateOfPlayer = PlayerState.stopped;
+  bool _isPlaying = false;
+  late bool _isLoading;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    // _controller.showBottomSheet();
     setState(() {
       selectedRadioStation = getSelectedRadioStation(
           widget.radioStationsList, widget.selectedRadioId);
+      _initAudioPlayer(station: selectedRadioStation);
     });
   }
 
-  Future<void> _playAudio(RadioStation radioStation) async {
-    try {
-      await _audioPlayer.play(UrlSource(radioStation.url!)); // For assets
-      print(_audioPlayer.state.name);
+  Future<void> _initAudioPlayer({RadioStation? station}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    _audioPlayer.playerStateStream.listen((playerState) {
       setState(() {
-        stateOfPlayer = _audioPlayer.state;
+        _isPlaying = playerState.playing;
+        if (playerState.processingState == ProcessingState.completed) {
+          _isPlaying = false;
+          _position = Duration.zero; // Reset position on completion
+        }
       });
-    } catch (id) {
-      print("Error ID - $id");
-      await _audioPlayer.play(UrlSource(radioStation.urlResolved!));
+    });
+
+    _audioPlayer.durationStream.listen((duration) {
+      setState(() {
+        _duration = duration ?? Duration.zero;
+      });
+    });
+
+    _audioPlayer.positionStream.listen((position) {
+      setState(() {
+        _position = position;
+      });
+    });
+
+    try {
+      AudioSource source = AudioSource.uri(
+        Uri.parse(station!.url!),
+        tag: const MediaItem(
+          id: '1',
+          title: "Orbit Radio",
+        ),
+      );
+      await _audioPlayer.setAudioSource(source);
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading audio: $e");
     }
   }
 
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  String _formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
+    return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  Future<void> _playAudio(RadioStation radioStation) async {
+    await _audioPlayer.play();
+  }
+
   Future<void> _stopAudio(RadioStation radioStation) async {
-    await _audioPlayer.stop(); // For assets
-    print(_audioPlayer.state.name);
-    setState(() {
-        stateOfPlayer = _audioPlayer.state;
-      });
+    await _audioPlayer.stop();
   }
 
   Future<void> _addToFavorites() async {
@@ -71,6 +117,7 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
       setState(() {
         selectedRadioStation = radioStation;
       });
+      await _initAudioPlayer(station: radioStation);
       _playAudio(radioStation);
     }
   }
@@ -84,6 +131,7 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
       setState(() {
         selectedRadioStation = radioStation;
       });
+      await _initAudioPlayer(station: radioStation);
       _playAudio(radioStation);
     }
   }
@@ -108,12 +156,15 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
                     top: screenHeight * 0.15,
                     right: 0,
                     left: 0,
-                    height: 250,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white),
-                    )),
+                    child: Column(children: [
+                      Container(
+                        height: 250,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white),
+                      ),
+                      // const Text("Testing")
+                    ])),
                 Positioned(
                     top: screenHeight * 0.065,
                     right: screenWidth * 1 / 3,
@@ -215,26 +266,20 @@ class _RadioPlayerViewState extends State<RadioPlayerView> {
                           onPressed: () => _playPrevious(),
                           child: const Icon(Icons.arrow_back),
                         ),
-                        PlayerState.playing != stateOfPlayer
-                            ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () =>
-                                    _playAudio(selectedRadioStation!),
-                                child: const Icon(Icons.play_arrow),
-                              )
+                        _isLoading
+                            ? const CircularProgressIndicator()
                             : ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
                                   padding: const EdgeInsets.all(
                                       10), // Adjust padding as needed
                                 ),
-                                onPressed: () =>
-                                    _stopAudio(selectedRadioStation!),
-                                child: const Icon(Icons.stop_sharp),
+                                onPressed: () => !_isPlaying
+                                    ? _playAudio(selectedRadioStation!)
+                                    : _stopAudio(selectedRadioStation!),
+                                child: Icon(!_isPlaying
+                                    ? Icons.play_arrow
+                                    : Icons.stop_sharp),
                               ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
