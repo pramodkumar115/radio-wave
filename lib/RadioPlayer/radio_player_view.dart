@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
@@ -110,21 +111,17 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
 
   Future<void> addToFavorites(List<String> favoritesUUIDs) async {
     var message = "";
-    if (favoritesUUIDs != null) {
-      if (!favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
-        favoritesUUIDs = [
-          ...favoritesUUIDs,
-          selectedRadioStation!.stationUuid!
-        ];
-        message = 'Station added to favorites';
-      } else {
-        favoritesUUIDs = favoritesUUIDs
-            .where((element) => element != selectedRadioStation!.stationUuid!)
-            .toList();
-        message = 'Station removed from favorites';
-      }
+    if (!favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
+      favoritesUUIDs = [...favoritesUUIDs, selectedRadioStation!.stationUuid!];
+      message = 'Station added to favorites';
+    } else {
+      favoritesUUIDs = favoritesUUIDs
+          .where((element) => element != selectedRadioStation!.stationUuid!)
+          .toList();
+      message = 'Station removed from favorites';
     }
     ref.read(favoritesDataProvider.notifier).updateFavorites(favoritesUUIDs);
+    GFToast.showToast(message, context);
   }
 
   Future<void> _addToPlayList() async {
@@ -261,11 +258,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                         padding: const EdgeInsets.all(2),
                                         child: Chip(
                                             padding: const EdgeInsets.all(0),
-                                            avatar: const CircleAvatar(
-                                              minRadius: 20,
-                                              child: Icon(Icons.tag, size: 20),
-                                            ),
-                                            label: Text(tag),
+                                            label: HStack([Text("#$tag")]),
                                             //onDeleted: () => _deleteTag(tag),
                                             backgroundColor: Theme.of(context)
                                                 .primaryColor
