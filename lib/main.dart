@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:orbit_radio/home.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -9,7 +10,11 @@ Future<void> main() async {
     androidNotificationChannelName: 'Background audio playback',
     androidNotificationOngoing: true,
   );
-  runApp(const MyApp());
+  // runApp(ChangeNotifierProvider(
+  //     create: (context) => OrbitRadioProvider(),
+  //     child: const MyApp(),
+  //   ));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -39,6 +44,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    // context.read<OrbitRadioProvider>().loadData();
     return const Home();
   }
 }

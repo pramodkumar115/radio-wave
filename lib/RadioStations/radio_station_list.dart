@@ -8,11 +8,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class RadioStationListView extends StatefulWidget {
   final List<RadioStation> stationList;
-  final List<dynamic>? favoritesData;
-  final Function loadAllData;
 
   const RadioStationListView(
-      {super.key, required this.stationList, required this.favoritesData, required this.loadAllData});
+      {super.key, required this.stationList});
 
   @override
   State<RadioStationListView> createState() => _RadioStationListViewState();
@@ -40,9 +38,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                       builder: (BuildContext context) {
                         return RadioPlayerView(
                             radioStationsList: widget.stationList,
-                            selectedRadioId: s.stationUuid!,
-                            favoritesData: widget.favoritesData!,
-                            loadAllData: widget.loadAllData);
+                            selectedRadioId: s.stationUuid!);
                       },
                     );
                   },

@@ -11,9 +11,7 @@ import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TopHitsView extends StatefulWidget {
-  const TopHitsView({super.key, required this.favoritesData, required this.loadAllData});
-  final List<dynamic>? favoritesData;
-  final Function loadAllData;
+  const TopHitsView({super.key});
 
   @override
   State<TopHitsView> createState() => _TopHitsViewState();
@@ -48,7 +46,7 @@ class _TopHitsViewState extends State<TopHitsView> {
         child: VStack([
           const Text("World's Top 10 Stations").text.scale(1.2).bold.make(),
           topHitStations.isNotEmpty
-              ? RadioStationListView(stationList: topHitStations, favoritesData: widget.favoritesData, loadAllData: widget.loadAllData)
+              ? RadioStationListView(stationList: topHitStations)
               : GFShimmer(child: emptyBlock)
         ]));
   }

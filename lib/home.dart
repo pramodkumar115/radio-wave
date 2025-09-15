@@ -2,49 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
+import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
+import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/RecentVisits/recents_visits_view.dart';
 import 'package:orbit_radio/TopHits/top_hits_view.dart';
-import 'package:orbit_radio/commons/util.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   TabController? _tabController;
-  String? userCurrentCountry;
-  List<dynamic>? favoritesData;
-  List<dynamic>? playList;
-  List<dynamic>? userPreferences;
+
+  String userCurrentCountry = "";
 
   @override
   void initState() {
     super.initState();
-    loadData();
     _tabController = TabController(length: 3, vsync: this);
-  }
 
-  Future<void> loadData() async {
-    setState(() {
-      favoritesData = null;
+    Future.delayed(Duration.zero, () async {
+      var country = await getUserCurrentCountry();
+      ref.read(countryProvider.notifier).updateCountry(country);
+      ref.read(favoritesDataProvider.notifier).fetchFavorites();
     });
-
-    var country = await getUserCurrentCountry();
-    var favoritesDataFromFile = await getFavoritesFromFile();
-    print("favorites in home page - $favoritesDataFromFile");
-    // var platListInfo = getPlayListDataFromFile();
-    
-    setState(() {
-      userCurrentCountry = country;
-      favoritesData = [...favoritesDataFromFile];
-    });
-    print("Came here in loaddata - $country");
-    
   }
 
   @override
@@ -61,6 +48,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final country = ref.watch(countryProvider);
+
     return Scaffold(
       body: SafeArea(
           child: ListView(scrollDirection: Axis.vertical, children: [
@@ -85,10 +74,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             const Icon(Icons.search_rounded)
           ],
         ),
-        TopHitsView(favoritesData:favoritesData, loadAllData: loadData),
-        RecentVisitsView(favoritesData:favoritesData, loadAllData: loadData),
-        userCurrentCountry != null
-            ? CountryFamousStationsView(favoritesData:favoritesData, countryName: userCurrentCountry, loadAllData: loadData)
+        const TopHitsView(),
+        const RecentVisitsView(),
+        country != ""
+            ? const CountryFamousStationsView()
             : const Text("User has not permitted us to use location details")
       ]).p12()),
       bottomNavigationBar: BottomNavigationBar(
