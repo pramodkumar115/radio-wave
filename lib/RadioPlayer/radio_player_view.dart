@@ -26,15 +26,8 @@ class RadioPlayerView extends ConsumerStatefulWidget {
 }
 
 class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
-  late final AudioPlayer _audioPlayer;
   late RadioStation? selectedRadioStation;
-  bool _isPlaying = false;
-  // List<String> favoritesUUIDs = List.empty(growable: true);
   late bool _isLoading = false;
-  Duration _duration = Duration.zero;
-  Duration _position = Duration.zero;
-
-  @override
   void initState() {
     super.initState();
     setState(() {
@@ -59,7 +52,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
 
   Future<void> _playAudio(RadioStation radioStation, audioPlayer) async {
     MediaItem media = MediaItem(
-      id: radioStation.serverUuid ?? "",
+      id: radioStation.stationUuid ?? "",
       title: "Orbit Radio",
       album: radioStation.name,
       displayTitle: radioStation.name,
@@ -96,18 +89,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   }
 
   Future<void> _stopAudio(RadioStation radioStation, audioPlayer) async {
-    // var playingRadio = ref.watch(playingRadioProvider);
-    // print("ref.watch(playingRadioProvider) ${{
-    //   'stationId': playingRadio.stationUuid,
-    //   'isPlaying': playingRadio.isPlaying
-    // }}");
-    // if (playingRadio.stationUuid == radioStation.stationUuid) {
-    //   ref.read(playingRadioProvider.notifier).updateRadioDetails(
-    //       PlayingRadioDetail(
-    //           isPlaying: false,
-    //           stationUuid: selectedRadioStation!.stationUuid ?? ""));
     await audioPlayer.stop();
-    // }
   }
 
   Future<void> addToFavorites(List<String> favoritesUUIDs) async {
@@ -129,7 +111,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     // await _audioPlayer.stop(); // For assets
   }
 
-  Future<void> _playPrevious(audioPlayer) async {
+  Future<void> _playPrevious(isPlaying) async {
     var index = widget.radioStationsList.indexOf(selectedRadioStation!);
     if (index == 0) {
       return;
@@ -138,12 +120,13 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       setState(() {
         selectedRadioStation = radioStation;
       });
-      // await _initAudioPlayer(station: radioStation);
-      _playAudio(radioStation, audioPlayer);
+      if (isPlaying) {
+        playAudioPlayer(ref.read(audioPlayerProvider.notifier), radioStation);
+      }
     }
   }
 
-  Future<void> _playNext(audioPlayer) async {
+  Future<void> _playNext(isPlaying) async {
     var index = widget.radioStationsList.indexOf(selectedRadioStation!);
     if (index == widget.radioStationsList.length - 1) {
       return;
@@ -152,8 +135,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       setState(() {
         selectedRadioStation = radioStation;
       });
-      // await _initAudioPlayer(station: radioStation);
-      _playAudio(radioStation, audioPlayer);
+      if (isPlaying) {
+        playAudioPlayer(ref.read(audioPlayerProvider.notifier), radioStation);
+      }
     }
   }
 
@@ -173,23 +157,17 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
 
   ClipRRect showContent(double screenHeight, double screenWidth,
       BuildContext context, List<String> favIds) {
-    final audioPlayer = ref.watch(audioPlayerProvider);
-    final playerState = ref.watch(playerStateStreamProvider);
-    final mediaState = ref.watch(mediaStreamProvider);
-    final position = ref.watch(positionStreamProvider);
-    final duration = ref.watch(durationStreamProvider);
+    final audioPlayerState = ref.watch(audioPlayerProvider);
+    final playerNotifier = ref.read(audioPlayerProvider.notifier);
 
-    final mediaItem = mediaState.value?.currentSource?.tag;
-
-    print(
-        "mediaState - ${mediaState.value?.currentSource?.tag?.toString()}, $playerState");
-    // print(
-    //     "current play - ${playingRadioDetail.stationUuid}, ${selectedRadioStation!.stationUuid!}, ${{'playerState': playerState.value}}");
+    final isCurrentAudio = audioPlayerState.currentMediaItem?.id ==
+        selectedRadioStation!.stationUuid;
+    final isPlaying = audioPlayerState.isPlaying;
 
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(25)),
         child: SizedBox(
-            height: screenHeight * 0.90, // Adjust height as needed
+            height: screenHeight * 0.90,
             child: Stack(
               children: [
                 Positioned(
@@ -204,12 +182,11 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                     left: 0,
                     child: Column(children: [
                       Container(
-                        height: 250,
+                        height: 300,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white),
                       ),
-                      // const Text("Testing")
                     ])),
                 Positioned(
                     top: screenHeight * 0.065,
@@ -276,13 +253,11 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                             //onDeleted: () => _deleteTag(tag),
                                             backgroundColor: Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(0.1)
-                                            // deleteIcon: const Icon(Icons.cancel),
-                                            ));
+                                                .withOpacity(0.1)));
                                   }).toList())))
                     ])),
                 Positioned(
-                  top: screenHeight * 0.36,
+                  top: screenHeight * 0.38,
                   right: 0,
                   left: 0,
                   // height: 20,
@@ -302,43 +277,50 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                               ? const Icon(Icons.favorite)
                               : const Icon(Icons.favorite_outline),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: const CircleBorder(),
-                            padding: const EdgeInsets.all(
-                                10), // Adjust padding as needed
-                          ),
-                          onPressed: () => _playPrevious(audioPlayer),
-                          child: const Icon(Icons.arrow_back),
-                        ),
-                        _isLoading
-                            ? const CircularProgressIndicator()
-                            : ElevatedButton(
+                        widget.radioStationsList
+                                    .indexOf(selectedRadioStation!) !=
+                                0
+                            ? ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
                                   padding: const EdgeInsets.all(
                                       10), // Adjust padding as needed
                                 ),
-                                onPressed: () => {
-                                  playerState.value?.playing != true
-                                      ? _playAudio(
-                                          selectedRadioStation!, audioPlayer)
-                                      : _stopAudio(
-                                          selectedRadioStation!, audioPlayer)
+                                onPressed: () => _playPrevious(isPlaying),
+                                child: const Icon(Icons.skip_previous),
+                              )
+                            : Container(),
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(60, 60),
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(10),
+                                ),
+                                onPressed: () async {
+                                  await playOrStop(
+                                      isCurrentAudio,
+                                      playerNotifier,
+                                      isPlaying,
+                                      selectedRadioStation!);
                                 },
-                                child: (playerState.value?.playing != true)
-                                    ? const Icon(Icons.play_arrow)
-                                    : const Icon(Icons.stop_sharp),
+                                child: showIcon(isCurrentAudio, isPlaying,
+                                    selectedRadioStation!),
                               ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: const CircleBorder(),
-                            padding: const EdgeInsets.all(
-                                10), // Adjust padding as needed
-                          ),
-                          onPressed: () => _playNext(audioPlayer),
-                          child: const Icon(Icons.arrow_forward),
-                        ),
+                        widget.radioStationsList
+                                    .indexOf(selectedRadioStation!) !=
+                                widget.radioStationsList.length - 1
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(
+                                      10), // Adjust padding as needed
+                                ),
+                                onPressed: () => _playNext(isPlaying),
+                                child: const Icon(Icons.skip_next),
+                              )
+                            : Container(),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
@@ -354,5 +336,46 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                 )
               ],
             )));
+  }
+
+  Future<void> playOrStop(bool isCurrentAudio, PlayerNotifier playerNotifier,
+      bool isPlaying, RadioStation selectedRadioStation) async {
+    if (!isCurrentAudio) {
+      await playAudioPlayer(playerNotifier, selectedRadioStation);
+    } else {
+      if (isPlaying) {
+        playerNotifier.stop();
+      } else {
+        playerNotifier.play();
+      }
+    }
+  }
+
+  Future<void> playAudioPlayer(
+      PlayerNotifier playerNotifier, RadioStation radioStation) async {
+    await playerNotifier.initPlayer(
+        radioStation!.url!,
+        MediaItem(
+          id: selectedRadioStation!.stationUuid ?? "",
+          title: "Orbit Radio",
+          album: selectedRadioStation!.name,
+          displayTitle: selectedRadioStation!.name,
+        ));
+    playerNotifier.play();
+  }
+
+  Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
+    if (isCurrentAudio) {
+      return Transform.scale(
+        scale: 2.0, // Doubles the size of the child icon
+        child: (isPlaying != true)
+            ? const Icon(Icons.play_arrow)
+            : const Icon(Icons.stop_sharp),
+      );
+    } else {
+      return Transform.scale(
+          scale: 2.0, // Doubles the size of the child icon
+          child: const Icon(Icons.play_arrow));
+    }
   }
 }
