@@ -44,7 +44,7 @@ class _TopHitsViewState extends State<TopHitsView> {
     return Container(
         margin: const EdgeInsets.only(top: 20),
         child: VStack([
-          const Text("World's Top 10 Stations").text.scale(1.2).bold.make(),
+          const Text("World's Top 10 Stations").text.scale(1.1).fade.extraBlack.extraBold.make(),
           topHitStations.isNotEmpty
               ? RadioStationListView(stationList: topHitStations)
               : GFShimmer(child: emptyBlock)

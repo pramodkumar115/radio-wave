@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
+import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
+import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RecentVisits/recents_visits_view.dart';
 import 'package:orbit_radio/TopHits/top_hits_view.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -31,6 +33,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
       var country = await getUserCurrentCountry();
       ref.read(countryProvider.notifier).updateCountry(country);
       ref.read(favoritesDataProvider.notifier).fetchFavorites();
+      ref.read(recentVisitsDataProvider.notifier).fetchRecentVisits();
     });
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
+import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -23,7 +24,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
       print("size: ${widget.stationList.length}");
     }
     return SizedBox(
-        height: 250,
+        height: 190,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: widget.stationList
@@ -67,17 +68,19 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                                     ).w15(context).h10(context))
                                 .w24(context)
                                 .h10(context)),
-                        Text(s.name!, softWrap: true)
+                        Text(getStationName(s.name), softWrap: true)
                             .text
                             .sm
                             .semiBold
+                            .gray500
                             .align(TextAlign.center)
                             .make()
                             .w24(context),
-                        Text("(${s.country})", softWrap: true)
+                        Text(getStationCountry(s.country), softWrap: true)
                             .text
                             .sm
                             .semiBold
+                            .gray500
                             .align(TextAlign.center)
                             .make()
                             .w24(context),
