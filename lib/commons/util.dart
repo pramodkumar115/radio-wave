@@ -19,7 +19,7 @@ Future<String?> getCountryFromCoordinates(
       return placemarks.first.country;
     }
   } catch (e) {
-    print("Error during reverse geocoding: $e");
+    // print("Error during reverse geocoding: $e");
   }
   return null;
 }
@@ -33,7 +33,7 @@ Future<Position?> getCurrentLocation() async {
   if (!serviceEnabled) {
     // Location services are not enabled don't continue
     // accessing the position and request users to enable the location services.
-    print('Location services are disabled.');
+    // print('Location services are disabled.');
     return null;
   }
 
@@ -46,15 +46,15 @@ Future<Position?> getCurrentLocation() async {
       // Android's shouldShowRequestPermissionRationale
       // returned true. According to Android guidelines
       // your App should show an explanatory UI now.
-      print('Location permissions are denied');
+      // print('Location permissions are denied');
       return null;
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-    print(
-        'Location permissions are permanently denied, we cannot request permissions.');
+    // print(
+        // 'Location permissions are permanently denied, we cannot request permissions.');
     return null;
   }
 
@@ -107,7 +107,7 @@ if (response.statusCode == 200) {
         }
       }
       if (kDebugMode) {
-        print(uniqueList);
+        // print(uniqueList);
       }
       return uniqueList;
     } else {

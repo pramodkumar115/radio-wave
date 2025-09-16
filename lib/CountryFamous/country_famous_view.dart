@@ -46,7 +46,7 @@ class _CountryFamousStationsViewState
         }
       }
       if (kDebugMode) {
-        print(uniqueList);
+        // print(uniqueList);
       }
       setState(() {
         topHitStations.addAll(uniqueList);
@@ -61,7 +61,7 @@ class _CountryFamousStationsViewState
     return Container(
         margin: const EdgeInsets.only(top: 20),
         child: VStack([
-          const Text("Famous stations near you").text.scale(1.2).bold.make(),
+          const Text("Famous stations near you").text.scale(1.1).bold.make(),
           topHitStations.isNotEmpty
               ? RadioStationListView(stationList: topHitStations)
               : GFShimmer(child: emptyBlock)

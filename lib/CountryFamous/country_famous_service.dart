@@ -10,11 +10,11 @@ getCountryFamousStationDetails(country) async {
 
 getUserCurrentCountry() async {
   Position? posn = await getCurrentLocation();
-  print("Positon details - $posn, ");
+  // print("Positon details - $posn, ");
   if (posn != null) {
     String? country =
         await getCountryFromCoordinates(posn.latitude, posn.longitude);
-    print("Positon details - $posn, $country");
+    // print("Positon details - $posn, $country");
     return country;
   }
   return null;

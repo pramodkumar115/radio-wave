@@ -21,7 +21,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print("size: ${widget.stationList.length}");
+      // print("size: ${widget.stationList.length}");
     }
     return SizedBox(
         height: 190,

@@ -18,7 +18,7 @@ Future<bool> checkIfFileExists(String fileName) async {
 
 Future<File> writeData(String filename, String data) async {
   final file = await _localFile(filename);
-  print("In write file $file");
+  // print("In write file $file");
   return file.writeAsString(data);
 }
 
@@ -29,7 +29,7 @@ Future<String> readFile(String fileName) async {
     String contents = await file.readAsString();
     return contents;
   } catch (e) {
-    print("Error reading file: $e");
+    // print("Error reading file: $e");
     return "";
   }
 }

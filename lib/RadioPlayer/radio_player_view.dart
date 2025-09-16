@@ -31,7 +31,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   void initState() {
     super.initState();
     setState(() {
-      print("-----------In radio player------------");
+      // print("-----------In radio player------------");
       selectedRadioStation = getSelectedRadioStation(
           widget.radioStationsList, widget.selectedRadioId);
     });
@@ -59,31 +59,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     );
     AudioSource source =
         AudioSource.uri(Uri.parse(radioStation.url!), tag: media);
-    var recentVisitList = ref.watch(recentVisitsDataProvider);
-    recentVisitList.when(
-        data: (recentVisitedStations) {
-          if (recentVisitedStations
-              .where((st) => st.stationUuid == radioStation.stationUuid)
-              .isNotEmpty) {
-            recentVisitedStations = recentVisitedStations
-                .where((st) => st.stationUuid != radioStation.stationUuid)
-                .toList();
-          }
-          if (recentVisitedStations.length > 10) {
-            recentVisitedStations.removeLast();
-          }
-          recentVisitedStations.insert(0, radioStation);
-          if (recentVisitedStations.isNotEmpty) {
-            List<String> uuids = recentVisitedStations
-                .map((element) => element.stationUuid ?? "")
-                .toList();
-            ref
-                .read(recentVisitsDataProvider.notifier)
-                .updateRecentVisits(uuids);
-          }
-        },
-        error: (error, stackTrace) => () => {},
-        loading: () => {});
+
     await audioPlayer.setAudioSource(source);
     await audioPlayer.play();
   }
@@ -361,6 +337,33 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
           album: selectedRadioStation!.name,
           displayTitle: selectedRadioStation!.name,
         ));
+    var recentVisitList = ref.watch(recentVisitsDataProvider);
+    var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
+    recentVisitList.when(
+        data: (recentVisitedStations) {
+          print("recent - $recentVisitedStations");
+          if (recentVisitedStations
+              .where((st) => st.stationUuid == radioStation.stationUuid)
+              .isNotEmpty) {
+                print("recent Inside - ${recentVisitedStations.length}");
+            recentVisitedStations = recentVisitedStations
+                .where((st) => st.stationUuid != radioStation.stationUuid)
+                .toList();
+          }
+          print("recent Outside - ${recentVisitedStations.length}");
+          if (recentVisitedStations.length > 10) {
+            recentVisitedStations.removeLast();
+          }
+          recentVisitedStations.insert(0, radioStation);
+          if (recentVisitedStations.isNotEmpty) {
+            List<String> uuids = recentVisitedStations
+                .map((element) => element.stationUuid ?? "")
+                .toList();
+            recentVisitsNotifier.updateRecentVisits([...uuids]);
+          }
+        },
+        error: (error, stackTrace) => () => {},
+        loading: () => {});
     playerNotifier.play();
   }
 

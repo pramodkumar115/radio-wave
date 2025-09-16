@@ -40,7 +40,7 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
     return Container(
         margin: const EdgeInsets.only(top: 20),
         child: VStack([
-          const Text("Recent Visits").text.scale(1.2).bold.make(),
+          const Text("Recent Visits").text.scale(1.1).bold.make(),
           stationList.isNotEmpty
               ? RadioStationListView(stationList: stationList)
               : GFShimmer(child: emptyBlock)
