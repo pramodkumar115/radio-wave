@@ -34,13 +34,9 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   late final AudioPlayer _player;
 
   // Initialize the player and set up listeners
-  Future<void> initPlayer(String url, MediaItem mediaItem) async {
-    await _player.setAudioSource(
-      AudioSource.uri(
-        Uri.parse(url),
-        tag: mediaItem,
-      ),
-    );
+  Future<void> initPlayer(List<MediaItem> mediaItemList) async {
+    List<AudioSource> playlist = mediaItemList.map((mediaItem) => AudioSource.uri(mediaItem.artUri!, tag: mediaItem)).toList();
+    await _player.setAudioSource(ConcatenatingAudioSource(children: playlist));
   }
 
   // Set up listeners for the player's stream
@@ -61,8 +57,17 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   }
 
   // Control methods
-  void play() async {
+  void play(index) async {
+    await _player.seek(Duration.zero, index: index);
     await _player.play();
+  }
+
+  void playNext() async {
+    await _player.seekToNext();
+  }
+
+  void playPrevious() async {
+    await _player.seekToPrevious();
   }
 
   void pause() async {

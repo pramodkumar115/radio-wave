@@ -10,10 +10,6 @@ Future<void> main() async {
     androidNotificationChannelName: 'Background audio playback',
     androidNotificationOngoing: true,
   );
-  // runApp(ChangeNotifierProvider(
-  //     create: (context) => OrbitRadioProvider(),
-  //     child: const MyApp(),
-  //   ));
   runApp(const ProviderScope(child: MyApp()));
 }
 

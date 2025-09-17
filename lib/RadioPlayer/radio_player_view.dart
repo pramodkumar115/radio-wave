@@ -28,12 +28,28 @@ class RadioPlayerView extends ConsumerStatefulWidget {
 class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   late RadioStation? selectedRadioStation;
   late bool _isLoading = false;
+
+  @override
   void initState() {
     super.initState();
     setState(() {
-      // print("-----------In radio player------------");
       selectedRadioStation = getSelectedRadioStation(
           widget.radioStationsList, widget.selectedRadioId);
+      // print("-----------In radio player------------");
+      Future.delayed(Duration.zero, () async {
+        final playerNotifier = ref.read(audioPlayerProvider.notifier);
+
+        await playerNotifier
+            .initPlayer(widget.radioStationsList.map((radioStation) {
+          return MediaItem(
+            id: radioStation.stationUuid ?? "",
+            artUri: Uri.parse(radioStation.url!),
+            title: "Orbit Radio - ${radioStation.name}",
+            album: radioStation.name,
+            displayTitle: radioStation.name,
+          );
+        }).toList());
+      });
     });
   }
 
@@ -48,24 +64,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
     return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
-
-  Future<void> _playAudio(RadioStation radioStation, audioPlayer) async {
-    MediaItem media = MediaItem(
-      id: radioStation.stationUuid ?? "",
-      title: "Orbit Radio",
-      album: radioStation.name,
-      displayTitle: radioStation.name,
-    );
-    AudioSource source =
-        AudioSource.uri(Uri.parse(radioStation.url!), tag: media);
-
-    await audioPlayer.setAudioSource(source);
-    await audioPlayer.play();
-  }
-
-  Future<void> _stopAudio(RadioStation radioStation, audioPlayer) async {
-    await audioPlayer.stop();
   }
 
   Future<void> addToFavorites(List<String> favoritesUUIDs) async {
@@ -87,36 +85,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     // await _audioPlayer.stop(); // For assets
   }
 
-  Future<void> _playPrevious(isPlaying) async {
-    var index = widget.radioStationsList.indexOf(selectedRadioStation!);
-    if (index == 0) {
-      return;
-    } else {
-      var radioStation = widget.radioStationsList[index - 1];
-      setState(() {
-        selectedRadioStation = radioStation;
-      });
-      if (isPlaying) {
-        playAudioPlayer(ref.read(audioPlayerProvider.notifier), radioStation);
-      }
-    }
-  }
-
-  Future<void> _playNext(isPlaying) async {
-    var index = widget.radioStationsList.indexOf(selectedRadioStation!);
-    if (index == widget.radioStationsList.length - 1) {
-      return;
-    } else {
-      var radioStation = widget.radioStationsList[index + 1];
-      setState(() {
-        selectedRadioStation = radioStation;
-      });
-      if (isPlaying) {
-        playAudioPlayer(ref.read(audioPlayerProvider.notifier), radioStation);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -135,6 +103,17 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       BuildContext context, List<String> favIds) {
     final audioPlayerState = ref.watch(audioPlayerProvider);
     final playerNotifier = ref.read(audioPlayerProvider.notifier);
+
+    ref.listen(audioPlayerProvider, (previous, next) {
+      print(
+          "previous - ${previous!.currentMediaItem!.album}, next - ${next!.currentMediaItem!.album}");
+      final current = getSelectedRadioStation(
+          widget.radioStationsList, next.currentMediaItem!.id);
+      final currentIndex = widget.radioStationsList.indexOf(current!);
+      setState(() {
+        getNextOrPreviousStationDetail("", current, currentIndex);
+      });
+    });
 
     final isCurrentAudio = audioPlayerState.currentMediaItem?.id ==
         selectedRadioStation!.stationUuid;
@@ -237,7 +216,11 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                         child: Chip(
                                             shape: RoundedRectangleBorder(
                                               side: const BorderSide(
-                                                color: Color.fromARGB(255, 162, 162, 163), // Specify border color
+                                                color: Color.fromARGB(
+                                                    255,
+                                                    162,
+                                                    162,
+                                                    163), // Specify border color
                                                 width:
                                                     1, // Specify border width
                                               ),
@@ -247,7 +230,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                             padding: const EdgeInsets.all(0),
                                             label: HStack([Text("#$tag")]),
                                             //onDeleted: () => _deleteTag(tag),
-                                            backgroundColor: const Color.fromARGB(255, 196, 245, 235)));
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 196, 245, 235)));
                                   }).toList())))
                     ])),
                 Positioned(
@@ -271,24 +256,24 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                               ? const Icon(Icons.favorite)
                               : const Icon(Icons.favorite_outline),
                         ),
-                        widget.radioStationsList
-                                    .indexOf(selectedRadioStation!) !=
-                                0
-                            ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => _playPrevious(isPlaying),
-                                child: const Icon(Icons.skip_previous),
-                              )
-                            : Container(),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(
+                                10), // Adjust padding as needed
+                          ),
+                          onPressed: () => _playPrevious(
+                              playerNotifier,
+                              audioPlayerState,
+                              isPlaying,
+                              selectedRadioStation),
+                          child: const Icon(Icons.skip_previous),
+                        ),
                         _isLoading
                             ? const CircularProgressIndicator()
                             : ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(60, 60),
+                                  fixedSize: const Size(60, 60),
                                   shape: const CircleBorder(),
                                   padding: const EdgeInsets.all(10),
                                 ),
@@ -297,24 +282,24 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       isCurrentAudio,
                                       playerNotifier,
                                       isPlaying,
-                                      selectedRadioStation!);
+                                      selectedRadioStation!.stationUuid!);
                                 },
                                 child: showIcon(isCurrentAudio, isPlaying,
                                     selectedRadioStation!),
                               ),
-                        widget.radioStationsList
-                                    .indexOf(selectedRadioStation!) !=
-                                widget.radioStationsList.length - 1
-                            ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => _playNext(isPlaying),
-                                child: const Icon(Icons.skip_next),
-                              )
-                            : Container(),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(
+                                10), // Adjust padding as needed
+                          ),
+                          onPressed: () => _playNext(
+                              playerNotifier,
+                              audioPlayerState,
+                              isPlaying,
+                              selectedRadioStation),
+                          child: const Icon(Icons.skip_next),
+                        ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
@@ -333,28 +318,46 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   }
 
   Future<void> playOrStop(bool isCurrentAudio, PlayerNotifier playerNotifier,
-      bool isPlaying, RadioStation selectedRadioStation) async {
+      bool isPlaying, String selectedRadioId) async {
     if (!isCurrentAudio) {
-      await playAudioPlayer(playerNotifier, selectedRadioStation);
+      await playAudioPlayer(playerNotifier, selectedRadioId);
     } else {
       if (isPlaying) {
         playerNotifier.stop();
       } else {
-        playerNotifier.play();
+        await playAudioPlayer(playerNotifier, selectedRadioId);
       }
     }
   }
 
   Future<void> playAudioPlayer(
-      PlayerNotifier playerNotifier, RadioStation radioStation) async {
-    await playerNotifier.initPlayer(
-        radioStation!.url!,
-        MediaItem(
-          id: selectedRadioStation!.stationUuid ?? "",
-          title: "Orbit Radio",
-          album: selectedRadioStation!.name,
-          displayTitle: selectedRadioStation!.name,
-        ));
+      PlayerNotifier playerNotifier, String selectedRadioId) async {
+    /* final playerNotifier = ref.read(audioPlayerProvider.notifier);
+
+    await playerNotifier
+        .initPlayer(widget.radioStationsList.map((radioStation) {
+      return MediaItem(
+        id: radioStation.stationUuid ?? "",
+        artUri: Uri.parse(radioStation.url!),
+        title: "Orbit Radio - ${radioStation.name}",
+        album: radioStation.name,
+        displayTitle: radioStation.name,
+      );
+    }).toList()); */
+    if (selectedRadioStation != null) {
+      setRecentVisits(selectedRadioStation!);
+      final index = widget.radioStationsList.indexOf(selectedRadioStation!);
+      playerNotifier.play(index);
+    }
+  }
+
+  RadioStation getCurrentRadioStation(String selectedRadioId) {
+    RadioStation radioStn = widget.radioStationsList
+        .firstWhere((element) => element.stationUuid == selectedRadioId);
+    return radioStn;
+  }
+
+  void setRecentVisits(RadioStation radioStation) {
     var recentVisitList = ref.watch(recentVisitsDataProvider);
     var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
     recentVisitList.when(
@@ -382,7 +385,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         },
         error: (error, stackTrace) => () => {},
         loading: () => {});
-    playerNotifier.play();
   }
 
   Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
@@ -397,6 +399,52 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       return Transform.scale(
           scale: 2.0, // Doubles the size of the child icon
           child: const Icon(Icons.play_arrow));
+    }
+  }
+
+  _playNext(playerNotifier, audioPlayerState, isPlaying, currentStation) {
+    setSelectedRadioStation(
+        audioPlayerState, isPlaying, 'NEXT', currentStation);
+    if (isPlaying) {
+      playerNotifier.playNext();
+    }
+  }
+
+  void setSelectedRadioStation(
+      audioPlayerState, isPlaying, action, RadioStation currentStation) {
+    Future.delayed(Duration.zero, () async {
+      if (!isPlaying) {
+        final current = getSelectedRadioStation(
+            widget.radioStationsList, currentStation.stationUuid!);
+        final currentIndex = widget.radioStationsList.indexOf(current!);
+        print("${current.name} - $currentIndex");
+        setState(() {
+          getNextOrPreviousStationDetail(action, current, currentIndex);
+        });
+      }
+    });
+  }
+
+  void getNextOrPreviousStationDetail(
+      action, RadioStation current, int currentIndex) {
+    if (action == null || action.isEmpty) {
+      selectedRadioStation = current;
+    } else {
+      if (action == 'NEXT' &&
+          currentIndex < widget.radioStationsList.length - 1) {
+        selectedRadioStation = widget.radioStationsList[currentIndex + 1];
+      }
+      if (action == 'PREVIOUS' && currentIndex > 0) {
+        selectedRadioStation = widget.radioStationsList[currentIndex - 1];
+      }
+    }
+  }
+
+  _playPrevious(playerNotifier, audioPlayerState, isPlaying, currentStation) {
+    setSelectedRadioStation(
+        audioPlayerState, isPlaying, 'PREVIOUS', currentStation);
+    if (isPlaying) {
+      playerNotifier.playPrevious();
     }
   }
 }

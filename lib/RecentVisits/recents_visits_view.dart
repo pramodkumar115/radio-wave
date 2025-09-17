@@ -18,11 +18,9 @@ class RecentVisitsView extends ConsumerStatefulWidget {
 }
 
 class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
-
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
