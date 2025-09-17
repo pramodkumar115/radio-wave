@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
-import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
@@ -54,7 +53,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     final country = ref.watch(countryProvider);
 
     return Scaffold(
-      body: SafeArea(
+      backgroundColor:Color.fromARGB(255, 247, 247, 244),
+        body: SafeArea(
           child: ListView(scrollDirection: Axis.vertical, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +100,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: const Color.fromARGB(255, 2, 129, 108),
         onTap: _onItemTapped,
       ),
     );

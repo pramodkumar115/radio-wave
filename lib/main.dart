@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Orbit Radio',
       theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(
+        textTheme: GoogleFonts.latoTextTheme(
           Theme.of(context).textTheme,
         ),
         useMaterial3: true,

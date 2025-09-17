@@ -10,8 +10,7 @@ import 'package:velocity_x/velocity_x.dart';
 class RadioStationListView extends StatefulWidget {
   final List<RadioStation> stationList;
 
-  const RadioStationListView(
-      {super.key, required this.stationList});
+  const RadioStationListView({super.key, required this.stationList});
 
   @override
   State<RadioStationListView> createState() => _RadioStationListViewState();
@@ -47,9 +46,18 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                color: Color.fromARGB(255, 218, 218, 219), // Specify border color
+                                width: 0.5, // Specify border width
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  2.0), // Optional: for rounded corners
+                            ),
                             margin: const EdgeInsets.all(8),
                             color: Colors.white,
-                            elevation: 2,
+                            surfaceTintColor: Colors.white,
+                            //elevation: 1,
                             child: Container(
                                     padding: const EdgeInsets.all(12),
                                     child: Image.network(

@@ -174,7 +174,18 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Card(
-                              // elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  color: Color.fromARGB(255, 218, 218,
+                                      219), // Specify border color
+                                  width: 0.5, // Specify border width
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    2.0), // Optional: for rounded corners
+                              ),
+                              // elevation: 1,
+                              surfaceTintColor: Colors.white,
+                              color: Colors.white,
                               child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -224,12 +235,19 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                     return Container(
                                         padding: const EdgeInsets.all(2),
                                         child: Chip(
+                                            shape: RoundedRectangleBorder(
+                                              side: const BorderSide(
+                                                color: Color.fromARGB(255, 162, 162, 163), // Specify border color
+                                                width:
+                                                    1, // Specify border width
+                                              ),
+                                              borderRadius: BorderRadius.circular(
+                                                  10), // Optional: for rounded corners
+                                            ),
                                             padding: const EdgeInsets.all(0),
                                             label: HStack([Text("#$tag")]),
                                             //onDeleted: () => _deleteTag(tag),
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.1)));
+                                            backgroundColor: const Color.fromARGB(255, 196, 245, 235)));
                                   }).toList())))
                     ])),
                 Positioned(
@@ -345,7 +363,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
           if (recentVisitedStations
               .where((st) => st.stationUuid == radioStation.stationUuid)
               .isNotEmpty) {
-                print("recent Inside - ${recentVisitedStations.length}");
+            print("recent Inside - ${recentVisitedStations.length}");
             recentVisitedStations = recentVisitedStations
                 .where((st) => st.stationUuid != radioStation.stationUuid)
                 .toList();
