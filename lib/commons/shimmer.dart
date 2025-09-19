@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 
 
 final Widget emptyBlock = Padding(
@@ -8,7 +7,7 @@ final Widget emptyBlock = Padding(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 54,
+            width: 100,
             height: 46,
             color: Colors.white,
           ),
@@ -18,24 +17,39 @@ final Widget emptyBlock = Padding(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  width: double.infinity,
+                  width: 100,
                   height: 8,
                   color: Colors.white,
                 ),
                 const SizedBox(height: 6),
                 Container(
-                  width: 10,
+                  width: 60,
                   height: 8,
                   color: Colors.white,
                 ),
                 const SizedBox(height: 6),
                 Container(
-                  width: 10,
+                  width: 60,
                   height: 8,
                   color: Colors.white,
                 ),
               ],
             ),
+          )
+        ],
+      ),
+    );
+
+
+final Widget emptyCardBlock = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 30,
+            height: 46,
+            color: Colors.white,
           )
         ],
       ),

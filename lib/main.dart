@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:orbit_radio/home.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   await JustAudioBackground.init(
@@ -10,6 +11,11 @@ Future<void> main() async {
     androidNotificationChannelName: 'Background audio playback',
     androidNotificationOngoing: true,
   );
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(const ProviderScope(child: MyApp()));
 }
 

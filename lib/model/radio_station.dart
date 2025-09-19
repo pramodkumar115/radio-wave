@@ -17,22 +17,22 @@ class RadioStation {
   final String? language;
   final String? languagecodes;
   final int? votes;
-  final DateTime? lastchangetime;
-  final String? codec;
-  final int? bitrate;
-  final int? hls;
-  final int? lastcheckok;
-  final DateTime? lastchecktime;
-  final DateTime? lastcheckoktime;
-  final DateTime? lastlocalchecktime;
-  final DateTime? clicktimestamp;
-  final int? clickcount;
-  final int? clicktrend;
-  final int? sslError;
-  final double? geoLat;
-  final double? geoLong;
-  final double? geoDistance;
-  final bool? hasExtendedInfo;
+  // final DateTime? lastchangetime;
+  // final String? codec;
+  // final int? bitrate;
+  // final int? hls;
+  // final int? lastcheckok;
+  // final DateTime? lastchecktime;
+  // final DateTime? lastcheckoktime;
+  // final DateTime? lastlocalchecktime;
+  // final DateTime? clicktimestamp;
+  // final int? clickcount;
+  // final int? clicktrend;
+  // final int? sslError;
+  // final double? geoLat;
+  // final double? geoLong;
+  // final double? geoDistance;
+  // final bool? hasExtendedInfo;
 
   RadioStation({
     this.changeUuid,
@@ -51,22 +51,22 @@ class RadioStation {
     this.language,
     this.languagecodes,
     this.votes,
-    this.lastchangetime,
-    this.codec,
-    this.bitrate,
-    this.hls,
-    this.lastcheckok,
-    this.lastchecktime,
-    this.lastcheckoktime,
-    this.lastlocalchecktime,
-    this.clicktimestamp,
-    this.clickcount,
-    this.clicktrend,
-    this.sslError,
-    this.geoLat,
-    this.geoLong,
-    this.geoDistance,
-    this.hasExtendedInfo,
+    // this.lastchangetime,
+    // this.codec,
+    // this.bitrate,
+    // this.hls,
+    // this.lastcheckok,
+    // this.lastchecktime,
+    // this.lastcheckoktime,
+    // this.lastlocalchecktime,
+    // this.clicktimestamp,
+    // this.clickcount,
+    // this.clicktrend,
+    // this.sslError,
+    // this.geoLat,
+    // this.geoLong,
+    // this.geoDistance,
+    // this.hasExtendedInfo,
   });
 
   // Factory constructor to create a RadioStation instance from a JSON map.
@@ -88,32 +88,32 @@ class RadioStation {
       language: json['language'] as String?,
       languagecodes: json['languagecodes'] as String?,
       votes: json['votes'] as int?,
-      lastchangetime: json['lastchangetime_iso8601'] != null
-          ? DateTime.tryParse(json['lastchangetime_iso8601'])
-          : null,
-      codec: json['codec'] as String?,
-      bitrate: json['bitrate'] as int?,
-      hls: json['hls'] as int?,
-      lastcheckok: json['lastcheckok'] as int?,
-      lastchecktime: json['lastchecktime_iso8601'] != null
-          ? DateTime.tryParse(json['lastchecktime_iso8601'])
-          : null,
-      lastcheckoktime: json['lastcheckoktime_iso8601'] != null
-          ? DateTime.tryParse(json['lastcheckoktime_iso8601'])
-          : null,
-      lastlocalchecktime: json['lastlocalchecktime_iso8601'] != null
-          ? DateTime.tryParse(json['lastlocalchecktime_iso8601'])
-          : null,
-      clicktimestamp: json['clicktimestamp_iso8601'] != null
-          ? DateTime.tryParse(json['clicktimestamp_iso8601'])
-          : null,
-      clickcount: json['clickcount'] as int?,
-      clicktrend: json['clicktrend'] as int?,
-      sslError: json['ssl_error'] as int?,
-      geoLat: json['geo_lat'] as double?,
-      geoLong: json['geo_long'] as double?,
-      geoDistance: json['geo_distance'] as double?,
-      hasExtendedInfo: json['has_extended_info'] as bool?,
+      // lastchangetime: json['lastchangetime_iso8601'] != null
+      //     ? DateTime.tryParse(json['lastchangetime_iso8601'])
+      //     : null,
+      // codec: json['codec'] as String?,
+      // bitrate: json['bitrate'] as int?,
+      // hls: json['hls'] as int?,
+      // lastcheckok: json['lastcheckok'] as int?,
+      // lastchecktime: json['lastchecktime_iso8601'] != null
+      //     ? DateTime.tryParse(json['lastchecktime_iso8601'])
+      //     : null,
+      // lastcheckoktime: json['lastcheckoktime_iso8601'] != null
+      //     ? DateTime.tryParse(json['lastcheckoktime_iso8601'])
+      //     : null,
+      // lastlocalchecktime: json['lastlocalchecktime_iso8601'] != null
+      //     ? DateTime.tryParse(json['lastlocalchecktime_iso8601'])
+      //     : null,
+      // clicktimestamp: json['clicktimestamp_iso8601'] != null
+      //     ? DateTime.tryParse(json['clicktimestamp_iso8601'])
+      //     : null,
+      // clickcount: json['clickcount'] as int?,
+      // clicktrend: json['clicktrend'] as int?,
+      // sslError: json['ssl_error'] as int?,
+      // geoLat: json['geo_lat'] as double?,
+      // geoLong: json['geo_long'] as double?,
+      // geoDistance: json['geo_distance'] as double?,
+      // hasExtendedInfo: json['has_extended_info'] as bool?,
     );
   }
 
@@ -135,23 +135,7 @@ class RadioStation {
       'state': state,
       'language': language,
       'languagecodes': languagecodes,
-      'votes': votes,
-      'lastchangetime_iso8601': lastchangetime?.toIso8601String(),
-      'codec': codec,
-      'bitrate': bitrate,
-      'hls': hls,
-      'lastcheckok': lastcheckok,
-      'lastchecktime_iso8601': lastchecktime?.toIso8601String(),
-      'lastcheckoktime_iso8601': lastcheckoktime?.toIso8601String(),
-      'lastlocalchecktime_iso8601': lastlocalchecktime?.toIso8601String(),
-      'clicktimestamp_iso8601': clicktimestamp?.toIso8601String(),
-      'clickcount': clickcount,
-      'clicktrend': clicktrend,
-      'ssl_error': sslError,
-      'geo_lat': geoLat,
-      'geo_long': geoLong,
-      'geo_distance': geoDistance,
-      'has_extended_info': hasExtendedInfo,
+      'votes': votes
     };
   }
 }

@@ -7,20 +7,20 @@ import 'package:just_audio_background/just_audio_background.dart';
 class PlayerState {
   final bool isPlaying;
   final MediaItem? currentMediaItem;
+  final List<MediaItem?>? playListMediaItems;
 
-  PlayerState({
-    this.isPlaying = false,
-    this.currentMediaItem,
-  });
+  PlayerState(
+      {this.isPlaying = false, this.currentMediaItem, this.playListMediaItems});
 
   PlayerState copyWith({
     bool? isPlaying,
     MediaItem? currentMediaItem,
+    List<MediaItem?>? playListMediaItems,
   }) {
     return PlayerState(
-      isPlaying: isPlaying ?? this.isPlaying,
-      currentMediaItem: currentMediaItem ?? this.currentMediaItem,
-    );
+        isPlaying: isPlaying ?? this.isPlaying,
+        currentMediaItem: currentMediaItem ?? this.currentMediaItem,
+        playListMediaItems: playListMediaItems ?? this.playListMediaItems);
   }
 }
 
@@ -35,7 +35,9 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
   // Initialize the player and set up listeners
   Future<void> initPlayer(List<MediaItem> mediaItemList) async {
-    List<AudioSource> playlist = mediaItemList.map((mediaItem) => AudioSource.uri(mediaItem.artUri!, tag: mediaItem)).toList();
+    List<AudioSource> playlist = mediaItemList
+        .map((mediaItem) => AudioSource.uri(mediaItem.artUri!, tag: mediaItem))
+        .toList();
     await _player.setAudioSource(ConcatenatingAudioSource(children: playlist));
   }
 
@@ -51,15 +53,26 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     _player.sequenceStateStream.listen((sequenceState) {
       if (sequenceState != null) {
         final mediaItem = sequenceState.currentSource?.tag as MediaItem?;
-        state = state.copyWith(currentMediaItem: mediaItem);
+        final List<MediaItem?> seqList = List.empty(growable: true);
+        if (sequenceState.effectiveSequence.isNotEmpty) {
+          seqList.addAll(
+              sequenceState.effectiveSequence.map((s) => s.tag as MediaItem?));
+        }
+        state = state.copyWith(
+            currentMediaItem: mediaItem, playListMediaItems: seqList);
       }
     });
   }
 
   // Control methods
   void play(index) async {
-    await _player.seek(Duration.zero, index: index);
+    print("index - $index");
+    await seek(index);
     await _player.play();
+  }
+
+  Future<void> seek(index) async {
+    await _player.seek(Duration.zero, index: index);
   }
 
   void playNext() async {
@@ -88,6 +101,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 }
 
 // The provider to be used by the UI
-final audioPlayerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
+final audioPlayerProvider =
+    StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
   return PlayerNotifier();
 });

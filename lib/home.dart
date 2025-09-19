@@ -7,6 +7,7 @@ import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RecentVisits/recents_visits_view.dart';
 import 'package:orbit_radio/TopHits/top_hits_view.dart';
+import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,58 +52,95 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final country = ref.watch(countryProvider);
-
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor:Color.fromARGB(255, 247, 247, 244),
+        backgroundColor: Color.fromARGB(255, 247, 247, 244),
         body: SafeArea(
-          child: ListView(scrollDirection: Axis.vertical, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // HStack([
-            const GFAvatar(
-              backgroundImage: AssetImage('assets/OrbitRadio.png'),
-              shape: GFAvatarShape.square,
-              backgroundColor: Color.fromRGBO(232, 237, 219, 0),
-              foregroundColor: Color.fromRGBO(232, 237, 219, 0),
-              size: 32,
+            child: Stack(children: [
+          ListView(scrollDirection: Axis.vertical, children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // HStack([
+                const GFAvatar(
+                  backgroundImage: AssetImage('assets/OrbitRadio.png'),
+                  shape: GFAvatarShape.square,
+                  backgroundColor: Color.fromRGBO(232, 237, 219, 0),
+                  foregroundColor: Color.fromRGBO(232, 237, 219, 0),
+                  size: 32,
+                ),
+                const Text("Orbit Radio")
+                    .text
+                    .color(Colors.red[900])
+                    .scale(1.5)
+                    .extraBold
+                    .make(),
+                // ]),
+                const Icon(Icons.search_rounded)
+              ],
             ),
-            const Text("Orbit Radio")
-                .text
-                .color(Colors.red[900])
-                .scale(1.5)
-                .extraBold
-                .make(),
-            // ]),
-            const Icon(Icons.search_rounded)
-          ],
-        ),
-        const TopHitsView(),
-        const RecentVisitsView(),
-        country != ""
-            ? const CountryFamousStationsView()
-            : const Text("User has not permitted us to use location details")
-      ]).p12()),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey.shade200,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            const TopHitsView(),
+            const RecentVisitsView(),
+            country != "" ? const CountryFamousStationsView() : Container()
+          ]).p12(),
+          Positioned(
+            //width: screenWidth,
+            bottom: 8,
+            left: 10,
+            right: 10,
+            child: GFListTile(
+              color: Colors.grey.shade50,
+                avatar: GFAvatar(),
+                titleText: 'Title',
+                subTitleText:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing',
+                icon: Icon(Icons.favorite)),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+        ])),
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                  color: Colors.grey,
+                  width: 0.5), // Customize border color and width
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favourites',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.library_music),
+                label: 'My Playlist',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color.fromARGB(255, 2, 0, 0),
+            onTap: _onItemTapped,
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 2, 129, 108),
-        onTap: _onItemTapped,
-      ),
-    );
+        ));
+  }
+
+  Transform showIcon(isCurrentAudio, isPlaying) {
+    if (isCurrentAudio) {
+      return Transform.scale(
+        scale: 2.0, // Doubles the size of the child icon
+        child: (isPlaying != true)
+            ? const Icon(Icons.play_arrow)
+            : const Icon(Icons.stop_sharp),
+      );
+    } else {
+      return Transform.scale(
+          scale: 2.0, // Doubles the size of the child icon
+          child: const Icon(Icons.play_arrow));
+    }
   }
 }
