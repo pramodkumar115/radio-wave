@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:orbit_radio/model/radio_media_item.dart';
 
 // The state of our player
 class PlayerState {
@@ -34,9 +35,10 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   late final AudioPlayer _player;
 
   // Initialize the player and set up listeners
-  Future<void> initPlayer(List<MediaItem> mediaItemList) async {
+  Future<void> initPlayer(List<PlayingRadioUriMediaItem> mediaItemList) async {
     List<AudioSource> playlist = mediaItemList
-        .map((mediaItem) => AudioSource.uri(mediaItem.artUri!, tag: mediaItem))
+        .map((radioMediaItem) =>
+            AudioSource.uri(Uri.parse(radioMediaItem.uriString!), tag: radioMediaItem.mediaItem))
         .toList();
     await _player.setAudioSource(ConcatenatingAudioSource(children: playlist));
   }

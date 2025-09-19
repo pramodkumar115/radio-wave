@@ -11,6 +11,7 @@ import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/commons/audio-player-singleton.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/model/playing_radio_detail.dart';
+import 'package:orbit_radio/model/radio_media_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -56,13 +57,15 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       else {
         await playerNotifier
             .initPlayer(widget.radioStationsList.map((radioStation) {
-          return MediaItem(
+          return PlayingRadioUriMediaItem(uriString: radioStation.url!, mediaItem: MediaItem(
             id: radioStation.stationUuid ?? "",
-            artUri: Uri.parse(radioStation.url!),
+            artUri: Uri.parse(radioStation.favicon!),
             title: "Orbit Radio - ${radioStation.name}",
             album: radioStation.name,
             displayTitle: radioStation.name,
-          );
+            artist: radioStation.country,
+            genre: radioStation.tags
+          ));
         }).toList());
         await playerNotifier.seek(widget.radioStationsList.indexOf(stn!));
         setState(() => _isLoading = false);
