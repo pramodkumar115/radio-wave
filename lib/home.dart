@@ -6,8 +6,9 @@ import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RecentVisits/recents_visits_view.dart';
+import 'package:orbit_radio/Search/search_view.dart';
 import 'package:orbit_radio/TopHits/top_hits_view.dart';
-import 'package:orbit_radio/model/radio_station.dart';
+import 'package:fui_kit/fui_kit.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,8 +77,16 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     .scale(1.5)
                     .extraBold
                     .make(),
-                // ]),
-                const Icon(Icons.search_rounded)
+                GestureDetector(
+                  child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
+                  onTap: () {
+                    print("Came here");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(builder: (context) => const SearchView()),
+                    );
+                  },
+                )
               ],
             ),
             const TopHitsView(),
@@ -90,8 +99,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             left: 10,
             right: 10,
             child: GFListTile(
-              color: Colors.grey.shade50,
-                avatar: GFAvatar(),
+                color: Colors.grey.shade50,
+                avatar: const GFAvatar(),
                 titleText: 'Title',
                 subTitleText:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing',
@@ -108,22 +117,39 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
           ),
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: FUI(
+                  _selectedIndex == 0 ? SolidRounded.HOME : RegularRounded.HOME,
+                  color: _selectedIndex == 0
+                      ? Color.fromARGB(255, 188, 14, 1)
+                      : Colors.grey, // Optional: set the size
+                ),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
+                icon: FUI(
+                  _selectedIndex == 1
+                      ? SolidRounded.HEART
+                      : RegularRounded.HEART,
+                  color: _selectedIndex == 1
+                      ? Color.fromARGB(255, 188, 14, 1)
+                      : Colors.grey,
+                ),
                 label: 'Favourites',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.library_music),
+                icon: FUI(
+                  _selectedIndex == 2 ? RegularRounded.LIST : SolidRounded.LIST,
+                  color: _selectedIndex == 2
+                      ? Color.fromARGB(255, 188, 14, 1)
+                      : Colors.grey,
+                ),
                 label: 'My Playlist',
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromARGB(255, 2, 0, 0),
+            selectedItemColor: Colors.black,
             onTap: _onItemTapped,
           ),
         ));

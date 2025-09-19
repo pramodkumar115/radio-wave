@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -59,7 +60,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
             .initPlayer(widget.radioStationsList.map((radioStation) {
           return PlayingRadioUriMediaItem(uriString: radioStation.url!, mediaItem: MediaItem(
             id: radioStation.stationUuid ?? "",
-            artUri: Uri.parse(radioStation.favicon!),
+            artUri: radioStation.favicon != null ? Uri.parse(radioStation.favicon!) : Uri.parse("/assets/music.jpg"),
             title: "Orbit Radio: ${radioStation.name}",
             album: radioStation.name,
             displayTitle: radioStation.name,
@@ -290,8 +291,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                     favIds, selectedRadioStation),
                                 child: favIds.contains(
                                         selectedRadioStation!.stationUuid!)
-                                    ? const Icon(Icons.favorite)
-                                    : const Icon(Icons.favorite_outline),
+                                    ? const FUI(SolidRounded.HEART)
+                                    : const FUI(RegularRounded.HEART),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -304,7 +305,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                     audioPlayerState,
                                     isPlaying,
                                     selectedRadioStation),
-                                child: const Icon(Icons.skip_previous),
+                                child: const FUI(RegularRounded.REWIND) //const Icon(Icons.skip_previous),
                               ),
                               _isLoading
                                   ? const CircularProgressIndicator()
@@ -335,7 +336,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                     audioPlayerState,
                                     isPlaying,
                                     selectedRadioStation),
-                                child: const Icon(Icons.skip_next),
+                                child: const FUI(RegularRounded.FORWARD) // const Icon(Icons.skip_next),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -344,7 +345,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       10), // Adjust padding as needed
                                 ),
                                 onPressed: () => _addToPlayList(),
-                                child: const Icon(Icons.playlist_add),
+                                child: const FUI(RegularRounded.FOLDER_ADD)  // const Icon(Icons.playlist_add),
                               ),
                             ],
                           ),
@@ -416,15 +417,15 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
     if (isCurrentAudio) {
       return Transform.scale(
-        scale: 2.0, // Doubles the size of the child icon
+        scale: 1.2, // Doubles the size of the child icon
         child: (isPlaying != true)
-            ? const Icon(Icons.play_arrow)
-            : const Icon(Icons.stop_sharp),
+            ? const FUI(RegularRounded.PLAY) // const Icon(Icons.play_arrow)
+            : const FUI(RegularRounded.STOP) // const Icon(Icons.stop_sharp),
       );
     } else {
       return Transform.scale(
-          scale: 2.0, // Doubles the size of the child icon
-          child: const Icon(Icons.play_arrow));
+          scale: 1.2, // Doubles the size of the child icon
+          child: const FUI(RegularRounded.PLAY));  // const Icon(Icons.play_arrow));
     }
   }
 

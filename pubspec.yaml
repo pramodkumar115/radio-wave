@@ -48,6 +48,7 @@ dependencies:
   path_provider: ^2.1.4
   riverpod: ^2.6.1
   flutter_riverpod: ^2.6.1
+  fui_kit: ^2.0.2
 
 dev_dependencies:
   flutter_test:
