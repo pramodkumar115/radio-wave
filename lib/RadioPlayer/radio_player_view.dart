@@ -60,7 +60,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
           return PlayingRadioUriMediaItem(uriString: radioStation.url!, mediaItem: MediaItem(
             id: radioStation.stationUuid ?? "",
             artUri: Uri.parse(radioStation.favicon!),
-            title: "Orbit Radio - ${radioStation.name}",
+            title: "Orbit Radio: ${radioStation.name}",
             album: radioStation.name,
             displayTitle: radioStation.name,
             artist: radioStation.country,
@@ -128,8 +128,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     ref.listen(audioPlayerProvider, (previous, next) {
       final isCurrentAudio = audioPlayerState.currentMediaItem?.id ==
           selectedRadioStation!.stationUuid;
-      print(
-          "next - ${next?.currentMediaItem!.album}, ${next?.isPlaying}, ${isCurrentAudio}");
 
       if (next.isPlaying && isCurrentAudio) {
         final current = getSelectedRadioStation(
