@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,38 +19,47 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final _searchController = TextEditingController();
-  String searchText = '';
   int startIndex = 0, endIndex = 10;
   List<RadioStation> searchedRadioStations = List.empty(growable: true);
   Set<String> searchType = {'byname'};
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      print('Controller text: ${_searchController.text}');
-      setState(() {
-        searchText = _searchController.text;
-      });
-      loadData(_searchController.text);
+    _searchController.addListener(loadData);
+  }
+
+  void loadData() async {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1000), () async {
+      String text = _searchController.text;
+      if (text.length >= 3) {
+        var response = await getSearchResults(
+            text.trim(), searchType.first, startIndex, endIndex);
+        if (response.statusCode == 200) {
+          List<dynamic> stationList = jsonDecode(response.body);
+          var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
+          print("list - ${response.body}");
+          setState(() {
+            searchedRadioStations.clear();
+            searchedRadioStations.addAll(list);
+          });
+        } else {
+          throw Exception('Failed to load album');
+        }
+      } else {
+        setState(() => searchedRadioStations.clear());
+      }
     });
   }
 
-  loadData(text) async {
-    if (text.length >= 3) {
-      var response =
-          await getSearchResults(text, searchType.first, startIndex, endIndex);
-      if (response.statusCode == 200) {
-        List<dynamic> stationList = jsonDecode(response.body);
-        var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-        print("list - ${response.body}");
-        setState(() {
-          searchedRadioStations = list;
-        });
-      } else {
-        throw Exception('Failed to load album');
-      }
-    }
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.removeListener(loadData);
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,20 +78,20 @@ class _SearchViewState extends State<SearchView> {
               multiSelectionEnabled: false,
               showSelectedIcon: false,
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
+                backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
                     // Return a different color for the selected segment
-                    if (states.contains(MaterialState.selected)) {
-                      return Color.fromARGB(255, 0, 29, 10).withOpacity(1);
+                    if (states.contains(WidgetState.selected)) {
+                      return Color.fromARGB(255, 0, 29, 10);
                     }
                     // Return a default color for unselected segments
                     return Colors.grey.shade200;
                   },
                 ),
-                foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
+                foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
                     // Return a different color for the selected segment
-                    if (states.contains(MaterialState.selected)) {
+                    if (states.contains(WidgetState.selected)) {
                       return Colors.white;
                     }
                     // Return a default color for unselected segments
@@ -102,12 +112,13 @@ class _SearchViewState extends State<SearchView> {
                   searchedRadioStations.clear();
                 });
                 Future.delayed(Duration.zero, () async {
-                  if (searchText.length >= 3) {
-                    loadData(_searchController.text);
+                  if (_searchController.text.length >= 3) {
+                    loadData();
                   }
                 });
               }),
           TextField(
+            enableSuggestions: false,
             textInputAction: TextInputAction.search,
             controller: _searchController,
             decoration: const InputDecoration(
@@ -129,7 +140,7 @@ class _SearchViewState extends State<SearchView> {
                     title: Text(radio.name!).text.bold.make(),
                     subTitle: Text(radio.country!),
                     icon: SizedBox(
-                        width: 100,
+                        width: 120,
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

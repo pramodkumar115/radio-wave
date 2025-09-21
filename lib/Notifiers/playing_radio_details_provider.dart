@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/legacy.dart';
 import 'package:orbit_radio/model/playing_radio_detail.dart';
 
 class PlayingRadioNotifier extends StateNotifier<PlayingRadioDetail> {

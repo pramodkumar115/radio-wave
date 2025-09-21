@@ -41,11 +41,11 @@ class _FavoritesButtonState extends ConsumerState<FavoritesButton> {
         error: (error, stackTrace) => Center(child: Text('Error: $error')));
   }
 
-  showContent(favIds, station) {
+  Widget showContent(List<String> favIds, RadioStation station) {
     return GestureDetector(
       child: favIds.contains(station!.stationUuid!)
-          ? const FUI(SolidRounded.HEART)
-          : const FUI(RegularRounded.HEART),
+          ? const FUI(SolidRounded.HEART, color: Color.fromARGB(255, 0, 29, 10))
+          : const FUI(RegularRounded.HEART, color: Color.fromARGB(255, 0, 29, 10)),
       onTap: () => addToFavorites(favIds, widget.station),
     );
   }

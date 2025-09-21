@@ -22,7 +22,7 @@ class PlayStopButton extends ConsumerStatefulWidget {
 
 class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
   RadioStation? station;
-  late bool _isLoading = true;
+  late bool _isLoading = false;
 
   @override
   void initState() {
@@ -39,7 +39,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       List<RadioStation> radioStationsList) {
     var radioIds = radioStationsList.map((r) => r.stationUuid).toList();
     var playListIds = playListMediaItems?.map((r) => r!.id).toList();
-    if (playListIds != null) {
+    print("playListMediaItems - ${playListMediaItems?.length}");
+    if (playListIds != null && playListIds!.isNotEmpty) {
       return radioIds.toSet().containsAll(playListIds);
     }
     return false;
@@ -57,7 +58,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
         error: (error, stackTrace) => Center(child: Text('Error: $error')));
   }
 
-  Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
+  Widget showIcon(bool isCurrentAudio, bool isPlaying, RadioStation station) {
+    if (_isLoading) return CircularProgressIndicator();
     if (isCurrentAudio) {
       return Transform.scale(
           scale: 1.2, // Doubles the size of the child icon
@@ -103,8 +105,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
   }
 
   Future<void> playAudioPlayer(
-      PlayerNotifier playerNotifier, String selectedRadioId) async {
-    var stn = getSelectedRadioStation(widget.stationList, selectedRadioId);
+      PlayerNotifier playerNotifier, RadioStation? stn) async {
+    await Future.delayed(Duration.zero);
     if (stn != null) {
       setRecentVisits(stn);
       final index = widget.stationList.indexOf(stn);
@@ -117,7 +119,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     final playerNotifier = ref.read(audioPlayerProvider.notifier);
     final audioPlayerState = ref.watch(audioPlayerProvider);
     var stn = getSelectedRadioStation(widget.stationList, widget.stationId);
-    print("${audioPlayerState.currentMediaItem?.id}, ${widget.stationId}");
+    setState(() => _isLoading = true);
     if (isSamePlayList(
         audioPlayerState.playListMediaItems, widget.stationList)) {
       // check if not the same station which is already playing
@@ -146,12 +148,12 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     Future.delayed(Duration.zero, () async {
       print("$isCurrentAudio, $isPlaying, $selectedRadioId");
       if (!isCurrentAudio) {
-        await playAudioPlayer(playerNotifier, selectedRadioId);
+        await playAudioPlayer(playerNotifier, stn);
       } else {
         if (isPlaying) {
           playerNotifier.stop();
         } else {
-          await playAudioPlayer(playerNotifier, selectedRadioId);
+          await playAudioPlayer(playerNotifier, stn);
         }
       }
       print("$isCurrentAudio, $isPlaying, $selectedRadioId");

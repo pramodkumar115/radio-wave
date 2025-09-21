@@ -1,5 +1,5 @@
 // player_notifier.dart
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/legacy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';

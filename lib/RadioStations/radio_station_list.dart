@@ -73,7 +73,7 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                                     ).w15(context).h10(context))
                                 .w24(context)
                                 .h10(context)),
-                        Text(getStationName(s.name), softWrap: true)
+                        Text('${getStationName(s.name)} ${getStationCountry(s.country)}', softWrap: true)
                             .text
                             .sm
                             .semiBold
@@ -81,14 +81,14 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                             .align(TextAlign.center)
                             .make()
                             .w24(context),
-                        Text(getStationCountry(s.country), softWrap: true)
-                            .text
-                            .sm
-                            .semiBold
-                            .gray500
-                            .align(TextAlign.center)
-                            .make()
-                            .w24(context),
+                        // Text(getStationCountry(s.country), softWrap: true)
+                        //     .text
+                        //     .sm
+                        //     .semiBold
+                        //     .gray500
+                        //     .align(TextAlign.center)
+                        //     .make()
+                        //     .w24(context),
                       ])))
               .toList(),
         ));

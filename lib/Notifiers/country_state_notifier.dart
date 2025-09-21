@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/legacy.dart';
 
 class CountryNotifier extends StateNotifier<String> {
   CountryNotifier() : super('');
