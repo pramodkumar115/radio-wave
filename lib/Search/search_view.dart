@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Search/search_service.dart';
+import 'package:orbit_radio/components/favorites_button.dart';
+import 'package:orbit_radio/components/play_stop_button.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -126,20 +128,15 @@ class _SearchViewState extends State<SearchView> {
                                 Image.asset("assets/music.jpg"))),
                     title: Text(radio.name!).text.bold.make(),
                     subTitle: Text(radio.country!),
-                    icon: const SizedBox(
-                        width: 90,
+                    icon: SizedBox(
+                        width: 100,
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // FUI(SolidStraight.REWIND, width: 30, height: 20, color: Colors.blueGrey),
-                              FUI(RegularRounded.HEART,
-                                  width: 20,
-                                  height: 20,
-                                  color: Color.fromARGB(255, 0, 29, 10)),
-                              FUI(RegularRounded.PLAY,
-                                  width: 30,
-                                  height: 30,
-                                  color: Color.fromARGB(255, 0, 29, 10)),
+                              FavoritesButton(station: radio),
+                              PlayStopButton(
+                                  stationId: radio.stationUuid!,
+                                  stationList: searchedRadioStations),
                               FUI(RegularRounded.FILE_ADD,
                                   width: 20,
                                   height: 20,
