@@ -64,13 +64,13 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       return Transform.scale(
           scale: 1.2, // Doubles the size of the child icon
           child: (isPlaying != true)
-              ? const FUI(RegularRounded.PLAY)
-              : const FUI(RegularRounded.STOP));
+              ? const FUI(RegularRounded.PLAY, color: Color.fromARGB(255, 0, 29, 10))
+              : const FUI(RegularRounded.STOP, color: Color.fromARGB(255, 0, 29, 10)));
     } else {
       return Transform.scale(
           scale: 1.2, // Doubles the size of the child icon
           child:
-              const FUI(RegularRounded.PLAY)); // const Icon(Icons.play_arrow));
+              const FUI(RegularRounded.PLAY, color: Color.fromARGB(255, 0, 29, 10))); // const Icon(Icons.play_arrow));
     }
   }
 

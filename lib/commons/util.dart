@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'file-helper-util.dart';
 import 'package:http/http.dart' as http;
 import './constants.dart' as constants;
-
-
 
 Future<String?> getCountryFromCoordinates(
     double latitude, double longitude) async {
@@ -54,7 +53,7 @@ Future<Position?> getCurrentLocation() async {
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
     // print(
-        // 'Location permissions are permanently denied, we cannot request permissions.');
+    // 'Location permissions are permanently denied, we cannot request permissions.');
     return null;
   }
 
@@ -73,11 +72,37 @@ Future<List<String>> getFavoritesFromFile() async {
   return List.empty(growable: true);
 }
 
-saveFavoritesFile(List<String> favoritesUUIDs) async {
+Future<void> saveFavoritesFile(List<String> favoritesUUIDs) async {
   writeData("favorites.json", json.encode(favoritesUUIDs));
 }
 
+Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
+  bool fileExists = await checkIfFileExists("playlist.json");
+  if (fileExists) {
+    String filesDataString = await readFile("playlist.json");
+    List<dynamic> filesData = json.decode(filesDataString);
+    List<PlayListJsonItem> list = List.empty(growable: true);
+    
+    for (var i =0; i < filesData.length; i++) {
+      var f = filesData[i];
+      print("file data - $f");
+      var item = PlayListJsonItem(
+          name: f["name"],
+          stationIds: jsonDecode(f["stationIds"]).cast<String>()
+      );
+      print("item - $item");
+      list.add(item);
+    }
+    return list;
+  }
+  return List.empty(growable: true);
+}
 
+Future<void> savePlaylistFile(List<PlayListJsonItem> playListData) async {
+  print(
+      "playListData - ${playListData.toString()}, ${json.encode(playListData)}");
+  writeData("playlist.json", json.encode(playListData));
+}
 
 Future<List<String>> getRecentVisitsFromFile() async {
   bool fileExists = await checkIfFileExists("recentVisits.json");
@@ -93,26 +118,27 @@ saveRecentVisitsFile(List<String> recentVisitsUUIDs) async {
   writeData("recentVisits.json", json.encode(recentVisitsUUIDs));
 }
 
-getStationsListForUUIDs(List<String> uuids) async {
-var response = await http.get(Uri.parse('${constants.BASE_URL}stations/byuuid?uuids=${uuids.join(",")}'));
-if (response.statusCode == 200) {
-      List<dynamic> stationList = jsonDecode(response.body);
-      var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-      list.sort((a, b) => a.votes! > b.votes! ? 1 : -1);
-      List<RadioStation> uniqueList = List.empty(growable: true);
-      for (int i = 0; i < list.length; i++) {
-        RadioStation element = list[i];
-        if (uniqueList.where((data) => data.name == element.name).isEmpty) {
-          uniqueList.add(element);
-        }
+Future<List<RadioStation>> getStationsListForUUIDs(List<String> uuids) async {
+  var response = await http.get(Uri.parse(
+      '${constants.BASE_URL}stations/byuuid?uuids=${uuids.join(",")}'));
+  if (response.statusCode == 200) {
+    List<dynamic> stationList = jsonDecode(response.body);
+    var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
+    list.sort((a, b) => a.votes! > b.votes! ? 1 : -1);
+    List<RadioStation> uniqueList = List.empty(growable: true);
+    for (int i = 0; i < list.length; i++) {
+      RadioStation element = list[i];
+      if (uniqueList.where((data) => data.name == element.name).isEmpty) {
+        uniqueList.add(element);
       }
-      if (kDebugMode) {
-        // print(uniqueList);
-      }
-      return uniqueList;
-    } else {
-      throw Exception('Failed to load album');
     }
+    if (kDebugMode) {
+      // print(uniqueList);
+    }
+    return uniqueList;
+  } else {
+    throw Exception('Failed to load album');
+  }
 }
 
 String getStationName(String? s) {
@@ -121,20 +147,18 @@ String getStationName(String? s) {
       return '${s.substring(0, 21)}...';
     }
     return s;
-  }
-  else {
+  } else {
     return "";
   }
 }
-  
-  String getStationCountry(String? country) {
-    if (country != null && country.isNotEmpty) {
+
+String getStationCountry(String? country) {
+  if (country != null && country.isNotEmpty) {
     if (country.length > 24) {
       return '(${country.substring(0, 21)}...)';
     }
     return '($country)';
+  } else {
+    return "";
   }
-  else {
-      return "";
-    }
-  }
+}

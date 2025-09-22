@@ -7,6 +7,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Search/search_service.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
+import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -128,33 +129,7 @@ class _SearchViewState extends State<SearchView> {
               ? Expanded(
                   child: ListView(
                       children: searchedRadioStations.map((radio) {
-                  return GFListTile(
-                    enabled: true,
-                    selected: true,
-                    color: Colors.grey.shade50,
-                    avatar: GFAvatar(
-                        backgroundColor: Colors.white,
-                        child: Image.network(radio.favicon!,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Image.asset("assets/music.jpg"))),
-                    title: Text(radio.name!).text.bold.make(),
-                    subTitle: Text(radio.country!),
-                    icon: SizedBox(
-                        width: 120,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FavoritesButton(station: radio),
-                              PlayStopButton(
-                                  stationId: radio.stationUuid!,
-                                  stationList: searchedRadioStations),
-                              FUI(RegularRounded.FILE_ADD,
-                                  width: 20,
-                                  height: 20,
-                                  color: Color.fromARGB(255, 0, 29, 10)),
-                              // FUI(SolidStraight.FORWARD, width: 30, height: 20, color: Colors.blueGrey)
-                            ])),
-                  );
+                  return RadioTile(radio: radio, radioStations: searchedRadioStations);
                 }).toList()))
               : Container()
         ]));

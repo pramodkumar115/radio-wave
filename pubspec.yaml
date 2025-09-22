@@ -50,6 +50,7 @@ dependencies:
   flutter_riverpod: ^3.0.0
   fui_kit: ^2.0.2
   riverpod_annotation: ^3.0.0
+  popover: ^0.3.1
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
   assets:
     - assets/
     - assets/music.jpg
+    - assets/background.jpg
 flutter_launcher_icons:
   image_path: "assets/OrbitRadio.png"
   adaptive_icon_background: "#FFFFFF" # or an image path

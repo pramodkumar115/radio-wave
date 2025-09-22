@@ -34,14 +34,12 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
         error: (error, stackTrace) => Center(child: Text('Error: $error')));
   }
 
-  showContent(context, stationList) {
-    return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: VStack([
+  Widget showContent(BuildContext context, List<RadioStation> stationList) {
+    return VStack([
           const Text("Recent Visits").text.scale(1.1).bold.make(),
           stationList.isNotEmpty
               ? RadioStationListView(stationList: stationList)
               : GFShimmer(child: emptyBlock)
-        ]));
+        ]);
   }
 }

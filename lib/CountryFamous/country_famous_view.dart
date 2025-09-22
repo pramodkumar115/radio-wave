@@ -58,13 +58,11 @@ class _CountryFamousStationsViewState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: VStack([
+    return VStack([
           const Text("Famous stations near you").text.scale(1.1).bold.make(),
           topHitStations.isNotEmpty
               ? RadioStationListView(stationList: topHitStations)
               : GFShimmer(child: emptyBlock)
-        ]));
+        ]);
   }
 }

@@ -42,7 +42,7 @@ class _TopHitsViewState extends State<TopHitsView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 20),
+        // margin: const EdgeInsets.only(top: 20),
         child: VStack([
           const Text("World's Top 10 Stations").text.scale(1.1).fade.extraBlack.extraBold.make(),
           topHitStations.isNotEmpty

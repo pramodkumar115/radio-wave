@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
+import 'package:orbit_radio/Favourites/favourites_view.dart';
+import 'package:orbit_radio/FloatingPLayer/floating_player_view.dart';
+import 'package:orbit_radio/Home/home_view.dart';
+import 'package:orbit_radio/MyPlaylist/my_playlist_list_view.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
@@ -50,63 +54,64 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     });
   }
 
+  Widget showContent() {
+    if (_selectedIndex == 1) {
+      return FavouritesView();
+    } else if (_selectedIndex == 2) {
+      return MyPlayListListView();
+    } else {
+      return HomeTabView();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final country = ref.watch(countryProvider);
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 247, 247, 244),
-        body: SafeArea(
-            child: Stack(children: [
-          ListView(scrollDirection: Axis.vertical, children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // HStack([
-                const GFAvatar(
-                  backgroundImage: AssetImage('assets/OrbitRadio.png'),
-                  shape: GFAvatarShape.square,
-                  backgroundColor: Color.fromRGBO(232, 237, 219, 0),
-                  foregroundColor: Color.fromRGBO(232, 237, 219, 0),
-                  size: 32,
-                ),
-                const Text("Orbit Radio")
-                    .text
-                    .color(Colors.red[900])
-                    .scale(1.5)
-                    .extraBold
-                    .make(),
-                GestureDetector(
-                  child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
-                  onTap: () {
-                    print("Came here");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(builder: (context) => const SearchView()),
-                    );
-                  },
-                )
-              ],
-            ),
-            const TopHitsView(),
-            const RecentVisitsView(),
-            country != "" ? const CountryFamousStationsView() : Container()
-          ]).p12(),
-          Positioned(
-            //width: screenWidth,
-            bottom: 8,
-            left: 10,
-            right: 10,
-            child: GFListTile(
-                color: Colors.grey.shade50,
-                avatar: const GFAvatar(),
-                titleText: 'Title',
-                subTitleText:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing',
-                icon: Icon(Icons.favorite)),
+        // backgroundColor: Color.fromARGB(255, 247, 247, 244),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/background.jpg'), // Your image path
+                fit: BoxFit.cover, // Adjust how the image fits the container
+              ),
           ),
-        ])),
+          child: SafeArea(
+            child: Stack(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // HStack([
+              const GFAvatar(
+                backgroundImage: AssetImage('assets/OrbitRadio.png'),
+                shape: GFAvatarShape.square,
+                backgroundColor: Color.fromRGBO(232, 237, 219, 0),
+                foregroundColor: Color.fromRGBO(232, 237, 219, 0),
+                size: 32,
+              ),
+              const Text("Orbit Radio")
+                  .text
+                  .color(Colors.red[900])
+                  .scale(1.5)
+                  .extraBold
+                  .make(),
+              GestureDetector(
+                child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
+                onTap: () {
+                  print("Came here");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => const SearchView()),
+                  );
+                },
+              )
+            ],
+          ).p12(),
+          showContent(),
+          FloatingPlayerView()
+        ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
             border: Border(

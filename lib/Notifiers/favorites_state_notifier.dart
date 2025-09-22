@@ -17,7 +17,6 @@ class FavoritesNotifier extends AsyncNotifier<List<String>> {
   Future<void> updateFavorites(List<String> favoritesUUIDs) async {
     state = const AsyncLoading();
     await saveFavoritesFile(favoritesUUIDs);
-    // await writeData("favorites.json", json.encode(favoritesUUIDs));
     state = AsyncData(await fetchFavorites());
   }
 }
