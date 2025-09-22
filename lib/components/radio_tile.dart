@@ -22,6 +22,10 @@ class _RadioTileState extends ConsumerState<RadioTile> {
   @override
   Widget build(BuildContext context) {
     final audioPlayerState = ref.watch(audioPlayerProvider);
+
+    final isCurrentAudio = audioPlayerState.currentMediaItem?.id == widget.radio!.stationUuid;
+    final isPlaying = audioPlayerState.isPlaying;
+
     return GFListTile(
       enabled: true,
       selected: true,
@@ -31,8 +35,12 @@ class _RadioTileState extends ConsumerState<RadioTile> {
           child: Image.network(widget.radio!.favicon!,
               errorBuilder: (context, error, stackTrace) =>
                   Image.asset("assets/music.jpg"))),
-      title: Text(widget.radio!.name!).text.bold.make(),
+      title: VStack([
+        Text(widget.radio!.name!, textAlign: TextAlign.start).text.bold.align(TextAlign.start).make(),
+        (isPlaying && isCurrentAudio ? Image.asset("assets/equalizer.gif", height: 50) : Container())
+        ]),
       subTitle: Text(widget.radio!.country!),
+
       icon: SizedBox(
           width: 120,
           child:
