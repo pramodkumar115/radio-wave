@@ -66,6 +66,8 @@ flutter:
     - assets/
     - assets/music.jpg
     - assets/background.jpg
+    - assets/backgroundNewPage.jpg
+    - assets/background3.jpg
 flutter_launcher_icons:
   image_path: "assets/OrbitRadio.png"
   adaptive_icon_background: "#FFFFFF" # or an image path

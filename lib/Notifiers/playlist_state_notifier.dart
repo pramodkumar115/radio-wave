@@ -3,12 +3,14 @@ import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 
 class PlaylistNotifier extends AsyncNotifier<List<PlayListJsonItem>> {
+  
   @override
   Future<List<PlayListJsonItem>> build() async {
     return fetchPlayLists();
   }
 
   Future<List<PlayListJsonItem>> fetchPlayLists() async {
+    print("Came inside fetch");
     return await getPlayListsFromFile();
   }
 

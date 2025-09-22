@@ -77,18 +77,10 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                             .text
                             .sm
                             .semiBold
-                            .gray500
+                            // .gray500
                             .align(TextAlign.center)
                             .make()
                             .w24(context),
-                        // Text(getStationCountry(s.country), softWrap: true)
-                        //     .text
-                        //     .sm
-                        //     .semiBold
-                        //     .gray500
-                        //     .align(TextAlign.center)
-                        //     .make()
-                        //     .w24(context),
                       ])))
               .toList(),
         ));

@@ -58,7 +58,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     if (_selectedIndex == 1) {
       return FavouritesView();
     } else if (_selectedIndex == 2) {
-      return MyPlayListListView();
+      return MyPlaylistListView();
     } else {
       return HomeTabView();
     }

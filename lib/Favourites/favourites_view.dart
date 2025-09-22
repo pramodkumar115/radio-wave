@@ -34,7 +34,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
           final rList = await getStationsListForUUIDs(stationIds);
           if (rList.isNotEmpty) {
             setState(() {
-              radioList = rList;
+              radioList = [...rList];
               _isLoading = false;
             });
           }
@@ -52,7 +52,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
     return Container(
             margin: const EdgeInsets.only(top: 50),
             child: _isLoading
-                ? CircularProgressIndicator()
+                ? ListView(children: [Center(child: Text("Please wait"))])
                 : ((radioList != null && radioList!.isNotEmpty)
                     ? ListView(
                         children: radioList!.map((radio) {
