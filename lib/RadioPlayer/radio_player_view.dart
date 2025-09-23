@@ -349,24 +349,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         error: (error, stackTrace) => () => {},
         loading: () => {});
   }
-
-  Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
-    if (isCurrentAudio) {
-      return Transform.scale(
-          scale: 1.2, // Doubles the size of the child icon
-          child: (isPlaying != true)
-              ? const FUI(RegularRounded.PLAY) // const Icon(Icons.play_arrow)
-              : const FUI(RegularRounded.STOP) // const Icon(Icons.stop_sharp),
-          );
-    } else {
-      return Transform.scale(
-          scale: 1.2, // Doubles the size of the child icon
-          child:
-              const FUI(RegularRounded.PLAY)); // const Icon(Icons.play_arrow));
-    }
-  }
-
-  _playNext(playerNotifier, audioPlayerState, isPlaying, currentStation) {
+  void _playNext(playerNotifier, audioPlayerState, isPlaying, currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'NEXT', currentStation);
     if (isPlaying) {
