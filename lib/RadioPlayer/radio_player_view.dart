@@ -60,7 +60,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -248,7 +247,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                               // ),
                               FavoritesButton(station: selectedRadioStation!),
 
-                              ElevatedButton(
+                              IconButton(
                                   style: ElevatedButton.styleFrom(
                                     shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(
@@ -259,8 +258,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       audioPlayerState,
                                       isPlaying,
                                       selectedRadioStation),
-                                  child: const FUI(RegularRounded
-                                      .REWIND) //const Icon(Icons.skip_previous),
+                                  icon: const FUI(RegularRounded.REWIND,
+                                      color: Color.fromARGB(255, 0, 29,
+                                          10)) 
                                   ),
                               _isLoading
                                   ? const CircularProgressIndicator()
@@ -268,7 +268,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       stationId:
                                           selectedRadioStation!.stationUuid!,
                                       stationList: widget.radioStationsList),
-                              ElevatedButton(
+                              IconButton(
                                   style: ElevatedButton.styleFrom(
                                     shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(
@@ -279,10 +279,12 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       audioPlayerState,
                                       isPlaying,
                                       selectedRadioStation),
-                                  child: const FUI(RegularRounded
-                                      .FORWARD) // const Icon(Icons.skip_next),
+                                  icon: const FUI(RegularRounded.FORWARD,
+                                      color: Color.fromARGB(255, 0, 29,
+                                          10)) // const Icon(Icons.skip_next),
                                   ),
-                              AddToPlaylistButton(station: selectedRadioStation!)
+                              AddToPlaylistButton(
+                                  station: selectedRadioStation!)
                             ],
                           ),
                         ),
@@ -349,6 +351,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         error: (error, stackTrace) => () => {},
         loading: () => {});
   }
+
   void _playNext(playerNotifier, audioPlayerState, isPlaying, currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'NEXT', currentStation);
