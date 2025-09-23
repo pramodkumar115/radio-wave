@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
-import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';

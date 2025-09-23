@@ -31,12 +31,12 @@ class _AddToPlaylistButtonState extends ConsumerState<AddToPlaylistButton> {
   @override
   Widget build(BuildContext context) {
     
-    return GestureDetector(
-        child: const FUI(
+    return IconButton(
+        icon: const FUI(
           RegularRounded.FILE_ADD,
           color: Color.fromRGBO(248, 1, 26, 1),
         ),
-        onTap: () => showModalBottomSheet(
+        onPressed: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             isDismissible: true,

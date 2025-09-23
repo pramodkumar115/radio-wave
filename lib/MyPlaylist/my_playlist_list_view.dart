@@ -63,7 +63,7 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
   List<Widget> getWidget(List<PlayListJsonItem> playlistJsonItems) {
     if (playlistJsonItems.isNotEmpty) {
       return playlistJsonItems
-          .map((pl) => PlaylistTile(playlistJsonItem: pl))
+          .map((pl) => PlaylistTile(playlistJsonItems:playlistJsonItems, playlistJsonItem: pl))
           .toList();
     } else {
       [Center(child: Text("No Playlists yet"))];

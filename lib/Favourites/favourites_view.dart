@@ -47,8 +47,6 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    print("radioList - $radioList");
     return Container(
             margin: const EdgeInsets.only(top: 50),
             child: _isLoading

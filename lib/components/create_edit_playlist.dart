@@ -5,7 +5,8 @@ import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 
 class CreateEditPlaylist extends ConsumerStatefulWidget {
-  const CreateEditPlaylist({super.key, required this.playlistDataItems, required this.selected});
+  const CreateEditPlaylist(
+      {super.key, required this.playlistDataItems, required this.selected});
   final List<PlayListJsonItem> playlistDataItems;
   final PlayListJsonItem? selected;
 
@@ -15,6 +16,22 @@ class CreateEditPlaylist extends ConsumerStatefulWidget {
 
 class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   final TextEditingController _nameController = TextEditingController();
+  int index = -1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.selected != null) {
+      setState(() {
+        _nameController.text = widget.selected!.name;
+        if (widget.selected != null) {
+          setState(
+              () => index = widget.playlistDataItems.indexOf(widget.selected!));
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -23,8 +40,12 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   }
 
   void createPlayList(List<PlayListJsonItem> playlistDataItems) async {
-    playlistDataItems
-        .add(PlayListJsonItem(name: _nameController.text, stationIds: []));
+    if (widget.selected != null) {
+      playlistDataItems[index].name = _nameController.text;
+    } else {
+      playlistDataItems
+          .add(PlayListJsonItem(name: _nameController.text, stationIds: []));
+    }
     await ref
         .watch(playlistDataProvider.notifier)
         .updatePlayList(playlistDataItems);
@@ -54,7 +75,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                       border: OutlineInputBorder(), labelText: 'Playlist Name'),
                 ),
                 GFButton(
-                    text: "Create",
+                    text: "Create / Save",
                     color: Colors.black,
                     fullWidthButton: true,
                     size: 60,

@@ -71,47 +71,55 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     return Scaffold(
         // backgroundColor: Color.fromARGB(255, 247, 247, 244),
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/background.jpg'), // Your image path
-                fit: BoxFit.cover, // Adjust how the image fits the container
-              ),
-          ),
-          child: SafeArea(
-            child: Stack(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // HStack([
-              const GFAvatar(
-                backgroundImage: AssetImage('assets/OrbitRadio.png'),
-                shape: GFAvatarShape.square,
-                backgroundColor: Color.fromRGBO(232, 237, 219, 0),
-                foregroundColor: Color.fromRGBO(232, 237, 219, 0),
-                size: 32,
-              ),
-              const Text("Orbit Radio")
-                  .text
-                  .color(Colors.red[900])
-                  .scale(1.5)
-                  .extraBold
-                  .make(),
-              GestureDetector(
-                child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
-                onTap: () {
-                  print("Came here");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (context) => const SearchView()),
-                  );
-                },
-              )
-            ],
-          ).p12(),
-          showContent(),
-          FloatingPlayerView()
-        ]))),
+            decoration: BoxDecoration(
+              // image: DecorationImage(
+              //   image: AssetImage('assets/background5.jpg'), // Your image path
+              //   fit: BoxFit.cover, // Adjust how the image fits the container
+              // ),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+              const Color.fromARGB(255, 187, 240, 235),
+              const Color.fromARGB(95, 76, 242, 184),
+              const Color.fromARGB(95, 144, 246, 231),
+            ])
+            ),
+            child: SafeArea(
+                child: Stack(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // HStack([
+                  const GFAvatar(
+                    backgroundImage: AssetImage('assets/OrbitRadio.png'),
+                    shape: GFAvatarShape.square,
+                    backgroundColor: Color.fromRGBO(232, 237, 219, 0),
+                    foregroundColor: Color.fromRGBO(232, 237, 219, 0),
+                    size: 32,
+                  ),
+                  const Text("Orbit Radio")
+                      .text
+                      .color(Colors.red[900])
+                      .scale(1.5)
+                      .extraBold
+                      .make(),
+                  GestureDetector(
+                    child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
+                    onTap: () {
+                      print("Came here");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (context) => const SearchView()),
+                      );
+                    },
+                  )
+                ],
+              ).p12(),
+              showContent(),
+              FloatingPlayerView()
+            ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
             border: Border(

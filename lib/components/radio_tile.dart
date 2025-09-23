@@ -30,6 +30,8 @@ class _RadioTileState extends ConsumerState<RadioTile> {
       enabled: true,
       selected: true,
       color: Colors.grey.shade50,
+      shadow: BoxShadow(color: Colors.grey.shade400, blurRadius: 1, // How blurry the shadow is
+        spreadRadius: 1, offset: Offset(1, 1)),
       avatar: GFAvatar(
           backgroundColor: Colors.white,
           child: Image.network(widget.radio!.favicon!,
@@ -40,9 +42,8 @@ class _RadioTileState extends ConsumerState<RadioTile> {
         (isPlaying && isCurrentAudio ? Image.asset("assets/equalizer.gif", height: 50) : Container())
         ]),
       subTitle: Text(widget.radio!.country!),
-
       icon: SizedBox(
-          width: 120,
+          width: 150,
           child:
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, 

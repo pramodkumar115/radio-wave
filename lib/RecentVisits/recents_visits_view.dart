@@ -30,16 +30,14 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
         data: (stationList) {
           return showContent(context, stationList);
         },
-        loading: () => showContent(context, []),
+        loading: () => GFShimmer(child: emptyBlock),
         error: (error, stackTrace) => Center(child: Text('Error: $error')));
   }
 
   Widget showContent(BuildContext context, List<RadioStation> stationList) {
-    return VStack([
+    return stationList.isNotEmpty ? VStack([
           const Text("Recent Visits").text.scale(1.1).bold.make(),
-          stationList.isNotEmpty
-              ? RadioStationListView(stationList: stationList)
-              : GFShimmer(child: emptyBlock)
-        ]);
+          RadioStationListView(stationList: stationList)
+        ]) : Container();
   }
 }

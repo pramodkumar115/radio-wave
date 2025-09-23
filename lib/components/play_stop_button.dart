@@ -180,9 +180,9 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       }
     });
 
-    return GestureDetector(
-      child: showIcon(isCurrentAudio, isPlaying, station!),
-      onTap: () async {
+    return IconButton(
+      icon: showIcon(isCurrentAudio, isPlaying, station!),
+      onPressed: () async {
         await playOrStop(
             isCurrentAudio, playerNotifier, isPlaying, station!.stationUuid!);
       },

@@ -11,6 +11,9 @@ import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/commons/audio-player-singleton.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
+import 'package:orbit_radio/components/add_to_playlist_button.dart';
+import 'package:orbit_radio/components/favorites_button.dart';
+import 'package:orbit_radio/components/play_stop_button.dart';
 import 'package:orbit_radio/model/playing_radio_detail.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -39,38 +42,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         widget.radioStationsList, widget.selectedRadioId);
     setState(() {
       selectedRadioStation = RadioStation.fromJson(stn!.toJson());
+      _isLoading = false;
       print(" In Init state ${_isLoading}, ${selectedRadioStation.toString()}");
-    });
-
-    Future.delayed(Duration.zero, () async {
-      final playerNotifier = ref.read(audioPlayerProvider.notifier);
-      final audioPlayerState = ref.watch(audioPlayerProvider);
-      print(
-          "${audioPlayerState.currentMediaItem?.id}, ${widget.selectedRadioId}");
-      if (isSamePlayList(
-          audioPlayerState.playListMediaItems, widget.radioStationsList)) {
-        // check if not the same station which is already playing
-        if (audioPlayerState.currentMediaItem?.id != widget.selectedRadioId) {
-          await playerNotifier.seek(widget.radioStationsList.indexOf(stn!));
-        }
-        setState(() => _isLoading = false);
-      }
-      else {
-        await playerNotifier
-            .initPlayer(widget.radioStationsList.map((radioStation) {
-          return PlayingRadioUriMediaItem(uriString: radioStation.url!, mediaItem: MediaItem(
-            id: radioStation.stationUuid ?? "",
-            artUri: radioStation.favicon != null ? Uri.parse(radioStation.favicon!) : Uri.parse("/assets/music.jpg"),
-            title: "Orbit Radio: ${radioStation.name}",
-            album: radioStation.name,
-            displayTitle: radioStation.name,
-            artist: radioStation.country,
-            genre: radioStation.tags
-          ));
-        }).toList());
-        await playerNotifier.seek(widget.radioStationsList.indexOf(stn!));
-        setState(() => _isLoading = false);
-      }
     });
   }
 
@@ -87,25 +60,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  Future<void> addToFavorites(
-      List<String> favoritesUUIDs, selectedRadioStation) async {
-    var message = "";
-    if (!favoritesUUIDs.contains(selectedRadioStation!.stationUuid!)) {
-      favoritesUUIDs = [...favoritesUUIDs, selectedRadioStation!.stationUuid!];
-      message = 'Station added to favorites';
-    } else {
-      favoritesUUIDs = favoritesUUIDs
-          .where((element) => element != selectedRadioStation!.stationUuid!)
-          .toList();
-      message = 'Station removed from favorites';
-    }
-    ref.read(favoritesDataProvider.notifier).updateFavorites(favoritesUUIDs);
-    GFToast.showToast(message, context);
-  }
-
-  Future<void> _addToPlayList() async {
-    // await _audioPlayer.stop(); // For assets
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +93,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       }
     });
 
-    final isCurrentAudio = audioPlayerState.currentMediaItem?.id ==
-        selectedRadioStation!.stationUuid;
     final isPlaying = audioPlayerState.isPlaying;
 
     return ClipRRect(
@@ -281,72 +233,56 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              // ElevatedButton(
+                              //   style: ElevatedButton.styleFrom(
+                              //     shape: const CircleBorder(),
+                              //     padding: const EdgeInsets.all(
+                              //         10), // Adjust padding as needed
+                              //   ),
+                              //   onPressed: () => addToFavorites(
+                              //       favIds, selectedRadioStation),
+                              //   child: favIds.contains(
+                              //           selectedRadioStation!.stationUuid!)
+                              //       ? const FUI(SolidRounded.HEART)
+                              //       : const FUI(RegularRounded.HEART),
+                              // ),
+                              FavoritesButton(station: selectedRadioStation!),
+
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => addToFavorites(
-                                    favIds, selectedRadioStation),
-                                child: favIds.contains(
-                                        selectedRadioStation!.stationUuid!)
-                                    ? const FUI(SolidRounded.HEART)
-                                    : const FUI(RegularRounded.HEART),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => _playPrevious(
-                                    playerNotifier,
-                                    audioPlayerState,
-                                    isPlaying,
-                                    selectedRadioStation),
-                                child: const FUI(RegularRounded.REWIND) //const Icon(Icons.skip_previous),
-                              ),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(
+                                        10), // Adjust padding as needed
+                                  ),
+                                  onPressed: () => _playPrevious(
+                                      playerNotifier,
+                                      audioPlayerState,
+                                      isPlaying,
+                                      selectedRadioStation),
+                                  child: const FUI(RegularRounded
+                                      .REWIND) //const Icon(Icons.skip_previous),
+                                  ),
                               _isLoading
                                   ? const CircularProgressIndicator()
-                                  : ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize: const Size(60, 60),
-                                        shape: const CircleBorder(),
-                                        padding: const EdgeInsets.all(10),
-                                      ),
-                                      onPressed: () async {
-                                        await playOrStop(
-                                            isCurrentAudio,
-                                            playerNotifier,
-                                            isPlaying,
-                                            selectedRadioStation!.stationUuid!);
-                                      },
-                                      child: showIcon(isCurrentAudio, isPlaying,
-                                          selectedRadioStation!),
-                                    ),
+                                  : PlayStopButton(
+                                      stationId:
+                                          selectedRadioStation!.stationUuid!,
+                                      stationList: widget.radioStationsList),
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => _playNext(
-                                    playerNotifier,
-                                    audioPlayerState,
-                                    isPlaying,
-                                    selectedRadioStation),
-                                child: const FUI(RegularRounded.FORWARD) // const Icon(Icons.skip_next),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(
-                                      10), // Adjust padding as needed
-                                ),
-                                onPressed: () => _addToPlayList(),
-                                child: const FUI(RegularRounded.FOLDER_ADD)  // const Icon(Icons.playlist_add),
-                              ),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(
+                                        10), // Adjust padding as needed
+                                  ),
+                                  onPressed: () => _playNext(
+                                      playerNotifier,
+                                      audioPlayerState,
+                                      isPlaying,
+                                      selectedRadioStation),
+                                  child: const FUI(RegularRounded
+                                      .FORWARD) // const Icon(Icons.skip_next),
+                                  ),
+                              AddToPlaylistButton(station: selectedRadioStation!)
                             ],
                           ),
                         ),
@@ -417,15 +353,16 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   Transform showIcon(isCurrentAudio, isPlaying, RadioStation station) {
     if (isCurrentAudio) {
       return Transform.scale(
-        scale: 1.2, // Doubles the size of the child icon
-        child: (isPlaying != true)
-            ? const FUI(RegularRounded.PLAY) // const Icon(Icons.play_arrow)
-            : const FUI(RegularRounded.STOP) // const Icon(Icons.stop_sharp),
-      );
+          scale: 1.2, // Doubles the size of the child icon
+          child: (isPlaying != true)
+              ? const FUI(RegularRounded.PLAY) // const Icon(Icons.play_arrow)
+              : const FUI(RegularRounded.STOP) // const Icon(Icons.stop_sharp),
+          );
     } else {
       return Transform.scale(
           scale: 1.2, // Doubles the size of the child icon
-          child: const FUI(RegularRounded.PLAY));  // const Icon(Icons.play_arrow));
+          child:
+              const FUI(RegularRounded.PLAY)); // const Icon(Icons.play_arrow));
     }
   }
 
@@ -474,14 +411,14 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
       playerNotifier.playPrevious();
     }
   }
-  
-  bool isSamePlayList(List<MediaItem?>? playListMediaItems, List<RadioStation> radioStationsList) {
+
+  bool isSamePlayList(List<MediaItem?>? playListMediaItems,
+      List<RadioStation> radioStationsList) {
     var radioIds = radioStationsList.map((r) => r.stationUuid).toList();
     var playListIds = playListMediaItems?.map((r) => r!.id).toList();
     if (playListIds != null) {
       return radioIds.toSet().containsAll(playListIds);
     }
     return false;
-    
   }
 }
