@@ -86,7 +86,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditStream> {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-        height: screenHeight * 0.5,
+        height: screenHeight * 0.9,
         width: screenWidth,
         child: Container(
             margin: EdgeInsets.all(24),
