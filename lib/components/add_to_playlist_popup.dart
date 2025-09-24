@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
-import 'package:orbit_radio/components/create_edit_playlist.dart';
 import 'package:orbit_radio/components/create_new_playlist_button.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class AddToPlaylistPopup extends ConsumerStatefulWidget {
   const AddToPlaylistPopup(
@@ -67,27 +64,30 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
                       fullWidthButton: true,
                       shape: GFButtonShape.pills,
                       onPressed: () async {
-                        List<PlayListJsonItem> playListDataItems =
-                            List.empty(growable: true);
-                        for (var i = 0; i < items.length; i++) {
-                          var item = items[i];
-                          if (item.name == selectedPlayListName) {
-                            playListDataItems.add(PlayListJsonItem(
-                                name: selectedPlayListName,
-                                stationIds: [
-                                  widget.selectedRadioStn.stationUuid!,
-                                  ...item.stationIds
-                                ]));
+                        if (selectedPlayListName.isNotEmpty) {
+                          List<PlayListJsonItem> playListDataItems =
+                              List.empty(growable: true);
+                          for (var i = 0; i < items.length; i++) {
+                            var item = items[i];
+                            if (item.name == selectedPlayListName) {
+                              playListDataItems.add(PlayListJsonItem(
+                                  name: selectedPlayListName,
+                                  stationIds: [
+                                    widget.selectedRadioStn.stationUuid!,
+                                    ...item.stationIds
+                                  ]));
+                            }
                           }
+                          var pl = items.firstWhere(
+                              (item) => item.name == selectedPlayListName);
+                          pl.stationIds
+                              .add(widget.selectedRadioStn.stationUuid!);
+                          await ref
+                              .read(playlistDataProvider.notifier)
+                              .updatePlayList(playListDataItems);
+                          GFToast.showToast("Added to playlist", context);
+                          Navigator.pop(context);
                         }
-                        var pl = items.firstWhere(
-                            (item) => item.name == selectedPlayListName);
-                        pl.stationIds.add(widget.selectedRadioStn.stationUuid!);
-                        await ref
-                            .read(playlistDataProvider.notifier)
-                            .updatePlayList(playListDataItems);
-                        GFToast.showToast("Added to playlist", context);
-                        Navigator.pop(context);
                       })
                   : Container()
             ])));

@@ -6,6 +6,7 @@ import 'package:orbit_radio/Favourites/favourites_view.dart';
 import 'package:orbit_radio/FloatingPLayer/floating_player_view.dart';
 import 'package:orbit_radio/Home/home_view.dart';
 import 'package:orbit_radio/MyPlaylist/my_playlist_list_view.dart';
+import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
@@ -45,6 +46,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController?.dispose();
+    ref.watch(audioPlayerProvider.notifier).dispose();
     super.dispose();
   }
 
@@ -80,8 +82,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-              const Color.fromARGB(255, 187, 240, 235),
-              const Color.fromARGB(95, 76, 242, 184),
+              const Color.fromARGB(255, 245, 242, 222),
+              const Color.fromARGB(95, 211, 203, 66),
               const Color.fromARGB(95, 144, 246, 231),
             ])
             ),

@@ -21,11 +21,16 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
   void initState() {
     super.initState();
     loadData();
+    
   }
 
   Future<void> loadData() async {
     setState(() => _isLoading = true);
     await ref.read(favoritesDataProvider.notifier).fetchFavorites();
+    setStateWithData();
+  }
+
+  void setStateWithData() {
     final favoritesUUIDs = ref.watch(favoritesDataProvider);
     print("favoritesUUIDs - $favoritesUUIDs");
     favoritesUUIDs.when(
@@ -47,6 +52,9 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(favoritesDataProvider, (previous, next) {
+      setStateWithData();
+    });
     return Container(
             margin: const EdgeInsets.only(top: 50),
             child: _isLoading

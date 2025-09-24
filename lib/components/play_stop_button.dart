@@ -141,7 +141,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
                 displayTitle: radioStation.name,
                 artist: radioStation.country,
                 genre: radioStation.tags));
-      }).toList());
+      }).toList(), widget.stationList.indexOf(stn!));
       await playerNotifier.seek(widget.stationList.indexOf(stn!));
       setState(() => _isLoading = false);
     }
@@ -160,7 +160,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     });
   }
 
-  showContent(favIds, stationId) {
+  Widget showContent(List<String> favIds, String stationId) {
     final audioPlayerState = ref.watch(audioPlayerProvider);
     final playerNotifier = ref.read(audioPlayerProvider.notifier);
     final isCurrentAudio = audioPlayerState.currentMediaItem?.id == stationId;
@@ -181,6 +181,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     });
 
     return IconButton(
+      splashColor: Colors.red,
+      color: Colors.amber,
       icon: showIcon(isCurrentAudio, isPlaying, station!),
       onPressed: () async {
         await playOrStop(

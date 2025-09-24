@@ -35,12 +35,12 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   late final AudioPlayer _player;
 
   // Initialize the player and set up listeners
-  Future<void> initPlayer(List<PlayingRadioUriMediaItem> mediaItemList) async {
+  Future<void> initPlayer(List<PlayingRadioUriMediaItem> mediaItemList, int? index) async {
     List<AudioSource> playlist = mediaItemList
         .map((radioMediaItem) =>
             AudioSource.uri(Uri.parse(radioMediaItem.uriString!), tag: radioMediaItem.mediaItem))
         .toList();
-    await _player.setAudioSource(ConcatenatingAudioSource(children: playlist));
+    await _player.setAudioSources(playlist, initialIndex: index ?? 0);
   }
 
   // Set up listeners for the player's stream
