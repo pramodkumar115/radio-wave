@@ -51,6 +51,7 @@ dependencies:
   fui_kit: ^2.0.2
   riverpod_annotation: ^3.0.0
   popover: ^0.3.1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

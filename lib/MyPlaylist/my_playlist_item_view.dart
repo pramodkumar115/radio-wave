@@ -3,6 +3,7 @@ import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class MyPlaylistItemView extends StatefulWidget {
   const MyPlaylistItemView({super.key, required this.playListJsonItem});
@@ -22,12 +23,20 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
   }
 
   loadData() async {
+    var addedStreamIds = widget.playListJsonItem.stationIds
+        .where((s) => s.startsWith("ADDED"))
+        .toList();
     List<RadioStation> stations =
         await getStationsListForUUIDs(widget.playListJsonItem.stationIds);
+    final aList = await getAddedStreamsFromFile();
+    final addedList =
+        aList.where((a) => addedStreamIds.contains(a.stationUuid)).toList();
+
     print("stations size - ${stations.length}");
     setState(() {
       playListItem = PlayListItem(
-          name: widget.playListJsonItem.name, radioStations: [...stations]);
+          name: widget.playListJsonItem.name,
+          radioStations: [...stations, ...addedList]);
     });
   }
 
@@ -35,8 +44,16 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(playListItem != null ? playListItem!.name : "Playlist"),
-        ),
+            title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("Playlist - ${playListItem!.name}")
+                .text
+                .bold
+                .xl
+                .make(),
+          ],
+        )),
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
@@ -51,7 +68,8 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
                             children: playListItem!.radioStations.map((radio) {
                       return RadioTile(
                           radio: radio,
-                          radioStations: playListItem!.radioStations);
+                          radioStations: playListItem!.radioStations,
+                          isAddedStream: false);
                     }).toList()))
                   ])
                 : Center(child: Text("No Radio Stations added"))));

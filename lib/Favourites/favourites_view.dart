@@ -21,7 +21,6 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
   void initState() {
     super.initState();
     loadData();
-    
   }
 
   Future<void> loadData() async {
@@ -36,13 +35,18 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
     favoritesUUIDs.when(
         data: (stationIds) async {
           print("In fav - $stationIds");
-          final rList = await getStationsListForUUIDs(stationIds);
-          if (rList.isNotEmpty) {
-            setState(() {
-              radioList = [...rList];
-              _isLoading = false;
-            });
-          }
+          var addedStreamIds =
+              stationIds.where((s) => s.startsWith("ADDED")).toList();
+          final rList = await getStationsListForUUIDs(
+              stationIds.where((s) => !s.startsWith("ADDED")).toList());
+          final aList = await getAddedStreamsFromFile();
+          final addedList = aList
+              .where((a) => addedStreamIds.contains(a.stationUuid))
+              .toList();
+          setState(() {
+            radioList = [...rList, ...addedList];
+            _isLoading = false;
+          });
         },
         error: (error, stacktrace) {
           setState(() => _isLoading = false);
@@ -63,7 +67,9 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                     ? ListView(
                         children: radioList!.map((radio) {
                         return RadioTile(
-                            radio: radio, radioStations: radioList!);
+                            radio: radio,
+                            radioStations: radioList!,
+                            isAddedStream: false);
                       }).toList())
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,

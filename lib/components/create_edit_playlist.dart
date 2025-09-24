@@ -20,7 +20,6 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.selected != null) {
       setState(() {
@@ -40,19 +39,23 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   }
 
   void createPlayList(List<PlayListJsonItem> playlistDataItems) async {
-    if (widget.selected != null) {
-      playlistDataItems[index].name = _nameController.text;
+    if (_nameController.text == null || _nameController.text.isEmpty) {
+      GFToast.showToast("Please enter name of the playlist", context);
     } else {
-      playlistDataItems
-          .add(PlayListJsonItem(name: _nameController.text, stationIds: []));
+      if (widget.selected != null) {
+        playlistDataItems[index].name = _nameController.text;
+      } else {
+        playlistDataItems
+            .add(PlayListJsonItem(name: _nameController.text, stationIds: []));
+      }
+      await ref
+          .watch(playlistDataProvider.notifier)
+          .updatePlayList(playlistDataItems);
+      setState(() {
+        _nameController.text = "";
+      });
+      Navigator.pop(context);
     }
-    await ref
-        .watch(playlistDataProvider.notifier)
-        .updatePlayList(playlistDataItems);
-    setState(() {
-      _nameController.text = "";
-    });
-    Navigator.pop(context);
   }
 
   @override

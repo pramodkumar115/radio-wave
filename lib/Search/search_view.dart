@@ -67,9 +67,8 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title:
-              const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text("Search"),
+          title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text("Search").text.bold.xl.make(),
           ]),
           backgroundColor: Colors.grey.shade100,
         ),
@@ -129,7 +128,10 @@ class _SearchViewState extends State<SearchView> {
               ? Expanded(
                   child: ListView(
                       children: searchedRadioStations.map((radio) {
-                  return RadioTile(radio: radio, radioStations: searchedRadioStations);
+                  return RadioTile(
+                      radio: radio,
+                      radioStations: searchedRadioStations,
+                      isAddedStream: false);
                 }).toList()))
               : Container()
         ]));

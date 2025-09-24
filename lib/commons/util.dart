@@ -85,7 +85,6 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
     
     for (var i =0; i < filesData.length; i++) {
       var f = filesData[i];
-      print("file data - $f");
       var item = PlayListJsonItem(
           name: f["name"],
           stationIds: jsonDecode(f["stationIds"]).cast<String>()
@@ -103,6 +102,29 @@ Future<void> savePlaylistFile(List<PlayListJsonItem> playListData) async {
       "playListData - ${playListData.toString()}, ${json.encode(playListData)}");
   writeData("playlist.json", json.encode(playListData));
 }
+Future<List<RadioStation>> getAddedStreamsFromFile() async {
+  bool fileExists = await checkIfFileExists("addedstreams.json");
+  if (fileExists) {
+    String filesDataString = await readFile("addedstreams.json");
+    List<dynamic> filesData = json.decode(filesDataString);
+    List<RadioStation> list = List.empty(growable: true);
+    
+    for (var i =0; i < filesData.length; i++) {
+      var f = filesData[i];
+      var item = RadioStation.fromJson(f);
+      print("Added item - $item");
+      list.add(item);
+    }
+    return list;
+  }
+  return List.empty(growable: true);
+}
+
+Future<void> saveAddedStreamsFile(List<RadioStation> playListData) async {
+  print(
+      "addedstreams - ${playListData.toString()}, ${json.encode(playListData)}");
+  writeData("addedstreams.json", json.encode(playListData));
+}
 
 Future<List<String>> getRecentVisitsFromFile() async {
   bool fileExists = await checkIfFileExists("recentVisits.json");
@@ -114,7 +136,7 @@ Future<List<String>> getRecentVisitsFromFile() async {
   return List.empty(growable: true);
 }
 
-saveRecentVisitsFile(List<String> recentVisitsUUIDs) async {
+Future<void> saveRecentVisitsFile(List<String> recentVisitsUUIDs) async {
   writeData("recentVisits.json", json.encode(recentVisitsUUIDs));
 }
 

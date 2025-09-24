@@ -5,7 +5,9 @@ import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
 import 'package:orbit_radio/Favourites/favourites_view.dart';
 import 'package:orbit_radio/FloatingPLayer/floating_player_view.dart';
 import 'package:orbit_radio/Home/home_view.dart';
+import 'package:orbit_radio/MyAddedStreams/my_added_streams_view.dart';
 import 'package:orbit_radio/MyPlaylist/my_playlist_list_view.dart';
+import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
@@ -38,8 +40,9 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     Future.delayed(Duration.zero, () async {
       var country = await getUserCurrentCountry();
       ref.read(countryProvider.notifier).updateCountry(country);
-      ref.read(favoritesDataProvider.notifier).fetchFavorites();
-      ref.read(recentVisitsDataProvider.notifier).fetchRecentVisits();
+      ref.read(favoritesDataProvider.notifier).build();
+      ref.read(recentVisitsDataProvider.notifier).build();
+      ref.read(addedStreamsDataProvider.notifier).build();
     });
   }
 
@@ -61,7 +64,10 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
       return FavouritesView();
     } else if (_selectedIndex == 2) {
       return MyPlaylistListView();
-    } else {
+    } else if (_selectedIndex == 3) {
+      return MyAddedStreamsView();
+    }
+    else {
       return HomeTabView();
     }
   }
@@ -85,6 +91,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
               const Color.fromARGB(255, 245, 242, 222),
               const Color.fromARGB(95, 211, 203, 66),
               const Color.fromARGB(95, 144, 246, 231),
+              const Color.fromARGB(95, 185, 245, 236),
             ])
             ),
             child: SafeArea(
@@ -120,7 +127,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 ],
               ).p12(),
               showContent(),
-              FloatingPlayerView()
+              // FloatingPlayerView()
             ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
@@ -155,12 +162,21 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
               ),
               BottomNavigationBarItem(
                 icon: FUI(
-                  _selectedIndex == 2 ? RegularRounded.LIST : SolidRounded.LIST,
+                  _selectedIndex == 2 ? SolidRounded.LIST : RegularRounded.LIST,
                   color: _selectedIndex == 2
                       ? Color.fromARGB(255, 188, 14, 1)
                       : Colors.grey,
                 ),
                 label: 'My Playlist',
+              ),
+              BottomNavigationBarItem(
+                icon: FUI(
+                  _selectedIndex == 3 ? SolidRounded.FOLDER : RegularRounded.FOLDER,
+                  color: _selectedIndex == 3
+                      ? Color.fromARGB(255, 188, 14, 1)
+                      : Colors.grey,
+                ),
+                label: 'My Added Streams',
               ),
             ],
             currentIndex: _selectedIndex,
