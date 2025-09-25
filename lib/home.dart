@@ -2,7 +2,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
-import 'package:orbit_radio/CountryFamous/country_famous_view.dart';
 import 'package:orbit_radio/Favourites/favourites_view.dart';
 import 'package:orbit_radio/FloatingPLayer/floating_player_view.dart';
 import 'package:orbit_radio/Home/home_view.dart';
@@ -13,9 +12,7 @@ import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
-import 'package:orbit_radio/RecentVisits/recents_visits_view.dart';
 import 'package:orbit_radio/Search/search_view.dart';
-import 'package:orbit_radio/TopHits/top_hits_view.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -127,15 +124,9 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 ],
               ).p12(),
               showContent(),
-              // FloatingPlayerView()
             ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
-            // border: Border(
-            //   top: BorderSide(
-            //       color: Colors.grey,
-            //       width: 0.5), // Customize border color and width
-            // ),
           ),
           child: VStack([
             FloatingPlayerView(),
@@ -149,72 +140,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 FUI(_selectedIndex == 2 ? SolidRounded.LIST : RegularRounded.LIST),
                 FUI(_selectedIndex == 3 ? SolidRounded.FOLDER : RegularRounded.FOLDER)
               ]
-              // items: <BottomNavigationBarItem>[
-              //   BottomNavigationBarItem(
-              //     icon: FUI(
-              //       _selectedIndex == 0
-              //           ? SolidRounded.HOME
-              //           : RegularRounded.HOME,
-              //       color: _selectedIndex == 0
-              //           ? Color.fromARGB(255, 188, 14, 1)
-              //           : Colors.grey, // Optional: set the size
-              //     ),
-              //     label: 'Home',
-              //   ),
-              //   BottomNavigationBarItem(
-              //     icon: FUI(
-              //       _selectedIndex == 1
-              //           ? SolidRounded.HEART
-              //           : RegularRounded.HEART,
-              //       color: _selectedIndex == 1
-              //           ? Color.fromARGB(255, 188, 14, 1)
-              //           : Colors.grey,
-              //     ),
-              //     label: 'Favourites',
-              //   ),
-              //   BottomNavigationBarItem(
-              //     icon: FUI(
-              //       _selectedIndex == 2
-              //           ? SolidRounded.LIST
-              //           : RegularRounded.LIST,
-              //       color: _selectedIndex == 2
-              //           ? Color.fromARGB(255, 188, 14, 1)
-              //           : Colors.grey,
-              //     ),
-              //     label: 'My Playlist',
-              //   ),
-              //   BottomNavigationBarItem(
-              //     icon: FUI(
-              //       _selectedIndex == 3
-              //           ? SolidRounded.FOLDER
-              //           : RegularRounded.FOLDER,
-              //       color: _selectedIndex == 3
-              //           ? Color.fromARGB(255, 188, 14, 1)
-              //           : Colors.grey,
-              //     ),
-              //     label: 'My Added Streams',
-              //   ),
-              // ],
-              // currentIndex: _selectedIndex,
-              // selectedItemColor: Colors.black,
-              // onTap: _onItemTapped,
             )
           ]),
         ));
   }
-
-  // Transform showIcon(isCurrentAudio, isPlaying) {
-  //   if (isCurrentAudio) {
-  //     return Transform.scale(
-  //       scale: 2.0, // Doubles the size of the child icon
-  //       child: (isPlaying != true)
-  //           ? const Icon(Icons.play_arrow)
-  //           : const Icon(Icons.stop_sharp),
-  //     );
-  //   } else {
-  //     return Transform.scale(
-  //         scale: 2.0, // Doubles the size of the child icon
-  //         child: const Icon(Icons.play_arrow));
-  //   }
-  // }
 }

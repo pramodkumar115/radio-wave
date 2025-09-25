@@ -14,6 +14,7 @@ import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
+import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playing_radio_detail.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -256,8 +257,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       stationId:
                                           selectedRadioStation!.stationUuid!,
                                       stationList: widget.radioStationsList),
-                              
-                              
                               IconButton(
                                   style: ElevatedButton.styleFrom(
                                     shape: const CircleBorder(),
@@ -278,6 +277,22 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                             ],
                           ),
                         ),
+                ),
+                Positioned(
+                  top: screenHeight * 0.45,
+                  right: 0,
+                  left: 0,
+                  height: screenHeight * 0.4,
+                  child: widget.radioStationsList.isNotEmpty
+              ? ListView(
+                      children: widget.radioStationsList.map((radio) {
+                  return RadioTile(
+                      radio: radio,
+                      radioStations: widget.radioStationsList,
+                      from: "SEARCH");
+                }).toList())
+              : Container()
+                
                 )
               ],
             )));
