@@ -101,7 +101,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 children: [
                   // HStack([
                   const GFAvatar(
-                    backgroundImage: AssetImage('assets/appicon.jpg'),
+                    backgroundImage: AssetImage('assets/AppIconNew.png'),
                     shape: GFAvatarShape.square,
                     backgroundColor: Color.fromRGBO(232, 237, 219, 0),
                     foregroundColor: Color.fromRGBO(232, 237, 219, 0),
