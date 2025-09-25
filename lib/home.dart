@@ -203,18 +203,18 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
         ));
   }
 
-  Transform showIcon(isCurrentAudio, isPlaying) {
-    if (isCurrentAudio) {
-      return Transform.scale(
-        scale: 2.0, // Doubles the size of the child icon
-        child: (isPlaying != true)
-            ? const Icon(Icons.play_arrow)
-            : const Icon(Icons.stop_sharp),
-      );
-    } else {
-      return Transform.scale(
-          scale: 2.0, // Doubles the size of the child icon
-          child: const Icon(Icons.play_arrow));
-    }
-  }
+  // Transform showIcon(isCurrentAudio, isPlaying) {
+  //   if (isCurrentAudio) {
+  //     return Transform.scale(
+  //       scale: 2.0, // Doubles the size of the child icon
+  //       child: (isPlaying != true)
+  //           ? const Icon(Icons.play_arrow)
+  //           : const Icon(Icons.stop_sharp),
+  //     );
+  //   } else {
+  //     return Transform.scale(
+  //         scale: 2.0, // Doubles the size of the child icon
+  //         child: const Icon(Icons.play_arrow));
+  //   }
+  // }
 }

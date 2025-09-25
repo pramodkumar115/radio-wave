@@ -5,6 +5,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
+import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
 import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/create_edit_stream.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
@@ -90,41 +91,57 @@ class _RadioTileState extends ConsumerState<RadioTile> {
         audioPlayerState.currentMediaItem?.id == widget.radio.stationUuid;
     final isPlaying = audioPlayerState.isPlaying;
 
-    return GFListTile(
-        enabled: true,
-        selected: true,
-        color: Colors.grey.shade50,
-        shadow: BoxShadow(
-            color: Colors.grey.shade400,
-            blurRadius: 1, // How blurry the shadow is
-            spreadRadius: 1,
-            offset: Offset(1, 1)),
-        avatar: GFAvatar(
-            backgroundColor: Colors.white,
-            child: Image.network(widget.radio.favicon!,
-                errorBuilder: (context, error, stackTrace) =>
-                    Image.asset("assets/music.jpg"))),
-        title: VStack([
-          Text(widget.radio.name!, textAlign: TextAlign.start)
-              .text
-              .bold
-              .align(TextAlign.start)
-              .make(),
-          (isPlaying && isCurrentAudio
-              ? Image.asset("assets/equalizer.gif", height: 50)
-              : Container())
-        ]),
-        subTitle: Text(widget.radio.country!),
-        icon: SizedBox(
-            width: 110,
-            child: Column(
-              children: [
-                Row(
-                    spacing: 10,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [...getButtons()])
-              ],
-            )));
+    return GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: true,
+            scrollControlDisabledMaxHeightRatio: 1,
+            backgroundColor: Colors.grey.shade100,
+            builder: (BuildContext context) {
+              return RadioPlayerView(
+                  radioStationsList: widget.radioStations,
+                  selectedRadioId: widget.radio.stationUuid!);
+            },
+          );
+        },
+        child: GFListTile(
+            enabled: true,
+            selected: true,
+            color: Colors.grey.shade50,
+            shadow: BoxShadow(
+                color: Colors.grey.shade400,
+                blurRadius: 1, // How blurry the shadow is
+                spreadRadius: 1,
+                offset: Offset(1, 1)),
+            avatar: GFAvatar(
+                backgroundColor: Colors.white,
+                child: Image.network(widget.radio.favicon!,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Image.asset("assets/music.jpg"))),
+            title: VStack([
+              Text(widget.radio.name!, textAlign: TextAlign.start)
+                  .text
+                  .bold
+                  .underline
+                  .align(TextAlign.start)
+                  .make(),
+              (isPlaying && isCurrentAudio
+                  ? Image.asset("assets/equalizer.gif", height: 50)
+                  : Container())
+            ]),
+            subTitle: Text(widget.radio.country!),
+            icon: SizedBox(
+                width: 110,
+                child: Column(
+                  children: [
+                    Row(
+                        spacing: 10,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [...getButtons()])
+                  ],
+                ))));
   }
 }
 
