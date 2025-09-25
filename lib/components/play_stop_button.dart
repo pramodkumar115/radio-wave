@@ -65,12 +65,11 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
           ? const FUI(BoldRounded.PLAY,
               color: Color.fromARGB(255, 0, 29, 10), width: 20, height: 20)
           : const FUI(BoldRounded.STOP,
-              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25);
+              color: Color.fromARGB(255, 0, 29, 10), width: 20, height: 20);
     } else {
-      return const FUI(RegularRounded.PLAY,
+      return const FUI(BoldRounded.PLAY,
           color: Color.fromARGB(255, 0, 29, 10),
-          width: 20,
-          height: 20); // const Icon(Icons.play_arrow));
+          width: 20, height: 20); // const Icon(Icons.play_arrow));
     }
   }
 

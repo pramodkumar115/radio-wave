@@ -20,7 +20,7 @@ class RadioTile extends ConsumerStatefulWidget {
       required this.radio,
       required this.radioStations,
       required this.from});
-  final RadioStation? radio;
+  final RadioStation radio;
   final List<RadioStation> radioStations;
   final String from;
 
@@ -39,7 +39,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
             PlayListJsonItem selectedPlaylist =
                 dataSet.firstWhere((element) => element.name == playlistName);
             selectedPlaylist.stationIds = selectedPlaylist.stationIds
-                .where((element) => element != widget.radio!.stationUuid!)
+                .where((element) => element != widget.radio.stationUuid!)
                 .toList();
             ref.read(playlistDataProvider.notifier).updatePlayList(dataSet);
           },
@@ -49,7 +49,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
     if (value == 'DELETE_FROM_ADDED_STREAMS') {
       ref.read(addedStreamsDataProvider.notifier).updateAddedStreams(widget
           .radioStations
-          .where((r) => r.stationUuid != widget.radio!.stationUuid!)
+          .where((r) => r.stationUuid != widget.radio.stationUuid!)
           .toList());
     }
     if (value == 'EDIT') {
@@ -63,12 +63,31 @@ class _RadioTileState extends ConsumerState<RadioTile> {
     }
   }
 
+  List<Widget> getButtons() {
+    List<Widget> widgets = [
+      FavoritesButton(station: widget.radio),
+      PlayStopButton(
+          stationId: widget.radio.stationUuid!,
+          stationList: widget.radioStations),
+      AddToPlaylistButton(station: widget.radio)
+    ];
+
+    if (widget.from == 'STREAMS') {
+      widgets.add(StreamActions(onMenuClicked: onMenuClicked));
+    }
+    if (widget.from.contains('PLAYLIST')) {
+      widgets.add(PlaylistActions(onMenuClicked: onMenuClicked));
+    }
+
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     final audioPlayerState = ref.watch(audioPlayerProvider);
 
     final isCurrentAudio =
-        audioPlayerState.currentMediaItem?.id == widget.radio!.stationUuid;
+        audioPlayerState.currentMediaItem?.id == widget.radio.stationUuid;
     final isPlaying = audioPlayerState.isPlaying;
 
     return GFListTile(
@@ -82,11 +101,11 @@ class _RadioTileState extends ConsumerState<RadioTile> {
             offset: Offset(1, 1)),
         avatar: GFAvatar(
             backgroundColor: Colors.white,
-            child: Image.network(widget.radio!.favicon!,
+            child: Image.network(widget.radio.favicon!,
                 errorBuilder: (context, error, stackTrace) =>
                     Image.asset("assets/music.jpg"))),
         title: VStack([
-          Text(widget.radio!.name!, textAlign: TextAlign.start)
+          Text(widget.radio.name!, textAlign: TextAlign.start)
               .text
               .bold
               .align(TextAlign.start)
@@ -95,23 +114,15 @@ class _RadioTileState extends ConsumerState<RadioTile> {
               ? Image.asset("assets/equalizer.gif", height: 50)
               : Container())
         ]),
-        subTitle: Text(widget.radio!.country!),
+        subTitle: Text(widget.radio.country!),
         icon: SizedBox(
             width: 110,
             child: Column(
               children: [
-                Row(spacing: 10, children: [
-                  FavoritesButton(station: widget.radio!),
-                  PlayStopButton(
-                      stationId: widget.radio!.stationUuid!,
-                      stationList: widget.radioStations),
-                  AddToPlaylistButton(station: widget.radio!),
-                  widget.from == 'STREAMS'
-                      ? StreamActions(onMenuClicked: onMenuClicked)
-                      : widget.from.contains('PLAYLIST')
-                          ? PlaylistActions(onMenuClicked: onMenuClicked)
-                          : Container()
-                ])
+                Row(
+                    spacing: 10,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [...getButtons()])
               ],
             )));
   }
@@ -144,7 +155,6 @@ class StreamActions extends StatelessWidget {
                         child: Text("Edit"),
                         onTap: () {
                           onMenuClicked("EDIT", context);
-                          
                         }),
                   ])),
               onPop: () => print('Popover was popped!'),

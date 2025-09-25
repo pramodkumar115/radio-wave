@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
@@ -66,8 +67,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
       return MyPlaylistListView();
     } else if (_selectedIndex == 3) {
       return MyAddedStreamsView();
-    }
-    else {
+    } else {
       return HomeTabView();
     }
   }
@@ -77,23 +77,23 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      extendBody: true,
         // backgroundColor: Color.fromARGB(255, 247, 247, 244),
         body: Container(
             decoration: BoxDecoration(
-              // image: DecorationImage(
-              //   image: AssetImage('assets/background5.jpg'), // Your image path
-              //   fit: BoxFit.cover, // Adjust how the image fits the container
-              // ),
+                // image: DecorationImage(
+                //   image: AssetImage('assets/background5.jpg'), // Your image path
+                //   fit: BoxFit.cover, // Adjust how the image fits the container
+                // ),
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-              const Color.fromARGB(255, 245, 242, 222),
-              const Color.fromARGB(95, 211, 203, 66),
-              const Color.fromARGB(95, 144, 246, 231),
-              const Color.fromARGB(95, 185, 245, 236),
-            ])
-            ),
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                  const Color.fromARGB(255, 245, 242, 222),
+                  const Color.fromARGB(95, 211, 203, 66),
+                  const Color.fromARGB(95, 144, 246, 231),
+                  const Color.fromARGB(95, 185, 245, 236),
+                ])),
             child: SafeArea(
                 child: Stack(children: [
               Row(
@@ -131,58 +131,75 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                  color: Colors.grey,
-                  width: 0.5), // Customize border color and width
-            ),
+            // border: Border(
+            //   top: BorderSide(
+            //       color: Colors.grey,
+            //       width: 0.5), // Customize border color and width
+            // ),
           ),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.white,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: FUI(
-                  _selectedIndex == 0 ? SolidRounded.HOME : RegularRounded.HOME,
-                  color: _selectedIndex == 0
-                      ? Color.fromARGB(255, 188, 14, 1)
-                      : Colors.grey, // Optional: set the size
-                ),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: FUI(
-                  _selectedIndex == 1
-                      ? SolidRounded.HEART
-                      : RegularRounded.HEART,
-                  color: _selectedIndex == 1
-                      ? Color.fromARGB(255, 188, 14, 1)
-                      : Colors.grey,
-                ),
-                label: 'Favourites',
-              ),
-              BottomNavigationBarItem(
-                icon: FUI(
-                  _selectedIndex == 2 ? SolidRounded.LIST : RegularRounded.LIST,
-                  color: _selectedIndex == 2
-                      ? Color.fromARGB(255, 188, 14, 1)
-                      : Colors.grey,
-                ),
-                label: 'My Playlist',
-              ),
-              BottomNavigationBarItem(
-                icon: FUI(
-                  _selectedIndex == 3 ? SolidRounded.FOLDER : RegularRounded.FOLDER,
-                  color: _selectedIndex == 3
-                      ? Color.fromARGB(255, 188, 14, 1)
-                      : Colors.grey,
-                ),
-                label: 'My Added Streams',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.black,
-            onTap: _onItemTapped,
-          ),
+          child: VStack([
+            FloatingPlayerView(),
+            CurvedNavigationBar(
+              backgroundColor: Colors.transparent,
+              index: _selectedIndex,
+              onTap: _onItemTapped,
+              items: [
+                FUI(_selectedIndex == 0 ? SolidRounded.HOME : RegularRounded.HOME),
+                FUI(_selectedIndex == 1 ? SolidRounded.HEART : RegularRounded.HEART),
+                FUI(_selectedIndex == 2 ? SolidRounded.LIST : RegularRounded.LIST),
+                FUI(_selectedIndex == 3 ? SolidRounded.FOLDER : RegularRounded.FOLDER)
+              ]
+              // items: <BottomNavigationBarItem>[
+              //   BottomNavigationBarItem(
+              //     icon: FUI(
+              //       _selectedIndex == 0
+              //           ? SolidRounded.HOME
+              //           : RegularRounded.HOME,
+              //       color: _selectedIndex == 0
+              //           ? Color.fromARGB(255, 188, 14, 1)
+              //           : Colors.grey, // Optional: set the size
+              //     ),
+              //     label: 'Home',
+              //   ),
+              //   BottomNavigationBarItem(
+              //     icon: FUI(
+              //       _selectedIndex == 1
+              //           ? SolidRounded.HEART
+              //           : RegularRounded.HEART,
+              //       color: _selectedIndex == 1
+              //           ? Color.fromARGB(255, 188, 14, 1)
+              //           : Colors.grey,
+              //     ),
+              //     label: 'Favourites',
+              //   ),
+              //   BottomNavigationBarItem(
+              //     icon: FUI(
+              //       _selectedIndex == 2
+              //           ? SolidRounded.LIST
+              //           : RegularRounded.LIST,
+              //       color: _selectedIndex == 2
+              //           ? Color.fromARGB(255, 188, 14, 1)
+              //           : Colors.grey,
+              //     ),
+              //     label: 'My Playlist',
+              //   ),
+              //   BottomNavigationBarItem(
+              //     icon: FUI(
+              //       _selectedIndex == 3
+              //           ? SolidRounded.FOLDER
+              //           : RegularRounded.FOLDER,
+              //       color: _selectedIndex == 3
+              //           ? Color.fromARGB(255, 188, 14, 1)
+              //           : Colors.grey,
+              //     ),
+              //     label: 'My Added Streams',
+              //   ),
+              // ],
+              // currentIndex: _selectedIndex,
+              // selectedItemColor: Colors.black,
+              // onTap: _onItemTapped,
+            )
+          ]),
         ));
   }
 
