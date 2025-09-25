@@ -62,7 +62,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
   List<Widget> getWidget(List<RadioStation> streams) {
     if (streams.isNotEmpty) {
       return streams
-          .map((stream) => RadioTile(radio: stream, radioStations: [...streams], isAddedStream: true))
+          .map((stream) => RadioTile(radio: stream, radioStations: [...streams], from: 'STREAMS'))
           .toList();
     } else {
       [Center(child: Text("No Radio streams added by you."))];

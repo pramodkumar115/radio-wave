@@ -7,7 +7,6 @@ import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/components/add_to_playlist_popup.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:popover/popover.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AddToPlaylistButton extends ConsumerStatefulWidget {
@@ -20,7 +19,6 @@ class AddToPlaylistButton extends ConsumerStatefulWidget {
 }
 
 class _AddToPlaylistButtonState extends ConsumerState<AddToPlaylistButton> {
-
   List<PlayListJsonItem>? playlistDataItems;
 
   @override
@@ -30,13 +28,10 @@ class _AddToPlaylistButtonState extends ConsumerState<AddToPlaylistButton> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return IconButton(
-        icon: const FUI(
-          RegularRounded.FILE_ADD,
-          color: Color.fromRGBO(248, 1, 26, 1),
-        ),
-        onPressed: () => showModalBottomSheet(
+    return InkWell(
+        child: const FUI(RegularRounded.FILE_ADD,
+            color: Color.fromRGBO(248, 1, 26, 1), width: 20, height: 20),
+        onTap: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             isDismissible: true,

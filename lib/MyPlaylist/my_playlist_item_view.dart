@@ -47,7 +47,7 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
             title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Playlist - ${playListItem!.name}")
+            Text("Playlist - ${playListItem != null ? playListItem?.name : ""}")
                 .text
                 .bold
                 .xl
@@ -69,7 +69,7 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
                       return RadioTile(
                           radio: radio,
                           radioStations: playListItem!.radioStations,
-                          isAddedStream: false);
+                          from: 'PLAYLIST|${playListItem!.name}');
                     }).toList()))
                   ])
                 : Center(child: Text("No Radio Stations added"))));

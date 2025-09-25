@@ -42,21 +42,21 @@ class _FavoritesButtonState extends ConsumerState<FavoritesButton> {
   }
 
   Widget showContent(List<String> favIds, RadioStation station) {
-    return IconButton(
-      icon: favIds.contains(station!.stationUuid!)
+    return InkWell(
+      child: favIds.contains(station!.stationUuid!)
           ? const FUI(
               SolidRounded.HEART,
               color: Color.fromRGBO(248, 1, 26, 1),
-              width: 25,
-              height: 25,
+              width: 20,
+              height: 20,
             )
           : const FUI(
               RegularRounded.HEART,
               color: Color.fromARGB(255, 250, 3, 3),
-              width: 25,
-              height: 25,
+              width: 20,
+              height: 20,
             ),
-      onPressed: () => addToFavorites(favIds, widget.station),
+      onTap: () => addToFavorites(favIds, widget.station),
     );
   }
 }

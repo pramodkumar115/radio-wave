@@ -112,7 +112,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                     left: 0,
                     child: Column(children: [
                       Container(
-                        height: 300,
+                        height: screenHeight * 0.7,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white),
@@ -232,21 +232,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              // ElevatedButton(
-                              //   style: ElevatedButton.styleFrom(
-                              //     shape: const CircleBorder(),
-                              //     padding: const EdgeInsets.all(
-                              //         10), // Adjust padding as needed
-                              //   ),
-                              //   onPressed: () => addToFavorites(
-                              //       favIds, selectedRadioStation),
-                              //   child: favIds.contains(
-                              //           selectedRadioStation!.stationUuid!)
-                              //       ? const FUI(SolidRounded.HEART)
-                              //       : const FUI(RegularRounded.HEART),
-                              // ),
                               FavoritesButton(station: selectedRadioStation!),
-
                               IconButton(
                                   style: ElevatedButton.styleFrom(
                                     shape: const CircleBorder(),
@@ -262,12 +248,16 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       color: Color.fromARGB(255, 0, 29,
                                           10)) 
                                   ),
+
+
                               _isLoading
                                   ? const CircularProgressIndicator()
                                   : PlayStopButton(
                                       stationId:
                                           selectedRadioStation!.stationUuid!,
                                       stationList: widget.radioStationsList),
+                              
+                              
                               IconButton(
                                   style: ElevatedButton.styleFrom(
                                     shape: const CircleBorder(),

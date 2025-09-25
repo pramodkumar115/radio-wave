@@ -131,7 +131,7 @@ class _SearchViewState extends State<SearchView> {
                   return RadioTile(
                       radio: radio,
                       radioStations: searchedRadioStations,
-                      isAddedStream: false);
+                      from: "SEARCH");
                 }).toList()))
               : Container()
         ]));

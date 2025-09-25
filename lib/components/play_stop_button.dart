@@ -61,16 +61,16 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
   Widget showIcon(bool isCurrentAudio, bool isPlaying, RadioStation station) {
     if (_isLoading) return CircularProgressIndicator();
     if (isCurrentAudio) {
-      return Transform.scale(
-          scale: 1.2, // Doubles the size of the child icon
-          child: (isPlaying != true)
-              ? const FUI(RegularRounded.PLAY, color: Color.fromARGB(255, 0, 29, 10))
-              : const FUI(RegularRounded.STOP, color: Color.fromARGB(255, 0, 29, 10)));
+      return (isPlaying != true)
+          ? const FUI(BoldRounded.PLAY,
+              color: Color.fromARGB(255, 0, 29, 10), width: 20, height: 20)
+          : const FUI(BoldRounded.STOP,
+              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25);
     } else {
-      return Transform.scale(
-          scale: 1.2, // Doubles the size of the child icon
-          child:
-              const FUI(RegularRounded.PLAY, color: Color.fromARGB(255, 0, 29, 10))); // const Icon(Icons.play_arrow));
+      return const FUI(RegularRounded.PLAY,
+          color: Color.fromARGB(255, 0, 29, 10),
+          width: 20,
+          height: 20); // const Icon(Icons.play_arrow));
     }
   }
 
@@ -128,20 +128,22 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       }
       setState(() => _isLoading = false);
     } else {
-      await playerNotifier.initPlayer(widget.stationList.map((radioStation) {
-        return PlayingRadioUriMediaItem(
-            uriString: radioStation.url!,
-            mediaItem: MediaItem(
-                id: radioStation.stationUuid ?? "",
-                artUri: radioStation.favicon != null
-                    ? Uri.parse(radioStation.favicon!)
-                    : Uri.parse("/assets/music.jpg"),
-                title: "Orbit Radio: ${radioStation.name}",
-                album: radioStation.name,
-                displayTitle: radioStation.name,
-                artist: radioStation.country,
-                genre: radioStation.tags));
-      }).toList(), widget.stationList.indexOf(stn!));
+      await playerNotifier.initPlayer(
+          widget.stationList.map((radioStation) {
+            return PlayingRadioUriMediaItem(
+                uriString: radioStation.url!,
+                mediaItem: MediaItem(
+                    id: radioStation.stationUuid ?? "",
+                    artUri: radioStation.favicon != null
+                        ? Uri.parse(radioStation.favicon!)
+                        : Uri.parse("/assets/music.jpg"),
+                    title: "Orbit Radio: ${radioStation.name}",
+                    album: radioStation.name,
+                    displayTitle: radioStation.name,
+                    artist: radioStation.country,
+                    genre: radioStation.tags));
+          }).toList(),
+          widget.stationList.indexOf(stn!));
       await playerNotifier.seek(widget.stationList.indexOf(stn!));
       setState(() => _isLoading = false);
     }
@@ -180,11 +182,9 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       }
     });
 
-    return IconButton(
-      splashColor: Colors.red,
-      color: Colors.amber,
-      icon: showIcon(isCurrentAudio, isPlaying, station!),
-      onPressed: () async {
+    return InkWell(
+      child: showIcon(isCurrentAudio, isPlaying, station!),
+      onTap: () async {
         await playOrStop(
             isCurrentAudio, playerNotifier, isPlaying, station!.stationUuid!);
       },

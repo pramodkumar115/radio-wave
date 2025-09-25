@@ -69,7 +69,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                         return RadioTile(
                             radio: radio,
                             radioStations: radioList!,
-                            isAddedStream: false);
+                            from: 'FAVOURITES');
                       }).toList())
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
