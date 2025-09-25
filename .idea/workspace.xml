@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ba6b5ca-edca-4295-aa22-768dcf599f55" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/RecentVisits/recents_visits_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/RecentVisits/recents_visits_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/create_edit_playlist.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/create_edit_playlist.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/playlist_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/playlist_tile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orbit_radio.iml" beforeDir="false" afterPath="$PROJECT_DIR$/orbit_radio.iml" afterDir="false" />
-    </list>
+    <list default="true" id="1ba6b5ca-edca-4295-aa22-768dcf599f55" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

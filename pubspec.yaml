@@ -65,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/appicon.jpg
     - assets/music.jpg
     - assets/background.jpg
     - assets/backgroundNewPage.jpg
@@ -75,8 +76,6 @@ flutter:
     - assets/equalizer-10278_128.gif
     - assets/equalizer.gif
 flutter_launcher_icons:
-  image_path: "assets/OrbitRadio.png"
-  adaptive_icon_background: "#FFFFFF" # or an image path
-  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
-  android: true
+  android: true # Set to true if you also want Android icons
   ios: true
+  image_path: "assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png"
