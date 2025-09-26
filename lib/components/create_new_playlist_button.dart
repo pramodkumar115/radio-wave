@@ -16,7 +16,13 @@ class _CreateNewPlaylistButtonState extends State<CreateNewPlaylistButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: Row(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Row(
           spacing: 10,
           children: [
             FUI(
@@ -26,14 +32,15 @@ class _CreateNewPlaylistButtonState extends State<CreateNewPlaylistButton> {
             Text(
               "Create New Playlist",
             ).text.bold.xl.red600.make()
-          ],
+          ]
+          )
         ),
         onTap: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             isDismissible: true,
             backgroundColor: Colors.white,
-            builder: (context) => CreateEditPlaylist(
-                playlistDataItems: widget.items, selected: null)));
+            builder: (context) =>  CreateEditPlaylist(
+                    playlistDataItems: widget.items, selected: null)));
   }
 }

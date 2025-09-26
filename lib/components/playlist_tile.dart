@@ -10,7 +10,10 @@ import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PlaylistTile extends ConsumerStatefulWidget {
-  const PlaylistTile({super.key, required this.playlistJsonItem, required this.playlistJsonItems});
+  const PlaylistTile(
+      {super.key,
+      required this.playlistJsonItem,
+      required this.playlistJsonItems});
   final PlayListJsonItem playlistJsonItem;
   final List<PlayListJsonItem> playlistJsonItems;
 
@@ -30,22 +33,26 @@ class _PlaylistTileState extends ConsumerState<PlaylistTile> {
           icon: SizedBox(
               width: 80,
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 20,
                   children: [
                     GestureDetector(
-                      child: FUI(RegularRounded.TRASH),
-                      onTap: () => removeSelectedPlaylist()
-                    ),
-                    GestureDetector(child: FUI(RegularRounded.EDIT),
-                    onTap: () {
-                      showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            isDismissible: true,
-            backgroundColor: Colors.white,
-            builder: (context) => CreateEditPlaylist(
-                playlistDataItems: widget.playlistJsonItems, selected: widget.playlistJsonItem));
-                    })
+                        child: FUI(RegularRounded.TRASH,
+                            color: Colors.black, width: 25, height: 25),
+                        onTap: () => removeSelectedPlaylist()),
+                    GestureDetector(
+                        child: FUI(RegularRounded.EDIT,
+                            color: Colors.black, width: 25, height: 25),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              backgroundColor: Colors.white,
+                              builder: (context) => CreateEditPlaylist(
+                                  playlistDataItems: widget.playlistJsonItems,
+                                  selected: widget.playlistJsonItem));
+                        })
                   ])),
         ),
         onTap: () {
@@ -62,13 +69,11 @@ class _PlaylistTileState extends ConsumerState<PlaylistTile> {
     var playListAsync = ref.watch(playlistDataProvider);
     playListAsync.when(
         data: (dataSet) {
-          ref
-              .read(playlistDataProvider.notifier)
-              .updatePlayList(dataSet.where((d) =>
-                  d.name != widget.playlistJsonItem.name).toList());
+          ref.read(playlistDataProvider.notifier).updatePlayList(dataSet
+              .where((d) => d.name != widget.playlistJsonItem.name)
+              .toList());
         },
-        error: (error, stackTrace) =>
-            Center(child: Text('Error: $error')),
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
         loading: () {});
   }
 }

@@ -63,13 +63,13 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     if (isCurrentAudio) {
       return (isPlaying != true)
           ? const FUI(BoldRounded.PLAY,
-              color: Color.fromARGB(255, 0, 29, 10), width: 20, height: 20)
+              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25)
           : const FUI(BoldRounded.STOP,
-              color: Color.fromARGB(255, 0, 29, 10), width: 20, height: 20);
+              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25);
     } else {
       return const FUI(BoldRounded.PLAY,
           color: Color.fromARGB(255, 0, 29, 10),
-          width: 20, height: 20); // const Icon(Icons.play_arrow));
+          width: 25, height: 25); // const Icon(Icons.play_arrow));
     }
   }
 

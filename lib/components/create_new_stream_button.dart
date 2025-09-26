@@ -10,32 +10,37 @@ class CreateNewStreamButton extends StatefulWidget {
   const CreateNewStreamButton({super.key, required this.items});
   final List<RadioStation> items;
   @override
-  State<CreateNewStreamButton> createState() =>
-      _CreateNewPlaylistButtonState();
+  State<CreateNewStreamButton> createState() => _CreateNewPlaylistButtonState();
 }
 
 class _CreateNewPlaylistButtonState extends State<CreateNewStreamButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: Row(
-          spacing: 10,
-          children: [
-            FUI(
-              RegularRounded.ADD,
-              color: Colors.red,
+        child: Container(
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
             ),
-            Text(
-              "Create New Stream",
-            ).text.bold.xl.red600.make()
-          ],
-        ),
+            child: Row(
+              spacing: 10,
+              children: [
+                FUI(
+                  RegularRounded.ADD,
+                  color: Colors.red,
+                ),
+                Text(
+                  "Create New Stream",
+                ).text.bold.xl.red600.make()
+              ],
+            )),
         onTap: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             isDismissible: true,
             backgroundColor: Colors.white,
-            builder: (context) => CreateEditStream(
-                streams: widget.items, selected: null)));
+            builder: (context) =>
+                CreateEditStream(streams: widget.items, selected: null)));
   }
 }

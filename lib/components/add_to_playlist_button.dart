@@ -30,7 +30,7 @@ class _AddToPlaylistButtonState extends ConsumerState<AddToPlaylistButton> {
   Widget build(BuildContext context) {
     return InkWell(
         child: const FUI(RegularRounded.FILE_ADD,
-            color: Color.fromRGBO(248, 1, 26, 1), width: 20, height: 20),
+            color: Color.fromRGBO(248, 1, 26, 1), width: 25, height: 25),
         onTap: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,

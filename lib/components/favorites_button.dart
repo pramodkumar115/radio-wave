@@ -47,14 +47,14 @@ class _FavoritesButtonState extends ConsumerState<FavoritesButton> {
           ? const FUI(
               SolidRounded.HEART,
               color: Color.fromRGBO(248, 1, 26, 1),
-              width: 20,
-              height: 20,
+              width: 25,
+              height: 25,
             )
           : const FUI(
               RegularRounded.HEART,
               color: Color.fromARGB(255, 250, 3, 3),
-              width: 20,
-              height: 20,
+              width: 25,
+              height: 25,
             ),
       onTap: () => addToFavorites(favIds, widget.station),
     );

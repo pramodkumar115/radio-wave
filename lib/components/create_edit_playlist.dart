@@ -63,29 +63,39 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return SizedBox(
-        height: screenHeight * 0.5,
-        width: screenWidth,
-        child: Container(
-            margin: EdgeInsets.all(24),
-            width: screenWidth,
-            child: Column(
-              spacing: 20,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Playlist Name'),
-                ),
-                GFButton(
-                    text: "Create / Save",
-                    color: Colors.black,
-                    fullWidthButton: true,
-                    size: 60,
-                    type: GFButtonType.solid,
-                    shape: GFButtonShape.pills,
-                    onPressed: () => createPlayList(widget.playlistDataItems))
-              ],
-            )));
+    return SingleChildScrollView(
+        // Make the content scrollable
+        child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom, // Adjust padding based on keyboard height
+            ),
+            child: SizedBox(
+                height: screenHeight * 0.2,
+                width: screenWidth,
+                child: Container(
+                    margin: EdgeInsets.all(24),
+                    width: screenWidth,
+                    child: Column(
+                      spacing: 20,
+                      children: [
+                        TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Playlist Name'),
+                        ),
+                        GFButton(
+                            text: "Create / Save",
+                            color: Colors.black,
+                            fullWidthButton: true,
+                            size: 60,
+                            type: GFButtonType.solid,
+                            shape: GFButtonShape.pills,
+                            onPressed: () =>
+                                createPlayList(widget.playlistDataItems))
+                      ],
+                    )))));
   }
 }

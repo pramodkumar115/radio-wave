@@ -173,19 +173,19 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                     child: _isLoading
                         ? GFShimmer(child: emptyBlock)
                         : Column(children: [
-                            Text(selectedRadioStation!.name!)
+                            Text(selectedRadioStation!.name ?? "")
                                 .text
                                 .align(TextAlign.center)
                                 .xl2
                                 .bold
                                 .make(),
-                            Text(selectedRadioStation!.country!)
+                            Text(selectedRadioStation!.country ?? "")
                                 .text
                                 .align(TextAlign.center)
                                 .medium
                                 .bold
                                 .make(),
-                            Padding(
+                            selectedRadioStation!.tags != null ? Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: SizedBox(
                                     height: 40,
@@ -220,7 +220,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                                   backgroundColor:
                                                       const Color.fromARGB(
                                                           255, 196, 245, 235)));
-                                        }).toList())))
+                                        }).toList()))) : Container()
                           ])),
                 Positioned(
                   top: screenHeight * 0.38,

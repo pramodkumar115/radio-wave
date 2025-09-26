@@ -141,7 +141,9 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [...getButtons()])
                   ],
-                ))));
+                )
+                ))
+                );
   }
 }
 
@@ -154,7 +156,7 @@ class StreamActions extends StatelessWidget {
     return GestureDetector(
         child: InkWell(
             child: FUI(BoldRounded.MENU_DOTS_VERTICAL,
-                width: 20, height: 20, color: Colors.black)),
+                width: 25, height: 25, color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,
@@ -194,7 +196,7 @@ class PlaylistActions extends StatelessWidget {
     return GestureDetector(
         child: InkWell(
             child: FUI(BoldRounded.MENU_DOTS_VERTICAL,
-                width: 20, height: 20, color: Colors.black)),
+                width: 25, height: 25, color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,

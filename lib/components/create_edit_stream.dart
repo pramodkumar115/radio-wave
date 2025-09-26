@@ -85,46 +85,56 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditStream> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return SizedBox(
-        height: screenHeight * 0.9,
-        width: screenWidth,
-        child: Container(
-            margin: EdgeInsets.all(24),
-            width: screenWidth,
-            child: Column(
-              spacing: 20,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Stream Name'),
-                ),
-                TextField(
-                  controller: _urlController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'URL of the Stream'),
-                ),
-                TextField(
-                  controller: _countryController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Country'),
-                ),
-                TextField(
-                  controller: _favIconController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Icon Url if any'),
-                ),
-                GFButton(
-                    text: "Create / Save",
-                    color: Colors.black,
-                    fullWidthButton: true,
-                    size: 60,
-                    type: GFButtonType.solid,
-                    shape: GFButtonShape.pills,
-                    onPressed: () => createStream(widget.streams))
-              ],
-            )));
+    return SingleChildScrollView(
+        // Make the content scrollable
+        child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom, // Adjust padding based on keyboard height
+            ),
+            child: SizedBox(
+                height: screenHeight * 0.5,
+                width: screenWidth,
+                child: Container(
+                    margin: EdgeInsets.all(24),
+                    width: screenWidth,
+                    child: Column(
+                      spacing: 20,
+                      children: [
+                        TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Stream Name'),
+                        ),
+                        TextField(
+                          controller: _urlController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'URL of the Stream'),
+                        ),
+                        TextField(
+                          controller: _countryController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Country'),
+                        ),
+                        TextField(
+                          controller: _favIconController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Icon Url if any'),
+                        ),
+                        GFButton(
+                            text: "Create / Save",
+                            color: Colors.black,
+                            fullWidthButton: true,
+                            size: 60,
+                            type: GFButtonType.solid,
+                            shape: GFButtonShape.pills,
+                            onPressed: () => createStream(widget.streams))
+                      ],
+                    )))));
   }
 }

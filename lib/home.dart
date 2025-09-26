@@ -74,7 +74,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      extendBody: true,
+        extendBody: true,
         // backgroundColor: Color.fromARGB(255, 247, 247, 244),
         body: Container(
             decoration: BoxDecoration(
@@ -127,20 +127,26 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
           child: VStack([
             FloatingPlayerView(),
             CurvedNavigationBar(
-              backgroundColor: Colors.transparent,
-              index: _selectedIndex,
-              onTap: _onItemTapped,
-              items: [
-                FUI(_selectedIndex == 0 ? SolidRounded.HOME : RegularRounded.HOME),
-                FUI(_selectedIndex == 1 ? SolidRounded.HEART : RegularRounded.HEART),
-                FUI(_selectedIndex == 2 ? SolidRounded.LIST : RegularRounded.LIST),
-                FUI(_selectedIndex == 3 ? SolidRounded.FOLDER : RegularRounded.FOLDER)
-              ]
-            )
+                backgroundColor: Colors.transparent,
+                index: _selectedIndex,
+                onTap: _onItemTapped,
+                animationCurve: Curves.linear,
+                items: [
+                  _selectedIndex == 0 ? FUI(SolidRounded.HOME, color: Colors.red)
+                      : FUI(RegularRounded.HOME, color: Colors.black),
+                      _selectedIndex == 1 ? FUI(SolidRounded.HEART, color: Colors.red)
+                      : FUI(RegularRounded.HEART, color: Colors.black),
+                      _selectedIndex == 2 ? FUI(SolidRounded.LIST, color: Colors.red)
+                      : FUI(RegularRounded.LIST, color: Colors.black),
+                      _selectedIndex == 3 ? FUI(SolidRounded.FOLDER_ADD, color: Colors.red)
+                      : FUI(RegularRounded.FOLDER_ADD, color: Colors.black),
+                  
+                ])
           ]),
         ));
   }
