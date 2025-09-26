@@ -18,7 +18,7 @@ class _CreateNewPlaylistButtonState extends State<CreateNewPlaylistButton> {
     return GestureDetector(
         child: Container(
           padding: EdgeInsets.all(20),
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: Colors.white,
           ),

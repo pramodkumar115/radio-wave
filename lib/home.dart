@@ -106,12 +106,12 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                   ),
                   const Text("Orbit Radio")
                       .text
-                      .color(Colors.red[900])
+                      .color(Colors.red.shade900)
                       .scale(1.5)
                       .extraBold
                       .make(),
                   GestureDetector(
-                    child: const FUI(BoldRounded.SEARCH, width: 25, height: 25),
+                    child: const FUI(BoldRounded.SEARCH, width: 25, height: 25, color: Colors.black),
                     onTap: () {
                       print("Came here");
                       Navigator.push(

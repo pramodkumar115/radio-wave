@@ -28,6 +28,12 @@ class _PlaylistTileState extends ConsumerState<PlaylistTile> {
         child: GFListTile(
           enabled: true,
           selected: true,
+          shadow: BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 1, // How blurry the shadow is
+              spreadRadius: 1,
+              offset: Offset(1, 1)),
+          margin: EdgeInsets.all(2),
           color: Colors.grey.shade50,
           title: Text(widget.playlistJsonItem.name).text.bold.make(),
           icon: SizedBox(

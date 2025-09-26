@@ -65,26 +65,28 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
                       shape: GFButtonShape.pills,
                       onPressed: () async {
                         if (selectedPlayListName.isNotEmpty) {
-                          List<PlayListJsonItem> playListDataItems =
-                              List.empty(growable: true);
-                          for (var i = 0; i < items.length; i++) {
-                            var item = items[i];
-                            if (item.name == selectedPlayListName) {
-                              playListDataItems.add(PlayListJsonItem(
-                                  name: selectedPlayListName,
-                                  stationIds: [
-                                    widget.selectedRadioStn.stationUuid!,
-                                    ...item.stationIds
-                                  ]));
-                            }
-                          }
+                          // List<PlayListJsonItem> playListDataItems =
+                          //    List.empty(growable: true);
+                          // for (var i = 0; i < items.length; i++) {
+                          //   var item = items[i];
+                          //   if (item.name == selectedPlayListName) {
+                          //     playListDataItems.add(PlayListJsonItem(
+                          //         name: selectedPlayListName,
+                          //         stationIds: [
+                          //           widget.selectedRadioStn.stationUuid!,
+                          //           ...item.stationIds
+                          //         ]));
+                          //   } else {
+                          //     playListDataItems.add(item);
+                          //   }
+                          // }
                           var pl = items.firstWhere(
                               (item) => item.name == selectedPlayListName);
                           pl.stationIds
                               .add(widget.selectedRadioStn.stationUuid!);
                           await ref
                               .read(playlistDataProvider.notifier)
-                              .updatePlayList(playListDataItems);
+                              .updatePlayList(items);
                           GFToast.showToast("Added to playlist", context);
                           Navigator.pop(context);
                         }

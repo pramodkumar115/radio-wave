@@ -117,6 +117,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                 blurRadius: 1, // How blurry the shadow is
                 spreadRadius: 1,
                 offset: Offset(1, 1)),
+            margin: EdgeInsets.all(2),
             avatar: GFAvatar(
                 backgroundColor: Colors.white,
                 child: Image.network(widget.radio.favicon!,
@@ -135,7 +136,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
             ]),
             subTitle: Text(widget.radio.country!),
             icon: SizedBox(
-                width: 110,
+                width: 130,
                 child: Column(
                   children: [
                     Row(

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fui_kit/fui_kit.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Search/search_service.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -16,7 +18,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final _searchController = TextEditingController();
-  int startIndex = 0, endIndex = 10;
+  int offset = 0, limit = 10;
   List<RadioStation> searchedRadioStations = List.empty(growable: true);
   Set<String> searchType = {'byname'};
   Timer? _debounce;
@@ -24,10 +26,10 @@ class _SearchViewState extends State<SearchView> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(loadData);
+    _searchController.addListener(() => loadData(offset, limit));
   }
 
-  void loadData() async {
+  void loadData(int startIndex, int endIndex) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 1000), () async {
       String text = _searchController.text;
@@ -54,7 +56,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   void dispose() {
     _debounce?.cancel();
-    _searchController.removeListener(loadData);
+    _searchController.removeListener(() => loadData);
     _searchController.dispose();
     super.dispose();
   }
@@ -109,7 +111,10 @@ class _SearchViewState extends State<SearchView> {
                 });
                 Future.delayed(Duration.zero, () async {
                   if (_searchController.text.length >= 3) {
-                    loadData();
+                    loadData(0, 10);
+                    setState(() {
+                      offset = 0;
+                    });
                   }
                 });
               }),
@@ -122,14 +127,48 @@ class _SearchViewState extends State<SearchView> {
           ),
           searchedRadioStations.isNotEmpty
               ? Expanded(
-                  child: ListView(
-                      children: searchedRadioStations.map((radio) {
-                  return RadioTile(
-                      radio: radio,
-                      radioStations: searchedRadioStations,
-                      from: "SEARCH");
-                }).toList()))
-              : Container()
+                  child: ListView(children: [
+                  ...searchedRadioStations.map((radio) {
+                    return RadioTile(
+                        radio: radio,
+                        radioStations: searchedRadioStations,
+                        from: "SEARCH");
+                  }),
+                  Padding(
+                      padding: EdgeInsetsGeometry.all(20),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            offset >= 10
+                                ? GFButton(
+                                    type: GFButtonType.transparent,
+                                    text: 'Previous',
+                                    textColor: Colors.black,
+                                    icon: FUI(RegularRounded.ARROW_LEFT),
+                                    onPressed: () {
+                                      loadData(offset - 10, limit);
+                                      setState(() {
+                                        offset = offset - 10;
+                                      });
+                                    })
+                                : Container(),
+                            searchedRadioStations != null &&
+                                    searchedRadioStations.length >= 10
+                                ? GFButton(
+                                    type: GFButtonType.transparent,
+                                    text: 'Next',
+                                    icon: FUI(RegularRounded.ARROW_RIGHT),
+                                    textColor: Colors.black,
+                                    onPressed: () {
+                                      loadData(offset + 10, limit);
+                                      setState(() {
+                                        offset = offset + 10;
+                                      });
+                                    })
+                                : Container(),
+                          ]))
+                ]))
+              : Container(),
         ]));
   }
 }
