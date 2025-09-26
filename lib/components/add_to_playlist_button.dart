@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
-import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/components/add_to_playlist_popup.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class AddToPlaylistButton extends ConsumerStatefulWidget {
   const AddToPlaylistButton({super.key, required this.station});

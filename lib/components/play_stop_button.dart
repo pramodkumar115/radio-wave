@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
