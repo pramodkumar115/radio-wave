@@ -26,7 +26,7 @@ class _FloatingPlayerViewState extends ConsumerState<FloatingPlayerView> {
 
     if (radio != null) {
       return RadioTile(
-          radio: radio, radioStations: radioStations, from: "");
+          radio: radio, radioStations: radioStations, from: "FLOATING_PLAYER");
     } else {
       return Container();
     }

@@ -284,7 +284,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                   return RadioTile(
                       radio: radio,
                       radioStations: widget.radioStationsList,
-                      from: "SEARCH");
+                      from: "RADIO_PLAYER_POPUP");
                 }).toList())
               : Container()
                 

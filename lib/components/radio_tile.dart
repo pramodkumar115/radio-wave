@@ -93,18 +93,20 @@ class _RadioTileState extends ConsumerState<RadioTile> {
 
     return GestureDetector(
         onTap: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            isDismissible: true,
-            scrollControlDisabledMaxHeightRatio: 1,
-            backgroundColor: Colors.grey.shade100,
-            builder: (BuildContext context) {
-              return RadioPlayerView(
-                  radioStationsList: widget.radioStations,
-                  selectedRadioId: widget.radio.stationUuid!);
-            },
-          );
+          if (widget.from != 'RADIO_PLAYER_POPUP') {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              isDismissible: true,
+              scrollControlDisabledMaxHeightRatio: 1,
+              backgroundColor: Colors.grey.shade100,
+              builder: (BuildContext context) {
+                return RadioPlayerView(
+                    radioStationsList: widget.radioStations,
+                    selectedRadioId: widget.radio.stationUuid!);
+              },
+            );
+          }
         },
         child: GFListTile(
             enabled: true,
@@ -141,9 +143,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [...getButtons()])
                   ],
-                )
-                ))
-                );
+                ))));
   }
 }
 
