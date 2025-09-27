@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -10,7 +11,7 @@ class AddedStreamsNotifier extends AsyncNotifier<List<RadioStation>> {
   }
 
   Future<List<RadioStation>> fetchStreams() async {
-    print("Came inside fetch Added streams");
+    debugPrint("Came inside fetch Added streams");
     return await getAddedStreamsFromFile();
   }
 

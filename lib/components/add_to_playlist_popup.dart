@@ -87,6 +87,7 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
                           await ref
                               .read(playlistDataProvider.notifier)
                               .updatePlayList(items);
+
                           GFToast.showToast("Added to playlist", context);
                           Navigator.pop(context);
                         }

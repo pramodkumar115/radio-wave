@@ -1,12 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RadioStations/radio_station_list.dart';
-import 'package:orbit_radio/RecentVisits/recent_visits_service.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';

@@ -89,7 +89,7 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
           name: f["name"],
           stationIds: jsonDecode(f["stationIds"]).cast<String>()
       );
-      print("item - $item");
+      debugPrint("item - $item");
       list.add(item);
     }
     return list;
@@ -98,7 +98,7 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
 }
 
 Future<void> savePlaylistFile(List<PlayListJsonItem> playListData) async {
-  print(
+  debugPrint(
       "playListData - ${playListData.toString()}, ${json.encode(playListData)}");
   writeData("playlist.json", json.encode(playListData));
 }
@@ -112,7 +112,7 @@ Future<List<RadioStation>> getAddedStreamsFromFile() async {
     for (var i =0; i < filesData.length; i++) {
       var f = filesData[i];
       var item = RadioStation.fromJson(f);
-      print("Added item - $item");
+      debugPrint("Added item - $item");
       list.add(item);
     }
     return list;
@@ -121,7 +121,7 @@ Future<List<RadioStation>> getAddedStreamsFromFile() async {
 }
 
 Future<void> saveAddedStreamsFile(List<RadioStation> playListData) async {
-  print(
+  debugPrint(
       "addedstreams - ${playListData.toString()}, ${json.encode(playListData)}");
   writeData("addedstreams.json", json.encode(playListData));
 }

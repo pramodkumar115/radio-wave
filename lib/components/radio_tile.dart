@@ -177,7 +177,7 @@ class StreamActions extends StatelessWidget {
                           onMenuClicked("EDIT", context);
                         }),
                   ])),
-              onPop: () => print('Popover was popped!'),
+              onPop: () => debugPrint('Popover was popped!'),
               direction: PopoverDirection.bottom,
               backgroundColor: Colors.white,
               width: 200,
@@ -211,7 +211,7 @@ class PlaylistActions extends StatelessWidget {
                           Navigator.of(context).pop();
                         }),
                   ])),
-              onPop: () => print('Popover was popped!'),
+              onPop: () => debugPrint('Popover was popped!'),
               direction: PopoverDirection.bottom,
               backgroundColor: Colors.white,
               width: 200,

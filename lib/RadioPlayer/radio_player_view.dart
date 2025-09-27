@@ -39,7 +39,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     setState(() {
       selectedRadioStation = RadioStation.fromJson(stn!.toJson());
       _isLoading = false;
-      print(" In Init state ${_isLoading}, ${selectedRadioStation.toString()}");
+      debugPrint(" In Init state $_isLoading, ${selectedRadioStation.toString()}");
     });
   }
 
@@ -49,12 +49,12 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     super.dispose();
   }
 
-  String _formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
-    return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
+  // String _formatDuration(Duration d) {
+  //   String twoDigits(int n) => n.toString().padLeft(2, "0");
+  //   String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
+  //   String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
+  //   return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +288,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                         playerNotifier,
                                         audioPlayerState,
                                         isPlaying,
-                                        selectedRadioStation),
+                                        selectedRadioStation!),
                                     icon: const FUI(RegularRounded.FORWARD,
                                         color: Color.fromARGB(255, 0, 29,
                                             10)) // const Icon(Icons.skip_next),
@@ -357,16 +357,16 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
     recentVisitList.when(
         data: (recentVisitedStations) {
-          print("recent - $recentVisitedStations");
+          debugPrint("recent - $recentVisitedStations");
           if (recentVisitedStations
               .where((st) => st.stationUuid == radioStation.stationUuid)
               .isNotEmpty) {
-            print("recent Inside - ${recentVisitedStations.length}");
+            debugPrint("recent Inside - ${recentVisitedStations.length}");
             recentVisitedStations = recentVisitedStations
                 .where((st) => st.stationUuid != radioStation.stationUuid)
                 .toList();
           }
-          print("recent Outside - ${recentVisitedStations.length}");
+          debugPrint("recent Outside - ${recentVisitedStations.length}");
           if (recentVisitedStations.length > 10) {
             recentVisitedStations.removeLast();
           }
@@ -382,7 +382,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         loading: () => {});
   }
 
-  void _playNext(playerNotifier, audioPlayerState, isPlaying, currentStation) {
+  void _playNext(playerNotifier, audioPlayerState, bool isPlaying, RadioStation currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'NEXT', currentStation);
     if (isPlaying) {

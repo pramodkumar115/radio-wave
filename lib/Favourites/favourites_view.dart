@@ -31,10 +31,10 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
 
   void setStateWithData() {
     final favoritesUUIDs = ref.watch(favoritesDataProvider);
-    print("favoritesUUIDs - $favoritesUUIDs");
+    debugPrint("favoritesUUIDs - $favoritesUUIDs");
     favoritesUUIDs.when(
         data: (stationIds) async {
-          print("In fav - $stationIds");
+          debugPrint("In fav - $stationIds");
           var addedStreamIds =
               stationIds.where((s) => s.startsWith("ADDED")).toList();
           final rList = await getStationsListForUUIDs(

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
@@ -10,7 +11,7 @@ class PlaylistNotifier extends AsyncNotifier<List<PlayListJsonItem>> {
   }
 
   Future<List<PlayListJsonItem>> fetchPlayLists() async {
-    print("Came inside fetch");
+    debugPrint("Came inside fetch");
     return await getPlayListsFromFile();
   }
 

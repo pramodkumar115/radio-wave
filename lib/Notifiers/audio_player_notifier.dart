@@ -1,4 +1,5 @@
 // player_notifier.dart
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod/legacy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -67,13 +68,13 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   }
 
   // Control methods
-  void play(index) async {
-    print("index - $index");
+  void play(int index) async {
+    debugPrint("index - $index");
     await seek(index);
     await _player.play();
   }
 
-  Future<void> seek(index) async {
+  Future<void> seek(int index) async {
     await _player.seek(Duration.zero, index: index);
   }
 

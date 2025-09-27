@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/RadioStations/radio_station_list.dart';
@@ -42,12 +40,11 @@ class _TopHitsViewState extends State<TopHitsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: VStack([
-          const Text("World's Top 10 Stations").text.scale(1.1).fade.extraBlack.extraBold.make(),
-          topHitStations.isNotEmpty
-              ? RadioStationListView(stationList: topHitStations)
-              : GFShimmer(child: emptyBlock)
-        ]));
+    return VStack([
+      const Text("World's Top 10 Stations").text.scale(1.1).fade.extraBlack.extraBold.make(),
+      topHitStations.isNotEmpty
+          ? RadioStationListView(stationList: topHitStations)
+          : GFShimmer(child: emptyBlock)
+    ]);
   }
 }

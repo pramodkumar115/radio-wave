@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/MyPlaylist/my_playlist_item_view.dart';
-import 'package:orbit_radio/Notifiers/playing_radio_details_provider.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/components/create_edit_playlist.dart';
 import 'package:orbit_radio/model/playlist_item.dart';

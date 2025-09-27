@@ -31,7 +31,7 @@ class _CountryFamousStationsViewState
     });
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     final country = ref.watch(countryProvider);
     var response = await getCountryFamousStationDetails(country);
     if (response.statusCode == 200) {

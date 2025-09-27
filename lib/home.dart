@@ -18,7 +18,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Home extends ConsumerStatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   ConsumerState<Home> createState() => _HomeState();
@@ -37,7 +37,9 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
     Future.delayed(Duration.zero, () async {
       var country = await getUserCurrentCountry();
-      ref.read(countryProvider.notifier).updateCountry(country);
+      if (country != null && country.isNotEmpty) {
+        ref.read(countryProvider.notifier).updateCountry(country);
+      }
       ref.read(favoritesDataProvider.notifier).build();
       ref.read(recentVisitsDataProvider.notifier).build();
       ref.read(addedStreamsDataProvider.notifier).build();
@@ -71,8 +73,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
+    // final double screenHeight = MediaQuery.of(context).size.height;
+    // final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         extendBody: true,
         // backgroundColor: Color.fromARGB(255, 247, 247, 244),
@@ -113,7 +115,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                   GestureDetector(
                     child: const FUI(BoldRounded.SEARCH, width: 25, height: 25, color: Colors.black),
                     onTap: () {
-                      print("Came here");
+                      debugPrint("Came here");
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(

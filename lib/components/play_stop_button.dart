@@ -38,8 +38,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       List<RadioStation> radioStationsList) {
     var radioIds = radioStationsList.map((r) => r.stationUuid).toList();
     var playListIds = playListMediaItems?.map((r) => r!.id).toList();
-    print("playListMediaItems - ${playListMediaItems?.length}");
-    if (playListIds != null && playListIds!.isNotEmpty) {
+    debugPrint("playListMediaItems - ${playListMediaItems?.length}");
+    if (playListIds != null && playListIds.isNotEmpty) {
       return radioIds.toSet().containsAll(playListIds);
     }
     return false;
@@ -77,16 +77,16 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
     recentVisitList.when(
         data: (recentVisitedStations) {
-          print("recent - $recentVisitedStations");
+          debugPrint("recent - $recentVisitedStations");
           if (recentVisitedStations
               .where((st) => st.stationUuid == radioStation.stationUuid)
               .isNotEmpty) {
-            print("recent Inside - ${recentVisitedStations.length}");
+            debugPrint("recent Inside - ${recentVisitedStations.length}");
             recentVisitedStations = recentVisitedStations
                 .where((st) => st.stationUuid != radioStation.stationUuid)
                 .toList();
           }
-          print("recent Outside - ${recentVisitedStations.length}");
+          debugPrint("recent Outside - ${recentVisitedStations.length}");
           if (recentVisitedStations.length > 10) {
             recentVisitedStations.removeLast();
           }
@@ -142,11 +142,11 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
                     genre: radioStation.tags));
           }).toList(),
           widget.stationList.indexOf(stn!));
-      await playerNotifier.seek(widget.stationList.indexOf(stn!));
+      await playerNotifier.seek(widget.stationList.indexOf(stn));
       setState(() => _isLoading = false);
     }
     Future.delayed(Duration.zero, () async {
-      print("$isCurrentAudio, $isPlaying, $selectedRadioId");
+      debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
       if (!isCurrentAudio) {
         await playAudioPlayer(playerNotifier, stn);
       } else {
@@ -156,7 +156,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
           await playAudioPlayer(playerNotifier, stn);
         }
       }
-      print("$isCurrentAudio, $isPlaying, $selectedRadioId");
+      debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
     });
   }
 

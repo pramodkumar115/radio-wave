@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
-import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
-import 'package:orbit_radio/components/create_new_playlist_button.dart';
 import 'package:orbit_radio/components/create_new_stream_button.dart';
-import 'package:orbit_radio/components/playlist_tile.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
-import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -39,14 +35,14 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
       return Center(child: Text("Error getting data"));
     }, loading: () {
       setState(() => _isLoading = true);
-      print("In loading");
+      debugPrint("In loading");
       return CircularProgressIndicator();
     });
   }
 
   Widget showContent(BuildContext context, List<RadioStation> streams) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    print('playlist length - ${streams.length}');
+    // final double screenHeight = MediaQuery.of(context).size.height;
+    debugPrint('playlist length - ${streams.length}');
     return Container(
             margin: const EdgeInsets.only(top: 70),
             padding: EdgeInsets.all(15),

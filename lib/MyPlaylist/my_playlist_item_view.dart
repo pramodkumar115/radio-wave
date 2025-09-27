@@ -22,7 +22,7 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
     loadData();
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     var addedStreamIds = widget.playListJsonItem.stationIds
         .where((s) => s.startsWith("ADDED"))
         .toList();
@@ -32,7 +32,7 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
     final addedList =
         aList.where((a) => addedStreamIds.contains(a.stationUuid)).toList();
 
-    print("stations size - ${stations.length}");
+    debugPrint("stations size - ${stations.length}");
     setState(() {
       playListItem = PlayListItem(
           name: widget.playListJsonItem.name,

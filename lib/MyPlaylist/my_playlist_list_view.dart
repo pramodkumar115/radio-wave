@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
-import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/create_new_playlist_button.dart';
 import 'package:orbit_radio/components/playlist_tile.dart';
-import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
-import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MyPlaylistListView extends ConsumerStatefulWidget {
@@ -29,7 +25,7 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
   Widget build(BuildContext context) {
     ref.read(playlistDataProvider.notifier).build();
     final playListData = ref.watch(playlistDataProvider);
-    print("favoritesUUIDs - $playListData");
+    debugPrint("favoritesUUIDs - $playListData");
     return playListData.when(data: (pListData) {
       setState(() {
         _isLoading = false;
@@ -40,15 +36,14 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
       return Center(child: Text("Error getting data"));
     }, loading: () {
       setState(() => _isLoading = true);
-      print("In loading");
+      debugPrint("In loading");
       return CircularProgressIndicator();
     });
   }
 
   Widget showContent(
       BuildContext context, List<PlayListJsonItem> playlistJsonItems) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    print('playlist length - ${playlistJsonItems.length}');
+    debugPrint('playlist length - ${playlistJsonItems.length}');
     return Container(
             margin: const EdgeInsets.only(top: 70),
             decoration: BoxDecoration(
