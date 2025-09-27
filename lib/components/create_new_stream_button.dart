@@ -18,8 +18,8 @@ class _CreateNewPlaylistButtonState extends State<CreateNewStreamButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Container(
-            padding: EdgeInsets.all(20),
-            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            // margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
             ),

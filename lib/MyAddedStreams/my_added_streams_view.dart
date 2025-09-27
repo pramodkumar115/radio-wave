@@ -44,12 +44,14 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
     });
   }
 
-  Widget showContent(
-      BuildContext context, List<RadioStation> streams) {
+  Widget showContent(BuildContext context, List<RadioStation> streams) {
     final double screenHeight = MediaQuery.of(context).size.height;
     print('playlist length - ${streams.length}');
     return Container(
-            margin: const EdgeInsets.only(top: 50),
+            margin: const EdgeInsets.only(top: 70),
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: _isLoading
                 ? ListView(children: [Center(child: Text("Please wait"))])
                 : ListView(children: [
@@ -62,7 +64,8 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
   List<Widget> getWidget(List<RadioStation> streams) {
     if (streams.isNotEmpty) {
       return streams
-          .map((stream) => RadioTile(radio: stream, radioStations: [...streams], from: 'STREAMS'))
+          .map((stream) => RadioTile(
+              radio: stream, radioStations: [...streams], from: 'STREAMS'))
           .toList();
     } else {
       [Center(child: Text("No Radio streams added by you."))];

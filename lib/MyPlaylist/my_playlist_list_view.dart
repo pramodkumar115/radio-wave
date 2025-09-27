@@ -50,7 +50,11 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
     final double screenHeight = MediaQuery.of(context).size.height;
     print('playlist length - ${playlistJsonItems.length}');
     return Container(
-            margin: const EdgeInsets.only(top: 50),
+            margin: const EdgeInsets.only(top: 70),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(20)
+            ),
             child: _isLoading
                 ? ListView(children: [Center(child: Text("Please wait"))])
                 : ListView(children: [
@@ -63,7 +67,10 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
   List<Widget> getWidget(List<PlayListJsonItem> playlistJsonItems) {
     if (playlistJsonItems.isNotEmpty) {
       return playlistJsonItems
-          .map((pl) => PlaylistTile(playlistJsonItems:playlistJsonItems, playlistJsonItem: pl))
+          .map((pl) => Container(
+            margin: EdgeInsets.only(left: 10, right: 10),
+            child: PlaylistTile(
+              playlistJsonItems: playlistJsonItems, playlistJsonItem: pl)))
           .toList();
     } else {
       [Center(child: Text("No Playlists yet"))];

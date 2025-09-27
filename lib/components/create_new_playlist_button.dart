@@ -17,11 +17,7 @@ class _CreateNewPlaylistButtonState extends State<CreateNewPlaylistButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Container(
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
+          padding: EdgeInsets.all(15),
           child: Row(
           spacing: 10,
           children: [
