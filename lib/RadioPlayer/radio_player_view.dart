@@ -38,7 +38,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     var stn = getSelectedRadioStation(
         widget.radioStationsList, widget.selectedRadioId);
     setState(() {
-      selectedRadioStation = RadioStation.fromJson(stn!.toJson());
+      if (stn != null) {
+        selectedRadioStation = RadioStation.fromJson(stn.toJson());
+      }
       _isLoading = false;
     });
   }
@@ -89,6 +91,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     });
 
     final isPlaying = audioPlayerState.isPlaying;
+    final isCurrentAudio = audioPlayerState.currentMediaItem?.id ==
+        selectedRadioStation!.stationUuid;
 
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -100,10 +104,10 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                     top: 0,
                     right: 0,
                     left: 0,
-                    height: screenHeight / 5,
+                    height: screenHeight / 4,
                     child: Container(color: Colors.tealAccent.shade100)),
                 Positioned(
-                    top: screenHeight * 0.15,
+                    top: screenHeight * 0.25,
                     right: 0,
                     left: 0,
                     child: Column(children: [
@@ -114,21 +118,27 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                             color: Colors.white),
                       ),
                     ])),
+
+
                 Positioned(
-                    top: screenHeight * 0.065,
-                    right: screenWidth * 1 / 3,
-                    left: screenWidth * 1 / 3,
-                    height: screenHeight / 6,
+                    top: screenHeight * 0.1,
+                    right: 0,
+                    left: 0,
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          Card(
+                          Container(
+                              padding: EdgeInsetsGeometry.only(
+                                  left: screenWidth * 0.15,
+                                  right: screenWidth * 0.15),
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              width: screenWidth,
+                              height: 280,
+                              child: Card(
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                       color: Color.fromARGB(255, 218, 218,
-                                          219), // Specify border color
-                                      width: 0.5, // Specify border width
+                                          219), 
+                                      width: 0.5,
                                     ),
                                     borderRadius: BorderRadius.circular(
                                         2.0), // Optional: for rounded corners
@@ -141,7 +151,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color: Colors.grey.shade100),
-                                      padding: const EdgeInsets.all(20),
+                                      // padding: const EdgeInsets.all(20),
                                       child: _isLoading
                                           ? GFShimmer(child: emptyCardBlock)
                                           : Image.network(
@@ -154,180 +164,151 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                               errorBuilder: (context, error,
                                                       stackTrace) =>
                                                   Image.asset(
-                                                      "assets/music.jpg",
-                                                      width: 75,
-                                                      height: 75),
-                                            )))
-                              .w24(context),
+                                                "assets/music.jpg",
+                                                // width: 75,
+                                                //height: 75
+                                              ),
+                                            )))),
+                          Text(selectedRadioStation!.name ?? "")
+                              .text
+                              .align(TextAlign.center)
+                              .xl2
+                              .bold
+                              .make(),
+                          Text(selectedRadioStation!.country ?? "")
+                              .text
+                              .align(TextAlign.center)
+                              .medium
+                              .bold
+                              .make(),
+                          selectedRadioStation!.tags != null
+                              ? Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: SizedBox(
+                                      height: 40,
+                                      child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          shrinkWrap: true,
+                                          children: selectedRadioStation!.tags!
+                                              .split(",")
+                                              .map((tag) {
+                                            return Container(
+                                                padding:
+                                                    const EdgeInsets.all(2),
+                                                child: Chip(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: const BorderSide(
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            162,
+                                                            162,
+                                                            163), // Specify border color
+                                                        width:
+                                                            1, // Specify border width
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10), // Optional: for rounded corners
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    label:
+                                                        HStack([Text("#$tag")]),
+                                                    //onDeleted: () => _deleteTag(tag),
+                                                    backgroundColor:
+                                                        const Color.fromARGB(
+                                                            255,
+                                                            196,
+                                                            245,
+                                                            235)));
+                                          }).toList())))
+                              : Container(),
                         ])),
                 Positioned(
-                    top: screenHeight * 0.22,
-                    right: 0,
-                    left: 0,
-                    height: 150,
-                    child: _isLoading
-                        ? GFShimmer(child: emptyBlock)
-                        : Column(children: [
-                            Text(selectedRadioStation!.name ?? "")
-                                .text
-                                .align(TextAlign.center)
-                                .xl2
-                                .bold
-                                .make(),
-                            Text(selectedRadioStation!.country ?? "")
-                                .text
-                                .align(TextAlign.center)
-                                .medium
-                                .bold
-                                .make(),
-                            selectedRadioStation!.tags != null
-                                ? Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: SizedBox(
-                                        height: 40,
-                                        child: ListView(
-                                            scrollDirection: Axis.horizontal,
-                                            shrinkWrap: true,
-                                            children: selectedRadioStation!
-                                                .tags!
-                                                .split(",")
-                                                .map((tag) {
-                                              return Container(
-                                                  padding:
-                                                      const EdgeInsets.all(2),
-                                                  child: Chip(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        side: const BorderSide(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              162,
-                                                              162,
-                                                              163), // Specify border color
-                                                          width:
-                                                              1, // Specify border width
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                10), // Optional: for rounded corners
-                                                      ),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      label: HStack(
-                                                          [Text("#$tag")]),
-                                                      //onDeleted: () => _deleteTag(tag),
-                                                      backgroundColor:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              196,
-                                                              245,
-                                                              235)));
-                                            }).toList())))
-                                : Container()
-                          ])),
-                Positioned(
-                  top: screenHeight * 0.32,
-                  right: 0,
-                  left: 0,
-                  // height: 20,
-                  child: _isLoading
-                      ? GFShimmer(child: emptyBlock)
-                      : Padding(
-                          padding: EdgeInsetsGeometry.all(40),
-                          child: Container(
-                            padding: EdgeInsets.all(5),
+                    top: screenHeight * 0.7,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsetsDirectional.symmetric(horizontal: screenWidth * 0.05),
+                      width: screenWidth * 0.9,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color.fromARGB(255, 245, 224, 224),
+                              const Color.fromARGB(255, 230, 240, 184)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        spacing: 20,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    const Color.fromARGB(255, 245, 224, 224),
-                                    const Color.fromARGB(255, 230, 240, 184)
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(50)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              spacing: 20,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(50)),
-                                  child: FavoritesButton(
-                                      station: selectedRadioStation!),
-                                ),
-                                IconButton(
-                                    style: ElevatedButton.styleFrom(
-                                      shape: const CircleBorder(),
-                                      padding: const EdgeInsets.all(
-                                          10), // Adjust padding as needed
-                                    ),
-                                    onPressed: () => _playPrevious(
-                                        playerNotifier,
-                                        audioPlayerState,
-                                        isPlaying,
-                                        selectedRadioStation),
-                                    icon: const FUI(RegularRounded.REWIND,
-                                        color: Color.fromARGB(255, 0, 29, 10))),
-                                _isLoading
-                                    ? const CircularProgressIndicator()
-                                    : Transform.scale(
-                                        scale: 1.5,
-                                        child: PlayStopButton(
-                                            stationId: selectedRadioStation!
-                                                .stationUuid!,
-                                            stationList:
-                                                widget.radioStationsList)),
-                                IconButton(
-                                    style: ElevatedButton.styleFrom(
-                                      shape: const CircleBorder(),
-                                      padding: const EdgeInsets.all(
-                                          10), // Adjust padding as needed
-                                    ),
-                                    onPressed: () => _playNext(
-                                        playerNotifier,
-                                        audioPlayerState,
-                                        isPlaying,
-                                        selectedRadioStation!),
-                                    icon: const FUI(RegularRounded.FORWARD,
-                                        color: Color.fromARGB(255, 0, 29,
-                                            10)) // const Icon(Icons.skip_next),
-                                    ),
-                                Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    child: AddToPlaylistButton(
-                                        station: selectedRadioStation!)),
-                              ],
-                            ),
-                          )),
-                ),
-                Positioned(
-                    top: screenHeight * 0.45,
-                    right: 0,
-                    left: 0,
-                    height: screenHeight * 0.4,
-                    child: widget.radioStationsList.isNotEmpty
-                        ? ListView(
-                            children: widget.radioStationsList.map((radio) {
-                            return RadioTile(
-                                radio: radio,
-                                radioStations: widget.radioStationsList,
-                                from: "RADIO_PLAYER_POPUP");
-                          }).toList())
-                        : Container())
+                            child:
+                                FavoritesButton(station: selectedRadioStation!),
+                          ),
+                          isCurrentAudio && isPlaying
+                              ? IconButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(
+                                        10), // Adjust padding as needed
+                                  ),
+                                  onPressed: () => _playPrevious(
+                                      playerNotifier,
+                                      audioPlayerState,
+                                      isPlaying,
+                                      selectedRadioStation),
+                                  icon: const FUI(RegularRounded.REWIND,
+                                      color: Color.fromARGB(255, 0, 29, 10)))
+                              : Container(),
+                          _isLoading
+                              ? const CircularProgressIndicator()
+                              : Transform.scale(
+                                  scale: 1.5,
+                                  child: PlayStopButton(
+                                      stationId:
+                                          selectedRadioStation!.stationUuid!,
+                                      stationList: widget.radioStationsList)),
+                          isCurrentAudio && isPlaying
+                              ? IconButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(
+                                        10), // Adjust padding as needed
+                                  ),
+                                  onPressed: () => _playNext(
+                                      playerNotifier,
+                                      audioPlayerState,
+                                      isPlaying,
+                                      selectedRadioStation!),
+                                  icon: const FUI(RegularRounded.FORWARD,
+                                      color: Color.fromARGB(255, 0, 29,
+                                          10)) // const Icon(Icons.skip_next),
+                                  )
+                              : Container(),
+                          Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: AddToPlaylistButton(
+                                  station: selectedRadioStation!)),
+                        ],
+                      ),
+                    ))
               ],
             )));
   }
 
-  void _playNext(PlayerNotifier playerNotifier, PlayerState audioPlayerState, bool isPlaying,
-      RadioStation currentStation) {
+  void _playNext(PlayerNotifier playerNotifier, PlayerState audioPlayerState,
+      bool isPlaying, RadioStation currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'NEXT', currentStation);
     if (isPlaying) {
@@ -335,8 +316,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     }
   }
 
-  void setSelectedRadioStation(
-      PlayerState audioPlayerState, bool isPlaying, String action, RadioStation currentStation) {
+  void setSelectedRadioStation(PlayerState audioPlayerState, bool isPlaying,
+      String action, RadioStation currentStation) {
     Future.delayed(Duration.zero, () async {
       if (!isPlaying) {
         final current = getSelectedRadioStation(
@@ -365,7 +346,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     }
   }
 
-  void _playPrevious(PlayerNotifier playerNotifier, audioPlayerState, isPlaying, currentStation) {
+  void _playPrevious(PlayerNotifier playerNotifier, audioPlayerState, isPlaying,
+      currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'PREVIOUS', currentStation);
     if (isPlaying) {
