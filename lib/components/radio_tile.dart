@@ -105,9 +105,14 @@ class _RadioTileState extends ConsumerState<RadioTile> {
               scrollControlDisabledMaxHeightRatio: 1,
               backgroundColor: Colors.grey.shade100,
               builder: (BuildContext context) {
-                
+                List<RadioStation> radioStnList = List.empty(growable: true);
+                if (audioPlayerState.playListMediaItems != null && audioPlayerState.playListMediaItems!.isNotEmpty) {
+                  radioStnList = converMediaItemsToRadioList((audioPlayerState.playListMediaItems));
+                } else {
+                  radioStnList.addAll(widget.radioStations);
+                }
                 return RadioPlayerView(
-                    radioStationsList: converMediaItemsToRadioList(audioPlayerState.playListMediaItems),
+                    radioStationsList: radioStnList,
                     selectedRadioId: widget.radio.stationUuid!);
               },
             );

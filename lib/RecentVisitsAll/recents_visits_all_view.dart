@@ -22,6 +22,12 @@ class _RecentsVisitsAllViewState extends State<RecentsVisitsAllView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: [GestureDetector(
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(10),
+              child: Text("Clear History").text.underline.make()
+            ),
+          )],
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Text("Recent Visits").text.bold.xl.make(),
           ]),
