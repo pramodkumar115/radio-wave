@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'file-helper-util.dart';
@@ -184,3 +185,25 @@ String getStationCountry(String? country) {
     return "";
   }
 }
+
+ RadioStation convertMediaItemToRadio(MediaItem currentMediaItem) {
+    return RadioStation(
+        stationUuid: currentMediaItem.id,
+        country: currentMediaItem.artist,
+        name: currentMediaItem.album,
+        favicon: currentMediaItem.artUri?.toString(),
+        tags: currentMediaItem.genre);
+  }
+
+List<RadioStation> converMediaItemsToRadioList(
+      List<MediaItem?>? playListMediaItems) {
+    List<RadioStation> stations = List.empty(growable: true);
+    if (playListMediaItems != null) {
+      for (var i = 0; i < playListMediaItems.length; i++) {
+        if (playListMediaItems[i] != null) {
+          stations.add(convertMediaItemToRadio(playListMediaItems[i]!));
+        }
+      }
+    }
+    return stations;
+  }

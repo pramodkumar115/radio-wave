@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 
@@ -7,7 +10,7 @@ class RecentVisitsNotifier extends AsyncNotifier<List<RadioStation>> {
   Future<List<RadioStation>> build() async {
     return fetchRecentVisits();
   }
-
+  
   Future<List<RadioStation>> fetchRecentVisits() async {
     List<String> uuids = await getRecentVisitsFromFile();
     return await getStationsListForUUIDs(uuids);

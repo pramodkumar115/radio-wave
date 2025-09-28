@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
@@ -39,7 +40,6 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     setState(() {
       selectedRadioStation = RadioStation.fromJson(stn!.toJson());
       _isLoading = false;
-      debugPrint(" In Init state $_isLoading, ${selectedRadioStation.toString()}");
     });
   }
 
@@ -239,7 +239,10 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [const Color.fromARGB(255, 245, 224, 224), const Color.fromARGB(255, 230, 240, 184)],
+                                  colors: [
+                                    const Color.fromARGB(255, 245, 224, 224),
+                                    const Color.fromARGB(255, 230, 240, 184)
+                                  ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
@@ -323,66 +326,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
             )));
   }
 
-  // Future<void> playOrStop(bool isCurrentAudio, PlayerNotifier playerNotifier,
-  //     bool isPlaying, String selectedRadioId) async {
-  //   print("$isCurrentAudio, $isPlaying, $selectedRadioId");
-  //   if (!isCurrentAudio) {
-  //     await playAudioPlayer(playerNotifier, selectedRadioId);
-  //   } else {
-  //     if (isPlaying) {
-  //       playerNotifier.stop();
-  //     } else {
-  //       await playAudioPlayer(playerNotifier, selectedRadioId);
-  //     }
-  //   }
-  //   print("$isCurrentAudio, $isPlaying, $selectedRadioId");
-  // }
-
-  Future<void> playAudioPlayer(
-      PlayerNotifier playerNotifier, String selectedRadioId) async {
-    var stn = getCurrentRadioStation(selectedRadioId);
-    setRecentVisits(stn);
-    final index = widget.radioStationsList.indexOf(stn);
-    playerNotifier.play(index);
-  }
-
-  RadioStation getCurrentRadioStation(String selectedRadioId) {
-    RadioStation radioStn = widget.radioStationsList
-        .firstWhere((element) => element.stationUuid == selectedRadioId);
-    return radioStn;
-  }
-
-  void setRecentVisits(RadioStation radioStation) {
-    var recentVisitList = ref.watch(recentVisitsDataProvider);
-    var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
-    recentVisitList.when(
-        data: (recentVisitedStations) {
-          debugPrint("recent - $recentVisitedStations");
-          if (recentVisitedStations
-              .where((st) => st.stationUuid == radioStation.stationUuid)
-              .isNotEmpty) {
-            debugPrint("recent Inside - ${recentVisitedStations.length}");
-            recentVisitedStations = recentVisitedStations
-                .where((st) => st.stationUuid != radioStation.stationUuid)
-                .toList();
-          }
-          debugPrint("recent Outside - ${recentVisitedStations.length}");
-          if (recentVisitedStations.length > 10) {
-            recentVisitedStations.removeLast();
-          }
-          recentVisitedStations.insert(0, radioStation);
-          if (recentVisitedStations.isNotEmpty) {
-            List<String> uuids = recentVisitedStations
-                .map((element) => element.stationUuid ?? "")
-                .toList();
-            recentVisitsNotifier.updateRecentVisits([...uuids]);
-          }
-        },
-        error: (error, stackTrace) => () => {},
-        loading: () => {});
-  }
-
-  void _playNext(playerNotifier, audioPlayerState, bool isPlaying, RadioStation currentStation) {
+  void _playNext(PlayerNotifier playerNotifier, PlayerState audioPlayerState, bool isPlaying,
+      RadioStation currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'NEXT', currentStation);
     if (isPlaying) {
@@ -391,13 +336,13 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   }
 
   void setSelectedRadioStation(
-      audioPlayerState, isPlaying, action, RadioStation currentStation) {
+      PlayerState audioPlayerState, bool isPlaying, String action, RadioStation currentStation) {
     Future.delayed(Duration.zero, () async {
       if (!isPlaying) {
         final current = getSelectedRadioStation(
             widget.radioStationsList, currentStation.stationUuid!);
         final currentIndex = widget.radioStationsList.indexOf(current!);
-        print("${current.name} - $currentIndex");
+        debugPrint("${current.name} - $currentIndex");
         setState(() {
           getNextOrPreviousStationDetail(action, current, currentIndex);
         });
@@ -406,7 +351,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
   }
 
   void getNextOrPreviousStationDetail(
-      action, RadioStation current, int currentIndex) {
+      String action, RadioStation current, int currentIndex) {
     if (action == null || action.isEmpty) {
       selectedRadioStation = current;
     } else {
@@ -420,7 +365,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
     }
   }
 
-  _playPrevious(playerNotifier, audioPlayerState, isPlaying, currentStation) {
+  void _playPrevious(PlayerNotifier playerNotifier, audioPlayerState, isPlaying, currentStation) {
     setSelectedRadioStation(
         audioPlayerState, isPlaying, 'PREVIOUS', currentStation);
     if (isPlaying) {

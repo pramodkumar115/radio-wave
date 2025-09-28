@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
@@ -80,16 +81,18 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
                           //     playListDataItems.add(item);
                           //   }
                           // }
-                          var pl = items.firstWhere(
+                          var pl = items.firstWhereOrNull(
                               (item) => item.name == selectedPlayListName);
-                          pl.stationIds
-                              .add(widget.selectedRadioStn.stationUuid!);
-                          await ref
-                              .read(playlistDataProvider.notifier)
-                              .updatePlayList(items);
+                          if (pl != null) {
+                            pl.stationIds
+                                .add(widget.selectedRadioStn.stationUuid!);
+                            await ref
+                                .read(playlistDataProvider.notifier)
+                                .updatePlayList(items);
 
-                          GFToast.showToast("Added to playlist", context);
-                          Navigator.pop(context);
+                            GFToast.showToast("Added to playlist", context);
+                            Navigator.pop(context);
+                          }
                         }
                       })
                   : Container()

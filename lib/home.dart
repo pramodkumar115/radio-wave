@@ -41,7 +41,6 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
         ref.read(countryProvider.notifier).updateCountry(country);
       }
       ref.read(favoritesDataProvider.notifier).build();
-      ref.read(recentVisitsDataProvider.notifier).build();
       ref.read(addedStreamsDataProvider.notifier).build();
     });
   }

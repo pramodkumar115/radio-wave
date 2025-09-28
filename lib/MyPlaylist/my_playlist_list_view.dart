@@ -45,7 +45,7 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
       BuildContext context, List<PlayListJsonItem> playlistJsonItems) {
     debugPrint('playlist length - ${playlistJsonItems.length}');
     return Container(
-            margin: const EdgeInsets.only(top: 70),
+            margin: const EdgeInsets.only(top: 65),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(20)

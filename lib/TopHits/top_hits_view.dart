@@ -27,7 +27,6 @@ class _TopHitsViewState extends State<TopHitsView> {
   loadData() async {
     var response = await getTopHitStationDetails();
     if (response.statusCode == 200) {
-      print("station list - ${response.body}");
       List<dynamic> stationList = jsonDecode(response.body);
       var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
       setState(() {

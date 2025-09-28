@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ba6b5ca-edca-4295-aa22-768dcf599f55" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/CountryFamous/country_famous_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/CountryFamous/country_famous_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/CountryFamous/country_famous_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/CountryFamous/country_famous_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Favourites/favourites_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Favourites/favourites_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/FloatingPLayer/floating_player_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FloatingPLayer/floating_player_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MyAddedStreams/my_added_streams_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyAddedStreams/my_added_streams_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_item_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_item_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Notifiers/addedstreams_state_notifier.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Notifiers/addedstreams_state_notifier.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Notifiers/audio_player_notifier.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Notifiers/audio_player_notifier.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Notifiers/playlist_state_notifier.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Notifiers/playlist_state_notifier.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/RadioPlayer/radio_player_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/RadioPlayer/radio_player_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/RecentVisits/recents_visits_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/RecentVisits/recents_visits_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Search/search_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Search/search_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Search/search_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Search/search_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/TopHits/top_hits_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/TopHits/top_hits_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons/util.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/commons/util.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/add_to_playlist_popup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/add_to_playlist_popup.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/create_edit_stream.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/create_edit_stream.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/create_new_stream_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/create_new_stream_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/play_stop_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/play_stop_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/playlist_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/playlist_tile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/radio_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/radio_tile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/home.dart" afterDir="false" />
-    </list>
+    <list default="true" id="1ba6b5ca-edca-4295-aa22-768dcf599f55" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

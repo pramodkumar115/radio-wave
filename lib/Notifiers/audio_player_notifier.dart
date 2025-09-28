@@ -1,9 +1,12 @@
 // player_notifier.dart
 import 'package:flutter/cupertino.dart';
+import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
+import 'package:orbit_radio/commons/util.dart';
 import 'package:riverpod/legacy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';
+import 'package:riverpod/riverpod.dart';
 
 // The state of our player
 class PlayerState {
@@ -44,12 +47,39 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     await _player.setAudioSources(playlist, initialIndex: index ?? 0);
   }
 
+  Future<void> setRecentVisits(MediaItem? mediaItem) async {
+    final recentVisitsNotifier = RecentVisitsNotifier();
+    
+
+    bool isPlaying = _player.playerState.playing;
+    if (isPlaying && mediaItem != null) {
+      print("Came Here in set recent visits");
+      List<String> recentVisitedIds = await getRecentVisitsFromFile();
+      if (recentVisitedIds.contains(mediaItem.id)) {
+        recentVisitedIds.removeAt(recentVisitedIds.indexOf(mediaItem.id));
+      }
+      recentVisitedIds.insert(0, mediaItem.id);
+      if (recentVisitedIds.length >= 10) {
+        recentVisitedIds.removeRange(10, recentVisitedIds.length);
+      }
+            print("recentVisitedIds - $recentVisitedIds");
+
+      await saveRecentVisitsFile(recentVisitedIds);
+      recentVisitsNotifier.build();
+    }
+  }
+
   // Set up listeners for the player's stream
   void _initListeners() {
-    // Listen for changes in the playback state
     _player.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
       state = state.copyWith(isPlaying: isPlaying);
+      if (isPlaying) {
+        print("Came inside is playing true - ${_player.sequenceState.currentSource?.tag?.id}");
+        if (_player.sequenceState.currentSource != null) {
+          setRecentVisits(_player.sequenceState.currentSource?.tag);
+        }
+      }
     });
 
     // Listen for changes to the currently playing item
@@ -106,5 +136,6 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 // The provider to be used by the UI
 final audioPlayerProvider =
     StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
+      
   return PlayerNotifier();
 });

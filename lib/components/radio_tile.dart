@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
@@ -6,6 +7,7 @@ import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
+import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/create_edit_stream.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
@@ -37,11 +39,13 @@ class _RadioTileState extends ConsumerState<RadioTile> {
       var playListAsync = ref.watch(playlistDataProvider);
       playListAsync.when(
           data: (dataSet) {
-            PlayListJsonItem selectedPlaylist =
-                dataSet.firstWhere((element) => element.name == playlistName);
-            selectedPlaylist.stationIds = selectedPlaylist.stationIds
-                .where((element) => element != widget.radio.stationUuid!)
-                .toList();
+            PlayListJsonItem? selectedPlaylist = dataSet
+                .firstWhereOrNull((element) => element.name == playlistName);
+            if (selectedPlaylist != null) {
+              selectedPlaylist.stationIds = selectedPlaylist.stationIds
+                  .where((element) => element != widget.radio.stationUuid!)
+                  .toList();
+            }
             ref.read(playlistDataProvider.notifier).updatePlayList(dataSet);
           },
           error: (error, stackTrace) => Center(child: Text('Error: $error')),
@@ -101,8 +105,9 @@ class _RadioTileState extends ConsumerState<RadioTile> {
               scrollControlDisabledMaxHeightRatio: 1,
               backgroundColor: Colors.grey.shade100,
               builder: (BuildContext context) {
+                
                 return RadioPlayerView(
-                    radioStationsList: widget.radioStations,
+                    radioStationsList: converMediaItemsToRadioList(audioPlayerState.playListMediaItems),
                     selectedRadioId: widget.radio.stationUuid!);
               },
             );
