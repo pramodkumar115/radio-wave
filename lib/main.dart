@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:orbit_radio/home.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 Future<void> main() async {
+  final bool isConnected = await InternetConnection().hasInternetAccess;
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_audio_channel',
     androidNotificationChannelName: 'Background audio playback',
@@ -16,11 +20,13 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp(isConnectedToInternet: isConnected)));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.isConnectedToInternet});
+
+  final bool isConnectedToInternet;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,11 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: isConnectedToInternet
+          ? const MyHomePage()
+          : Center(
+              child: Text("This app requires internet connection.").text.xl.bold.amber100.underline.make(),
+            ),
     );
   }
 }

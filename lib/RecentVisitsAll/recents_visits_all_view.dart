@@ -1,47 +1,97 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fui_kit/fui_kit.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:orbit_radio/Search/search_service.dart';
+import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
+import 'package:orbit_radio/commons/shimmer.dart';
+import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class RecentsVisitsAllView extends StatefulWidget {
-  const RecentsVisitsAllView({super.key, required this.stationsList});
-  final List<RadioStation> stationsList;
+class RecentsVisitsAllView extends ConsumerStatefulWidget {
+  const RecentsVisitsAllView({super.key});
 
   @override
-  State<RecentsVisitsAllView> createState() => _RecentsVisitsAllViewState();
+  ConsumerState<RecentsVisitsAllView> createState() =>
+      _RecentsVisitsAllViewState();
 }
 
-class _RecentsVisitsAllViewState extends State<RecentsVisitsAllView> {
+class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
+  late Future<List<RadioStation>> _recentsViewsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _recentsViewsFuture = loadData();
+  }
+
+  Future<List<RadioStation>> loadData() async {
+    List<String> uuids = await getRecentVisitsFromFile();
+    return await getStationsListForUUIDs(uuids);
+  }
+
+  void _refreshFuture() {
+    // 3. Call setState and re-assign the Future variable to a new Future.
+    setState(() {
+      _recentsViewsFuture = loadData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          actions: [GestureDetector(
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(10),
-              child: Text("Clear History").text.underline.make()
+    return PopScope(
+        canPop: false, // Allow pop if no unsaved changes
+        onPopInvokedWithResult:(didPop, result) {
+          if (didPop) {
+            print("came in $didPop");
+            
+          } else {
+            Navigator.of(context).pop(true);
+          }
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              actions: [
+                GestureDetector(
+                  child: Padding(
+                      padding: EdgeInsetsGeometry.all(10),
+                      child: Text("Clear History").text.underline.make()),
+                  onTap: () {
+                    ref
+                        .watch(recentVisitsDataProvider.notifier)
+                        .updateRecentVisits([]);
+                    _refreshFuture();
+                  },
+                )
+              ],
+              title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Text("Recent Visits").text.bold.xl.make(),
+              ]),
+              backgroundColor: Colors.grey.shade100,
             ),
-          )],
-          title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text("Recent Visits").text.bold.xl.make(),
-          ]),
-          backgroundColor: Colors.grey.shade100,
-        ),
-        body: widget.stationsList.isNotEmpty
-            ? ListView(children: [
-                ...widget.stationsList.map((radio) {
-                  return RadioTile(
-                      radio: radio,
-                      radioStations: widget.stationsList,
-                      from: "RECENT_VISITS");
-                }),
-              ])
-            : Container());
+            body: FutureBuilder(
+                future: _recentsViewsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return showContent(snapshot.data);
+                  } else {
+                    return GFShimmer(child: emptyCardBlock);
+                  }
+                })));
+  }
+
+  Widget showContent(List<RadioStation>? stationsList) {
+    return stationsList != null && stationsList.isNotEmpty
+        ? ListView(children: [
+            ...stationsList!.map((radio) {
+              return RadioTile(
+                  radio: radio,
+                  radioStations: stationsList,
+                  from: "RECENT_VISITS");
+            }),
+          ])
+        : Text("No history of radios yet");
   }
 }

@@ -26,14 +26,12 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  TabController? _tabController;
 
   String userCurrentCountry = "";
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
 
     Future.delayed(Duration.zero, () async {
       var country = await getUserCurrentCountry();
@@ -47,7 +45,6 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _tabController?.dispose();
     ref.watch(audioPlayerProvider.notifier).dispose();
     super.dispose();
   }

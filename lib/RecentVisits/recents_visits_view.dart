@@ -19,30 +19,33 @@ class RecentVisitsView extends ConsumerStatefulWidget {
 }
 
 class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
-  List<RadioStation> stationList = List.empty(growable: true);
-  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    loadData();
   }
 
-  Future<void> loadData() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<List<RadioStation>> loadData() async {
     List<String> uuids = await getRecentVisitsFromFile();
-    List<RadioStation> stnList = await getStationsListForUUIDs(uuids);
-    setState(() {
-      stationList = stnList;
-      _isLoading = false;
-    });
+    return await getStationsListForUUIDs(uuids);
   }
 
   @override
   Widget build(BuildContext context) {
     print("In recent");
+
+    return FutureBuilder(
+      future: loadData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return showContent(snapshot.data);
+        } else {
+          return GFShimmer(child: emptyCardBlock);
+        }
+  });
+  }
+
+  Widget showContent(List<RadioStation>? stationList) {
     return VStack([
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         const Text("Recent Visits").text.scale(1.1).bold.make(),
@@ -53,17 +56,15 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
                   context,
                   MaterialPageRoute<void>(
                       builder: (context) =>
-                          RecentsVisitsAllView(stationsList: stationList)));
+                          RecentsVisitsAllView()));
             })
       ]),
-      _isLoading
-          ? GFShimmer(child: emptyCardBlock)
-          : stationList.isNotEmpty
+        stationList != null && stationList.isNotEmpty
               ? // RadioStationListView(stationList: stationList)
               SizedBox(
                   height: 300,
                   child: ListView(
-                      children: stationList.sublist(0, 4).map((radio) {
+                      children: stationList.sublist(0, stationList.length > 4  ? 4 : stationList.length).map((radio) {
                     return RadioTile(
                         radio: radio,
                         radioStations: stationList,
