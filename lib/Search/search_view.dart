@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Search/search_service.dart';
@@ -20,35 +21,52 @@ class _SearchViewState extends State<SearchView> {
   final _searchController = TextEditingController();
   int offset = 0, limit = 10;
   List<RadioStation> searchedRadioStations = List.empty(growable: true);
-  Set<String> searchType = {'byname'};
+  Set<String> searchBy = {'byname'};
+  String searchType = "SIMPLE";
   Timer? _debounce;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _languageController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+
+  List<String> countryList = List.empty(growable: true);
+  String selectedCountry = "";
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(() => loadData(offset, limit));
+    _nameController.addListener(() => loadData(offset, limit));
+    _countryController.addListener(() => loadData(offset, limit));
+    _languageController.addListener(() => loadData(offset, limit));
+    _tagController.addListener(() => loadData(offset, limit));
   }
 
   void loadData(int startIndex, int endIndex) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 1000), () async {
       String text = _searchController.text;
-      if (text.length >= 3) {
-        var response = await getSearchResults(
-            text.trim(), searchType.first, startIndex, endIndex);
-        if (response.statusCode == 200) {
-          List<dynamic> stationList = jsonDecode(response.body);
-          var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-          print("list - ${response.body}");
-          setState(() {
-            searchedRadioStations.clear();
-            searchedRadioStations.addAll(list);
-          });
-        } else {
-          throw Exception('Failed to load album');
-        }
+      var response = searchType == 'SIMPLE'
+          ? await getSearchResults(
+              text.trim(), searchBy.first, startIndex, endIndex)
+          : await getAdvancedSearchResults(
+              _nameController.text,
+              selectedCountry,
+              _languageController.text,
+              _tagController.text,
+              startIndex,
+              endIndex);
+      if (response != null && response.statusCode == 200) {
+        List<dynamic> stationList = jsonDecode(response.body);
+        var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
+        print("list - ${response.body}");
+        setState(() {
+          searchedRadioStations.clear();
+          searchedRadioStations.addAll(list);
+        });
       } else {
-        setState(() => searchedRadioStations.clear());
+        throw Exception('Failed to load album');
       }
     });
   }
@@ -71,60 +89,143 @@ class _SearchViewState extends State<SearchView> {
           backgroundColor: Colors.grey.shade100,
         ),
         body: Column(children: [
-          SegmentedButton(
-              emptySelectionAllowed: false,
-              multiSelectionEnabled: false,
-              showSelectedIcon: false,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                  (Set<WidgetState> states) {
-                    // Return a different color for the selected segment
-                    if (states.contains(WidgetState.selected)) {
-                      return Color.fromARGB(255, 0, 29, 10);
-                    }
-                    // Return a default color for unselected segments
-                    return Colors.grey.shade200;
-                  },
-                ),
-                foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                  (Set<WidgetState> states) {
-                    // Return a different color for the selected segment
-                    if (states.contains(WidgetState.selected)) {
-                      return Colors.white;
-                    }
-                    // Return a default color for unselected segments
-                    return Colors.black;
-                  },
-                ),
-              ),
-              segments: const <ButtonSegment<String>>[
-                ButtonSegment(value: 'byname', label: Text('By Name')),
-                ButtonSegment(value: 'bycountry', label: Text('By Country')),
-                ButtonSegment(value: 'bytag', label: Text('By Hashtag')),
-                ButtonSegment(value: 'bylanguage', label: Text('By Language')),
-              ],
-              selected: searchType,
-              onSelectionChanged: (Set<String> value) {
-                setState(() {
-                  searchType = value;
-                  searchedRadioStations.clear();
-                });
-                Future.delayed(Duration.zero, () async {
-                  if (_searchController.text.length >= 3) {
-                    loadData(0, 10);
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GFButton(
+                  onPressed: () {
                     setState(() {
-                      offset = 0;
+                      searchType = 'SIMPLE';
+                      searchedRadioStations.clear();
                     });
-                  }
-                });
-              }),
-          TextField(
-            enableSuggestions: false,
-            textInputAction: TextInputAction.search,
-            controller: _searchController,
-            decoration: const InputDecoration(
-                labelText: 'Enter station name, country, language, tags etc'),
+                  },
+                  text: "Simple Search",
+                  color: const Color.fromARGB(255, 0, 75, 32),
+                  shape: GFButtonShape.pills,
+                  type: searchType == 'SIMPLE'
+                      ? GFButtonType.solid
+                      : GFButtonType.outline),
+              GFButton(
+                  onPressed: () async {
+                    setState(() {
+                      searchType = 'ADVANCED';
+                      searchedRadioStations.clear();
+                    });
+                  },
+                  text: "Advanced Search",
+                  color: const Color.fromARGB(255, 0, 75, 32),
+                  shape: GFButtonShape.pills,
+                  type: searchType == 'ADVANCED'
+                      ? GFButtonType.solid
+                      : GFButtonType.outline)
+            ],
           ),
+          searchType == 'SIMPLE'
+              ? Column(children: [
+                  SegmentedButton(
+                      emptySelectionAllowed: false,
+                      multiSelectionEnabled: false,
+                      showSelectedIcon: false,
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) {
+                            // Return a different color for the selected segment
+                            if (states.contains(WidgetState.selected)) {
+                              return Color.fromARGB(255, 0, 29, 10);
+                            }
+                            // Return a default color for unselected segments
+                            return Colors.grey.shade200;
+                          },
+                        ),
+                        foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) {
+                            // Return a different color for the selected segment
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.white;
+                            }
+                            // Return a default color for unselected segments
+                            return Colors.black;
+                          },
+                        ),
+                      ),
+                      segments: const <ButtonSegment<String>>[
+                        ButtonSegment(value: 'byname', label: Text('By Name')),
+                        ButtonSegment(
+                            value: 'bycountry', label: Text('By Country')),
+                        ButtonSegment(
+                            value: 'bytag', label: Text('By Hashtag')),
+                        ButtonSegment(
+                            value: 'bylanguage', label: Text('By Language')),
+                      ],
+                      selected: searchBy,
+                      onSelectionChanged: (Set<String> value) {
+                        setState(() {
+                          searchBy = value;
+                          searchedRadioStations.clear();
+                        });
+                        Future.delayed(Duration.zero, () async {
+                          if (_searchController.text.length >= 3) {
+                            getData();
+                          }
+                        });
+                      }),
+                  TextField(
+                    enableSuggestions: false,
+                    textInputAction: TextInputAction.search,
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                        labelText:
+                            'Enter station name, country, language, tags etc'),
+                  )
+                ])
+              : Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    spacing: 10,
+                    children: [
+                      TextField(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Name of the station'),
+                      ),
+                      TypeAheadField<String>(
+                        suggestionsCallback: (search) => getCountryList(search),
+                        controller: _countryController,
+                        builder: (context, controller, focusNode) {
+                          return TextField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Country'));
+                        },
+                        itemBuilder: (context, country) {
+                          return ListTile(title: Text(country));
+                        },
+                        onSelected: (country) {
+                          setState(() {
+                            selectedCountry = country;
+                          });
+                          _countryController.text = country;
+                          // loadData(0, 10);
+                        },
+                      ),
+                      TextField(
+                        controller: _languageController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Language'),
+                      ),
+                      TextField(
+                        controller: _tagController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), labelText: 'Hash Tags (Comma Seperated for multiple tag search)'),
+                      ),
+                    ],
+                  )),
           searchedRadioStations.isNotEmpty
               ? Expanded(
                   child: ListView(children: [
@@ -170,5 +271,12 @@ class _SearchViewState extends State<SearchView> {
                 ]))
               : Container(),
         ]));
+  }
+
+  void getData() {
+    loadData(0, 10);
+    setState(() {
+      offset = 0;
+    });
   }
 }
