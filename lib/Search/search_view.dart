@@ -22,7 +22,7 @@ class _SearchViewState extends State<SearchView> {
   int offset = 0, limit = 10;
   List<RadioStation> searchedRadioStations = List.empty(growable: true);
   Set<String> searchBy = {'byname'};
-  String searchType = "SIMPLE";
+  String searchType = "ADVANCED";
   Timer? _debounce;
 
   final TextEditingController _nameController = TextEditingController();
@@ -41,32 +41,52 @@ class _SearchViewState extends State<SearchView> {
     _countryController.addListener(() => loadData(offset, limit));
     _languageController.addListener(() => loadData(offset, limit));
     _tagController.addListener(() => loadData(offset, limit));
+    getCountryList("").then((valueList) => setState(() {
+          countryList = valueList;
+        }));
+  }
+
+  List<String> filterCountryList(String search) {
+    return countryList
+        .where((e) => e.toLowerCase().contains(search.toLowerCase()))
+        .toList();
   }
 
   void loadData(int startIndex, int endIndex) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 1000), () async {
-      String text = _searchController.text;
-      var response = searchType == 'SIMPLE'
-          ? await getSearchResults(
-              text.trim(), searchBy.first, startIndex, endIndex)
-          : await getAdvancedSearchResults(
-              _nameController.text,
-              selectedCountry,
-              _languageController.text,
-              _tagController.text,
-              startIndex,
-              endIndex);
-      if (response != null && response.statusCode == 200) {
-        List<dynamic> stationList = jsonDecode(response.body);
-        var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-        print("list - ${response.body}");
-        setState(() {
-          searchedRadioStations.clear();
-          searchedRadioStations.addAll(list);
-        });
-      } else {
-        throw Exception('Failed to load album');
+      setState(() {
+        searchedRadioStations = [];
+      });
+      // String text = _searchController.text;
+      // var response = searchType == 'SIMPLE'
+      // ? await getSearchResults(
+      // text.trim(), searchBy.first, startIndex, endIndex)
+      // :
+      if (_nameController.text.length > 3 ||
+          selectedCountry.isNotEmpty ||
+          _languageController.text.length > 3 ||
+          _tagController.text.length > 3) {
+        var response = await getAdvancedSearchResults(
+            _nameController.text,
+            selectedCountry,
+            _languageController.text,
+            _tagController.text,
+            startIndex,
+            endIndex);
+        if (response != null &&
+            response.statusCode == 200 &&
+            response.body != null) {
+          List<dynamic> stationList = jsonDecode(response.body);
+          var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
+          print("list - ${response.body}");
+          setState(() {
+            searchedRadioStations.clear();
+            searchedRadioStations.addAll(list);
+          });
+        } else {
+          throw Exception('Failed to load album');
+        }
       }
     });
   }
@@ -82,6 +102,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.teal.shade50,
         appBar: AppBar(
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Text("Search").text.bold.xl.make(),
@@ -89,38 +110,38 @@ class _SearchViewState extends State<SearchView> {
           backgroundColor: Colors.grey.shade100,
         ),
         body: Column(children: [
-          Row(
-            spacing: 10,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GFButton(
-                  onPressed: () {
-                    setState(() {
-                      searchType = 'SIMPLE';
-                      searchedRadioStations.clear();
-                    });
-                  },
-                  text: "Simple Search",
-                  color: const Color.fromARGB(255, 0, 75, 32),
-                  shape: GFButtonShape.pills,
-                  type: searchType == 'SIMPLE'
-                      ? GFButtonType.solid
-                      : GFButtonType.outline),
-              GFButton(
-                  onPressed: () async {
-                    setState(() {
-                      searchType = 'ADVANCED';
-                      searchedRadioStations.clear();
-                    });
-                  },
-                  text: "Advanced Search",
-                  color: const Color.fromARGB(255, 0, 75, 32),
-                  shape: GFButtonShape.pills,
-                  type: searchType == 'ADVANCED'
-                      ? GFButtonType.solid
-                      : GFButtonType.outline)
-            ],
-          ),
+          // Row(
+          //   spacing: 10,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     GFButton(
+          //         onPressed: () {
+          //           setState(() {
+          //             searchType = 'SIMPLE';
+          //             searchedRadioStations.clear();
+          //           });
+          //         },
+          //         text: "Simple Search",
+          //         color: const Color.fromARGB(255, 0, 75, 32),
+          //         shape: GFButtonShape.pills,
+          //         type: searchType == 'SIMPLE'
+          //             ? GFButtonType.solid
+          //             : GFButtonType.outline),
+          //     GFButton(
+          //         onPressed: () async {
+          //           setState(() {
+          //             searchType = 'ADVANCED';
+          //             searchedRadioStations.clear();
+          //           });
+          //         },
+          //         text: "Advanced Search",
+          //         color: const Color.fromARGB(255, 0, 75, 32),
+          //         shape: GFButtonShape.pills,
+          //         type: searchType == 'ADVANCED'
+          //             ? GFButtonType.solid
+          //             : GFButtonType.outline)
+          //   ],
+          // ),
           searchType == 'SIMPLE'
               ? Column(children: [
                   SegmentedButton(
@@ -191,7 +212,8 @@ class _SearchViewState extends State<SearchView> {
                             labelText: 'Name of the station'),
                       ),
                       TypeAheadField<String>(
-                        suggestionsCallback: (search) => getCountryList(search),
+                        suggestionsCallback: (search) =>
+                            filterCountryList(search),
                         controller: _countryController,
                         builder: (context, controller, focusNode) {
                           return TextField(
@@ -222,7 +244,9 @@ class _SearchViewState extends State<SearchView> {
                       TextField(
                         controller: _tagController,
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(), labelText: 'Hash Tags (Comma Seperated for multiple tag search)'),
+                            border: OutlineInputBorder(),
+                            labelText:
+                                'Hash Tags (Comma Seperated for multiple tag search)'),
                       ),
                     ],
                   )),

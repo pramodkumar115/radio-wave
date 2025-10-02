@@ -73,13 +73,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     // final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         extendBody: true,
-        // backgroundColor: Color.fromARGB(255, 247, 247, 244),
         body: Container(
             decoration: BoxDecoration(
-                // image: DecorationImage(
-                //   image: AssetImage('assets/background5.jpg'), // Your image path
-                //   fit: BoxFit.cover, // Adjust how the image fits the container
-                // ),
                 gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -109,7 +104,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                       .extraBold
                       .make(),
                   GestureDetector(
-                    child: const FUI(BoldRounded.SEARCH, width: 25, height: 25, color: Colors.black),
+                    child: const FUI(BoldRounded.SEARCH,
+                        width: 25, height: 25, color: Colors.black),
                     onTap: () {
                       debugPrint("Came here");
                       Navigator.push(
@@ -135,15 +131,18 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 onTap: _onItemTapped,
                 animationCurve: Curves.linear,
                 items: [
-                  _selectedIndex == 0 ? FUI(SolidRounded.HOME, color: Colors.red)
+                  _selectedIndex == 0
+                      ? FUI(SolidRounded.HOME, color: Colors.red)
                       : FUI(RegularRounded.HOME, color: Colors.black),
-                      _selectedIndex == 1 ? FUI(SolidRounded.HEART, color: Colors.red)
+                  _selectedIndex == 1
+                      ? FUI(SolidRounded.HEART, color: Colors.red)
                       : FUI(RegularRounded.HEART, color: Colors.black),
-                      _selectedIndex == 2 ? FUI(SolidRounded.LIST, color: Colors.red)
+                  _selectedIndex == 2
+                      ? FUI(SolidRounded.LIST, color: Colors.red)
                       : FUI(RegularRounded.LIST, color: Colors.black),
-                      _selectedIndex == 3 ? FUI(SolidRounded.FOLDER_ADD, color: Colors.red)
+                  _selectedIndex == 3
+                      ? FUI(SolidRounded.FOLDER_ADD, color: Colors.red)
                       : FUI(RegularRounded.FOLDER_ADD, color: Colors.black),
-                  
                 ])
           ]),
         ));

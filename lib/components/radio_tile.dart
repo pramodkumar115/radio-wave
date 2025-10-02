@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:music_visualizer/music_visualizer.dart';
 import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
@@ -109,7 +110,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                 // if (audioPlayerState.playListMediaItems != null && audioPlayerState.playListMediaItems!.isNotEmpty) {
                 //   radioStnList = converMediaItemsToRadioList((audioPlayerState.playListMediaItems));
                 // } else {
-                  radioStnList.addAll(widget.radioStations);
+                radioStnList.addAll(widget.radioStations);
                 // }
                 return RadioPlayerView(
                     radioStationsList: radioStnList,
@@ -140,9 +141,20 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                   .underline
                   .align(TextAlign.start)
                   .make(),
-              (isPlaying && isCurrentAudio
-                  ? Image.asset("assets/equalizer.gif", height: 50)
-                  : Container())
+              isPlaying && isCurrentAudio
+                  ? SizedBox(
+                    height: 30,
+                    child: MusicVisualizer(
+                      barCount: 30,
+                      colors: [
+                        Colors.red[900]!,
+                        Colors.green[900]!,
+                        Colors.blue[900]!,
+                        Colors.brown[900]!
+                      ],
+                      duration: [900, 700, 600, 800, 500],
+                    ))
+                  : Container(),
             ]),
             subTitle: Text(widget.radio.country!),
             icon: SizedBox(

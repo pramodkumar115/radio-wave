@@ -12,7 +12,7 @@ Future<dynamic> getSearchResults(
       '${constants.BASE_URL}stations/$searchBy/${text.toLowerCase()}?offset=$startIndex&limit=$endIndex'));
 }
 
-Future<dynamic> getAdvancedSearchResults(String stationName, String country,
+Future<dynamic>? getAdvancedSearchResults(String stationName, String country,
     String language, String tag, int startIndex, int endIndex) async {
   List<String> searchString = List.empty(growable: true);
   if (stationName.isNotEmpty) {
@@ -33,7 +33,7 @@ Future<dynamic> getAdvancedSearchResults(String stationName, String country,
     return await http.get(Uri.parse(
         '${constants.BASE_URL}stations/search?${searchString.join("&")}&offset=$startIndex&limit=$endIndex'));
   }
-  return [];
+  return null;
 }
 
 Future<List<String>> getCountryList(String country) async {

@@ -1,18 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:music_visualizer/music_visualizer.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
-import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
-import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -118,118 +116,118 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                             color: Colors.white),
                       ),
                     ])),
-
-
                 Positioned(
                     top: screenHeight * 0.1,
                     right: 0,
                     left: 0,
-                    child: Column(
-                        children: [
-                          Container(
-                              padding: EdgeInsetsGeometry.only(
-                                  left: screenWidth * 0.15,
-                                  right: screenWidth * 0.15),
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              width: screenWidth,
-                              height: 280,
-                              child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                      color: Color.fromARGB(255, 218, 218,
-                                          219), 
-                                      width: 0.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        2.0), // Optional: for rounded corners
-                                  ),
-                                  // elevation: 1,
-                                  surfaceTintColor: Colors.white,
-                                  color: Colors.white,
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.grey.shade100),
-                                      // padding: const EdgeInsets.all(20),
-                                      child: _isLoading
-                                          ? GFShimmer(child: emptyCardBlock)
-                                          : Image.network(
-                                              selectedRadioStation!.favicon!,
-                                              loadingBuilder: (context, child,
-                                                      loadingProgress) =>
-                                                  (loadingProgress == null)
-                                                      ? child
-                                                      : const CircularProgressIndicator(),
-                                              errorBuilder: (context, error,
-                                                      stackTrace) =>
+                    child: Column(children: [
+                      Container(
+                          padding: EdgeInsetsGeometry.only(
+                              left: screenWidth * 0.15,
+                              right: screenWidth * 0.15),
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          width: screenWidth,
+                          height: 280,
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  color: Color.fromARGB(255, 218, 218, 219),
+                                  width: 0.5,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    2.0), // Optional: for rounded corners
+                              ),
+                              // elevation: 1,
+                              surfaceTintColor: Colors.white,
+                              color: Colors.white,
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade100),
+                                  // padding: const EdgeInsets.all(20),
+                                  child: _isLoading
+                                      ? GFShimmer(child: emptyCardBlock)
+                                      : Image.network(
+                                          selectedRadioStation!.favicon!,
+                                          loadingBuilder: (context, child,
+                                                  loadingProgress) =>
+                                              (loadingProgress == null)
+                                                  ? child
+                                                  : const CircularProgressIndicator(),
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
                                                   Image.asset(
-                                                "assets/music.jpg",
-                                                // width: 75,
-                                                //height: 75
-                                              ),
-                                            )))),
-                          Text(selectedRadioStation!.name ?? "")
-                              .text
-                              .align(TextAlign.center)
-                              .xl2
-                              .bold
-                              .make(),
-                          Text(selectedRadioStation!.country ?? "")
-                              .text
-                              .align(TextAlign.center)
-                              .medium
-                              .bold
-                              .make(),
-                          selectedRadioStation!.tags != null
-                              ? Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: SizedBox(
-                                      height: 40,
-                                      child: ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          children: selectedRadioStation!.tags!
-                                              .split(",")
-                                              .map((tag) {
-                                            return Container(
+                                            "assets/music.jpg",
+                                            // width: 75,
+                                            //height: 75
+                                          ),
+                                        )))),
+                      Text(selectedRadioStation!.name ?? "")
+                          .text
+                          .align(TextAlign.center)
+                          .xl2
+                          .bold
+                          .make(),
+                      Text(selectedRadioStation!.country ?? "")
+                          .text
+                          .align(TextAlign.center)
+                          .medium
+                          .bold
+                          .make(),
+                      selectedRadioStation!.tags != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                  height: 40,
+                                  child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      children: selectedRadioStation!.tags!
+                                          .split(",")
+                                          .map((tag) {
+                                        return Container(
+                                            padding: const EdgeInsets.all(2),
+                                            child: Chip(
+                                                shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255,
+                                                        162,
+                                                        162,
+                                                        163), // Specify border color
+                                                    width:
+                                                        1, // Specify border width
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10), // Optional: for rounded corners
+                                                ),
                                                 padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Chip(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: const BorderSide(
-                                                        color: Color.fromARGB(
-                                                            255,
-                                                            162,
-                                                            162,
-                                                            163), // Specify border color
-                                                        width:
-                                                            1, // Specify border width
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10), // Optional: for rounded corners
-                                                    ),
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    label:
-                                                        HStack([Text("#$tag")]),
-                                                    //onDeleted: () => _deleteTag(tag),
-                                                    backgroundColor:
-                                                        const Color.fromARGB(
-                                                            255,
-                                                            196,
-                                                            245,
-                                                            235)));
-                                          }).toList())))
-                              : Container(),
-                        ])),
+                                                    const EdgeInsets.all(0),
+                                                label: HStack([Text("#$tag")]),
+                                                //onDeleted: () => _deleteTag(tag),
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 196, 245, 235)));
+                                      }).toList())))
+                          : Container(),
+                      isPlaying ? MusicVisualizer(
+                        barCount: 30,
+                        colors: [
+                          Colors.red[900]!,
+                          Colors.green[900]!,
+                          Colors.blue[900]!,
+                          Colors.brown[900]!
+                        ],
+                        duration: [900, 700, 600, 800, 500],
+                      ) : Container(),
+                    ])),
                 Positioned(
                     top: screenHeight * 0.7,
                     child: Container(
                       padding: EdgeInsets.all(5),
-                      margin: EdgeInsetsDirectional.symmetric(horizontal: screenWidth * 0.05),
+                      margin: EdgeInsetsDirectional.symmetric(
+                          horizontal: screenWidth * 0.05),
                       width: screenWidth * 0.9,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
