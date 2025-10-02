@@ -9,7 +9,6 @@ import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/RadioStations/radio_station_list.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class CountryFamousStationsView extends ConsumerStatefulWidget {
   const CountryFamousStationsView({super.key});
@@ -58,8 +57,11 @@ class _CountryFamousStationsViewState
 
   @override
   Widget build(BuildContext context) {
-    return VStack([
-          const Text("Famous stations near you").text.scale(1.1).bold.make(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+          const Text("Famous stations near you", 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           topHitStations.isNotEmpty
               ? RadioStationListView(stationList: topHitStations)
               : GFShimmer(child: emptyBlock)

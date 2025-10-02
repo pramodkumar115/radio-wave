@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
-import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -61,14 +59,14 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     if (_isLoading) return CircularProgressIndicator();
     if (isCurrentAudio) {
       return (isPlaying != true)
-          ? const FUI(BoldRounded.PLAY,
-              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25)
-          : const FUI(BoldRounded.STOP,
-              color: Color.fromARGB(255, 0, 29, 10), width: 25, height: 25);
+          ? const Icon(Icons.play_arrow,
+              color: Color.fromARGB(255, 0, 29, 10), size: 40)
+          : const Icon(Icons.stop_sharp,
+              color: Color.fromARGB(255, 0, 29, 10), size: 40);
     } else {
-      return const FUI(BoldRounded.PLAY,
+      return const Icon(Icons.play_arrow,
           color: Color.fromARGB(255, 0, 29, 10),
-          width: 25, height: 25); // const Icon(Icons.play_arrow));
+          size: 40,); // const Icon(Icons.play_arrow));
     }
   }
 

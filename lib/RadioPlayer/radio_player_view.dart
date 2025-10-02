@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_visualizer/music_visualizer.dart';
@@ -12,7 +11,6 @@ import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class RadioPlayerView extends ConsumerStatefulWidget {
   const RadioPlayerView(
@@ -162,18 +160,18 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                             //height: 75
                                           ),
                                         )))),
-                      Text(selectedRadioStation!.name ?? "")
-                          .text
-                          .align(TextAlign.center)
-                          .xl2
-                          .bold
-                          .make(),
-                      Text(selectedRadioStation!.country ?? "")
-                          .text
-                          .align(TextAlign.center)
-                          .medium
-                          .bold
-                          .make(),
+                      Text(selectedRadioStation!.name ?? "",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      )),
+
+                      Text(selectedRadioStation!.country ?? "",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      )),
                       selectedRadioStation!.tags != null
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -204,7 +202,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                                 ),
                                                 padding:
                                                     const EdgeInsets.all(0),
-                                                label: HStack([Text("#$tag")]),
+                                                label: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [Text("#$tag")]),
                                                 //onDeleted: () => _deleteTag(tag),
                                                 backgroundColor:
                                                     const Color.fromARGB(
@@ -263,8 +263,8 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       audioPlayerState,
                                       isPlaying,
                                       selectedRadioStation),
-                                  icon: const FUI(RegularRounded.REWIND,
-                                      color: Color.fromARGB(255, 0, 29, 10)))
+                                  icon: const Icon(Icons.skip_previous,
+                                      color: Color.fromARGB(255, 0, 29, 10), size: 30))
                               : Container(),
                           _isLoading
                               ? const CircularProgressIndicator()
@@ -286,9 +286,9 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                       audioPlayerState,
                                       isPlaying,
                                       selectedRadioStation!),
-                                  icon: const FUI(RegularRounded.FORWARD,
+                                  icon: const Icon(Icons.skip_next,
                                       color: Color.fromARGB(255, 0, 29,
-                                          10)) // const Icon(Icons.skip_next),
+                                          10), size: 30) // const Icon(Icons.skip_next),
                                   )
                               : Container(),
                           Container(

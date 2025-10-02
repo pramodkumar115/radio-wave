@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -44,17 +43,13 @@ class _FavoritesButtonState extends ConsumerState<FavoritesButton> {
   Widget showContent(List<String> favIds, RadioStation station) {
     return InkWell(
       child: favIds.contains(station!.stationUuid!)
-          ? const FUI(
-              SolidRounded.HEART,
+          ? const Icon(Icons.favorite,
               color: Color.fromRGBO(248, 1, 26, 1),
-              width: 25,
-              height: 25,
-            )
-          : const FUI(
-              RegularRounded.HEART,
+              size: 30)
+            
+          : const Icon(Icons.favorite_border_outlined,
               color: Color.fromARGB(255, 250, 3, 3),
-              width: 25,
-              height: 25,
+              size: 30
             ),
       onTap: () => addToFavorites(favIds, widget.station),
     );

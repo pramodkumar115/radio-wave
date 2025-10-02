@@ -8,7 +8,6 @@ import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class RecentsVisitsAllView extends ConsumerStatefulWidget {
   const RecentsVisitsAllView({super.key});
@@ -43,10 +42,9 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
   Widget build(BuildContext context) {
     return PopScope(
         canPop: false, // Allow pop if no unsaved changes
-        onPopInvokedWithResult:(didPop, result) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             print("came in $didPop");
-            
           } else {
             Navigator.of(context).pop(true);
           }
@@ -57,7 +55,9 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
                 GestureDetector(
                   child: Padding(
                       padding: EdgeInsetsGeometry.all(10),
-                      child: Text("Clear History").text.underline.make()),
+                      child: Text("Clear History",
+                          style:
+                              TextStyle(decoration: TextDecoration.underline))),
                   onTap: () {
                     ref
                         .watch(recentVisitsDataProvider.notifier)
@@ -67,7 +67,11 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
                 )
               ],
               title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Text("Recent Visits").text.bold.xl.make(),
+                Text("Recent Visits",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    )),
               ]),
               backgroundColor: Colors.grey.shade100,
             ),

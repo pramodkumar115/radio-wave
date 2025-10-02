@@ -4,7 +4,6 @@ import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/components/create_new_playlist_button.dart';
 import 'package:orbit_radio/components/playlist_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class MyPlaylistListView extends ConsumerStatefulWidget {
   const MyPlaylistListView({super.key});
@@ -45,27 +44,26 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
       BuildContext context, List<PlayListJsonItem> playlistJsonItems) {
     debugPrint('playlist length - ${playlistJsonItems.length}');
     return Container(
-            margin: const EdgeInsets.only(top: 65),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(20)
-            ),
-            child: _isLoading
-                ? ListView(children: [Center(child: Text("Please wait"))])
-                : ListView(children: [
-                    CreateNewPlaylistButton(items: playlistJsonItems),
-                    ...getWidget(playlistJsonItems)
-                  ]))
-        .p12();
+        margin: const EdgeInsets.only(top: 65),
+        padding: EdgeInsets.all(6),
+        decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(20)),
+        child: _isLoading
+            ? ListView(children: [Center(child: Text("Please wait"))])
+            : ListView(children: [
+                CreateNewPlaylistButton(items: playlistJsonItems),
+                ...getWidget(playlistJsonItems)
+              ]));
   }
 
   List<Widget> getWidget(List<PlayListJsonItem> playlistJsonItems) {
     if (playlistJsonItems.isNotEmpty) {
       return playlistJsonItems
           .map((pl) => Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: PlaylistTile(
-              playlistJsonItems: playlistJsonItems, playlistJsonItem: pl)))
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: PlaylistTile(
+                  playlistJsonItems: playlistJsonItems, playlistJsonItem: pl)))
           .toList();
     } else {
       [Center(child: Text("No Playlists yet"))];

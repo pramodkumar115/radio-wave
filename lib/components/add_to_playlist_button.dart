@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:orbit_radio/components/add_to_playlist_popup.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -25,8 +24,7 @@ class _AddToPlaylistButtonState extends ConsumerState<AddToPlaylistButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        child: const FUI(RegularRounded.FILE_ADD,
-            color: Color.fromRGBO(248, 1, 26, 1), width: 25, height: 25),
+        child: const Icon(Icons.playlist_add, color: Color.fromRGBO(248, 1, 26, 1), size: 30),
         onTap: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,

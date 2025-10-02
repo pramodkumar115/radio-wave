@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:orbit_radio/components/create_edit_stream.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class CreateNewStreamButton extends StatefulWidget {
   const CreateNewStreamButton({super.key, required this.items});
@@ -24,13 +22,17 @@ class _CreateNewPlaylistButtonState extends State<CreateNewStreamButton> {
             child: Row(
               spacing: 10,
               children: [
-                FUI(
-                  RegularRounded.ADD,
+                Icon(
+                  Icons.add_circle,
                   color: Colors.red,
                 ),
                 Text(
-                  "Create New Stream",
-                ).text.bold.xl.red600.make()
+                "Create New Stream",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              )
               ],
             )),
         onTap: () => showModalBottomSheet(

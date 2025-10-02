@@ -3,7 +3,6 @@ import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class MyPlaylistItemView extends StatefulWidget {
   const MyPlaylistItemView({super.key, required this.playListJsonItem});
@@ -47,11 +46,8 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
             title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Playlist - ${playListItem != null ? playListItem?.name : ""}")
-                .text
-                .bold
-                .xl
-                .make(),
+            Text("Playlist - ${playListItem != null ? playListItem?.name : ""}",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ],
         )),
         body: Container(

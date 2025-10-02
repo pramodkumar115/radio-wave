@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class RadioStationListView extends StatefulWidget {
   final List<RadioStation> stationList;
@@ -39,20 +38,24 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                color: Color.fromARGB(255, 226, 226, 227), // Specify border color
-                                width: 0.5, // Specify border width
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  5.0), // Optional: for rounded corners
-                            ),
-                            margin: const EdgeInsets.all(8),
-                            color: Colors.white,
-                            surfaceTintColor: Colors.white,
-                            elevation: 1,
-                            child: Container(
+                        SizedBox(
+                          width: 120,
+                          height: 100,
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                    color: Color.fromARGB(255, 226, 226,
+                                        227), // Specify border color
+                                    width: 0.5, // Specify border width
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      5.0), // Optional: for rounded corners
+                                ),
+                                margin: const EdgeInsets.all(8),
+                                color: Colors.white,
+                                surfaceTintColor: Colors.white,
+                                elevation: 1,
+                                child: Container(
                                     padding: const EdgeInsets.all(12),
                                     child: Image.network(
                                       s.favicon!,
@@ -66,18 +69,17 @@ class _RadioStationListViewState extends State<RadioStationListView> {
                                       errorBuilder:
                                           (context, error, stackTrace) =>
                                               Image.asset("assets/music.jpg",
-                                                  width: 75, height: 75),
-                                    ).w15(context).h10(context))
-                                .w24(context)
-                                .h10(context)),
-                        Text('${getStationName(s.name)} ${getStationCountry(s.country)}', softWrap: true)
-                            .text
-                            .sm
-                            .semiBold
-                            // .gray500
-                            .align(TextAlign.center)
-                            .make()
-                            .w24(context),
+                                                  width: 200, height: 100),
+                                    )))),
+                        SizedBox(
+                            width: 120,
+                            child: Text(
+                                '${getStationName(s.name)} ${getStationCountry(s.country)}',
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold))),
                       ])))
               .toList(),
         ));

@@ -4,7 +4,6 @@ import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/components/create_new_stream_button.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class MyAddedStreamsView extends ConsumerStatefulWidget {
   const MyAddedStreamsView({super.key});
@@ -45,7 +44,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
     debugPrint('playlist length - ${streams.length}');
     return Container(
             margin: const EdgeInsets.only(top: 70),
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(25),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: _isLoading
@@ -53,8 +52,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
                 : ListView(children: [
                     CreateNewStreamButton(items: streams),
                     ...getWidget(streams)
-                  ]))
-        .p12();
+                  ]));
   }
 
   List<Widget> getWidget(List<RadioStation> streams) {

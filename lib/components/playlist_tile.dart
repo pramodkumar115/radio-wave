@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/MyPlaylist/my_playlist_item_view.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/components/create_edit_playlist.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class PlaylistTile extends ConsumerStatefulWidget {
   const PlaylistTile(
@@ -34,7 +32,7 @@ class _PlaylistTileState extends ConsumerState<PlaylistTile> {
               offset: Offset(1, 1)),
           margin: EdgeInsets.all(2),
           color: Colors.grey.shade50,
-          title: Text(widget.playlistJsonItem.name).text.bold.make(),
+          title: Text(widget.playlistJsonItem.name, style: TextStyle(fontWeight: FontWeight.bold)),
           icon: SizedBox(
               width: 80,
               child: Row(
@@ -42,12 +40,12 @@ class _PlaylistTileState extends ConsumerState<PlaylistTile> {
                   spacing: 20,
                   children: [
                     GestureDetector(
-                        child: FUI(RegularRounded.TRASH,
-                            color: Colors.black, width: 25, height: 25),
+                        child: Icon(Icons.delete_forever_sharp,
+                            color: Colors.black, size: 25),
                         onTap: () => removeSelectedPlaylist()),
                     GestureDetector(
-                        child: FUI(RegularRounded.EDIT,
-                            color: Colors.black, width: 25, height: 25),
+                        child: Icon(Icons.edit_rounded,
+                            color: Colors.black, size: 25),
                         onTap: () {
                           showModalBottomSheet(
                               context: context,

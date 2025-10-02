@@ -11,10 +11,7 @@ import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
-import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/Search/search_view.dart';
-import 'package:fui_kit/fui_kit.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -89,7 +86,6 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // HStack([
                   const GFAvatar(
                     backgroundImage: AssetImage('assets/AppIconNew.png'),
                     shape: GFAvatarShape.square,
@@ -97,15 +93,11 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     foregroundColor: Color.fromRGBO(232, 237, 219, 0),
                     size: 32,
                   ),
-                  const Text("Orbit Radio")
-                      .text
-                      .color(Colors.red.shade900)
-                      .scale(1.5)
-                      .extraBold
-                      .make(),
+                  const Text("Orbit Radio", 
+                  style: TextStyle(color: Color.fromARGB(255, 186, 8, 5), fontSize: 22, fontWeight: FontWeight.w800)),
+                      
                   GestureDetector(
-                    child: const FUI(BoldRounded.SEARCH,
-                        width: 25, height: 25, color: Colors.black),
+                    child: const Icon(Icons.search, size: 30, color: Colors.black),
                     onTap: () {
                       debugPrint("Came here");
                       Navigator.push(
@@ -116,14 +108,16 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     },
                   )
                 ],
-              ).p12(),
+              ),
               showContent(),
             ]))),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          child: VStack([
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             FloatingPlayerView(),
             CurvedNavigationBar(
                 backgroundColor: Colors.transparent,
@@ -132,17 +126,31 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                 animationCurve: Curves.linear,
                 items: [
                   _selectedIndex == 0
-                      ? FUI(SolidRounded.HOME, color: Colors.red)
-                      : FUI(RegularRounded.HOME, color: Colors.black),
+                      ? Icon(Icons.home,
+                          size: 30,
+                          color: Colors
+                              .red) // FUI(SolidRounded.HOME, color: Colors.red)
+                      : Icon(Icons.home_outlined,
+                          size: 30,), // FUI(RegularRounded.HOME, color: Colors.black),
                   _selectedIndex == 1
-                      ? FUI(SolidRounded.HEART, color: Colors.red)
-                      : FUI(RegularRounded.HEART, color: Colors.black),
+                      ? Icon(Icons.favorite,
+                          size: 30,
+                          color: Colors
+                              .red) // FUI(SolidRounded.HEART, color: Colors.red)
+                      : Icon(Icons.favorite_border_outlined,
+                          size: 30,), // FUI(RegularRounded.HEART, color: Colors.black),
                   _selectedIndex == 2
-                      ? FUI(SolidRounded.LIST, color: Colors.red)
-                      : FUI(RegularRounded.LIST, color: Colors.black),
+                      ? Icon(Icons.playlist_play_outlined,
+                          size: 30,
+                          color: Colors
+                              .red) // FUI(SolidRounded.HEART, color: Colors.red)
+                      : Icon(Icons.playlist_play_outlined, size: 30,),
                   _selectedIndex == 3
-                      ? FUI(SolidRounded.FOLDER_ADD, color: Colors.red)
-                      : FUI(RegularRounded.FOLDER_ADD, color: Colors.black),
+                      ? Icon(Icons.add_to_photos,
+                          size: 30,
+                          color: Colors
+                              .red) // FUI(SolidRounded.HEART, color: Colors.red)
+                      : Icon(Icons.add_to_photos_outlined, size: 30,),
                 ])
           ]),
         ));

@@ -6,7 +6,6 @@ import 'package:orbit_radio/RadioStations/radio_station_list.dart';
 import 'package:orbit_radio/TopHits/top_hits_service.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class TopHitsView extends StatefulWidget {
   const TopHitsView({super.key});
@@ -39,8 +38,10 @@ class _TopHitsViewState extends State<TopHitsView> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack([
-      const Text("World's Top 10 Stations").text.scale(1.1).fade.extraBlack.extraBold.make(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      const Text("World's Top 10 Stations", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       topHitStations.isNotEmpty
           ? RadioStationListView(stationList: topHitStations)
           : GFShimmer(child: emptyBlock)

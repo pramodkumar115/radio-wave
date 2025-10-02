@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:orbit_radio/home.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flutter/services.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 Future<void> main() async {
   final bool isConnected = await InternetConnection().hasInternetAccess;
@@ -41,8 +39,13 @@ class MyApp extends StatelessWidget {
       home: isConnectedToInternet
           ? const MyHomePage()
           : Center(
-              child: Text("This app requires internet connection.").text.xl.bold.amber100.underline.make(),
-            ),
+              child: Text(
+              "This app requires internet connection.",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.amber,
+                  decoration: TextDecoration.underline),
+            )),
     );
   }
 }

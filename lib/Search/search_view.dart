@@ -3,12 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Search/search_service.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -105,7 +103,10 @@ class _SearchViewState extends State<SearchView> {
       backgroundColor: Colors.teal.shade50,
         appBar: AppBar(
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text("Search").text.bold.xl.make(),
+            Text("Search", style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            )),
           ]),
           backgroundColor: Colors.grey.shade100,
         ),
@@ -269,7 +270,7 @@ class _SearchViewState extends State<SearchView> {
                                     type: GFButtonType.transparent,
                                     text: 'Previous',
                                     textColor: Colors.black,
-                                    icon: FUI(RegularRounded.ARROW_LEFT),
+                                    icon: Icon(Icons.arrow_back),
                                     onPressed: () {
                                       loadData(offset - 10, limit);
                                       setState(() {
@@ -282,7 +283,7 @@ class _SearchViewState extends State<SearchView> {
                                 ? GFButton(
                                     type: GFButtonType.transparent,
                                     text: 'Next',
-                                    icon: FUI(RegularRounded.ARROW_RIGHT),
+                                    icon: Icon(Icons.arrow_forward),
                                     textColor: Colors.black,
                                     onPressed: () {
                                       loadData(offset + 10, limit);

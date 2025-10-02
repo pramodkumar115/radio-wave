@@ -4,7 +4,6 @@ import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class FavouritesView extends ConsumerStatefulWidget {
   const FavouritesView({super.key});
@@ -60,29 +59,26 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
       setStateWithData();
     });
     return Container(
-            margin: const EdgeInsets.only(top: 50),
-            child: _isLoading
-                ? ListView(children: [Center(child: Text("Please wait"))])
-                : ((radioList != null && radioList!.isNotEmpty)
-                    ? ListView(
-                        children: radioList!.map((radio) {
-                        return RadioTile(
-                            radio: radio,
-                            radioStations: radioList!,
-                            from: 'FAVOURITES');
-                      }).toList())
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                            Center(
-                                child: Text(
-                                        "You have not added any radio stations to your Favourites list")
-                                    .text
-                                    .bold
-                                    .xl2
-                                    .make())
-                          ])))
-        .p12();
+        margin: const EdgeInsets.only(top: 50),
+        child: _isLoading
+            ? ListView(children: [Center(child: Text("Please wait"))])
+            : ((radioList != null && radioList!.isNotEmpty)
+                ? ListView(
+                    children: radioList!.map((radio) {
+                    return RadioTile(
+                        radio: radio,
+                        radioStations: radioList!,
+                        from: 'FAVOURITES');
+                  }).toList())
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        Center(
+                            child: Text(
+                                "You have not added any radio stations to your Favourites list",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20)))
+                      ])));
   }
 }

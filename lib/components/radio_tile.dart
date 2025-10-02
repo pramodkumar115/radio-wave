@@ -1,21 +1,18 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fui_kit/fui_kit.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:music_visualizer/music_visualizer.dart';
 import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_view.dart';
-import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/create_edit_stream.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:popover/popover.dart';
 
 class RadioTile extends ConsumerStatefulWidget {
@@ -134,13 +131,15 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                 child: Image.network(widget.radio.favicon!,
                     errorBuilder: (context, error, stackTrace) =>
                         Image.asset("assets/music.jpg"))),
-            title: VStack([
-              Text(widget.radio.name!, textAlign: TextAlign.start)
-                  .text
-                  .bold
-                  .underline
-                  .align(TextAlign.start)
-                  .make(),
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Text(widget.radio.name!, 
+              textAlign: TextAlign.start,
+              style: TextStyle(fontWeight:  FontWeight.bold,
+              decoration: TextDecoration.underline)),
               isPlaying && isCurrentAudio
                   ? SizedBox(
                     height: 30,
@@ -178,8 +177,8 @@ class StreamActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: InkWell(
-            child: FUI(BoldRounded.MENU_DOTS_VERTICAL,
-                width: 25, height: 25, color: Colors.black)),
+            child: Icon(Icons.more_vert, // FUI(BoldRounded.MENU_DOTS_VERTICAL,
+                size: 30, color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,
@@ -218,8 +217,8 @@ class PlaylistActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: InkWell(
-            child: FUI(BoldRounded.MENU_DOTS_VERTICAL,
-                width: 25, height: 25, color: Colors.black)),
+            child: Icon(Icons.more_vert, 
+                size: 30, color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,
