@@ -22,6 +22,7 @@ class MyAddedStreamsView extends ConsumerStatefulWidget {
 class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
   bool _isLoading = true;
   late FilePickerResult? _filePickerResult;
+  int startIndex = 0, endIndex = 10;
 
   @override
   void initState() {
@@ -94,7 +95,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
       for (var index = 1; index < excel.tables[table]!.rows.length; index++) {
         var row = excel.tables[table]!.rows[index];
         var rowIndex = excel.tables[table]!.rows.indexOf(row);
-        print (rowIndex);
+        print(rowIndex);
         if (rowIndex == 0) {
           continue;
         }
@@ -149,27 +150,66 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
     debugPrint('playlist length - ${streams.length}');
     return Container(
         margin: const EdgeInsets.only(top: 70),
-        padding: EdgeInsets.all(25),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(20)),
         child: _isLoading
             ? ListView(children: [Center(child: Text("Please wait"))])
             : ListView(children: [
                 CreateNewStreamButton(items: streams),
-                GFButton(onPressed: pickFile, text: "Upload a file"),
-                ...getWidget(streams)
+                GFButton(
+                    color: Colors.black87,
+                    shape: GFButtonShape.pills,
+                    onPressed: pickFile,
+                    text:
+                        "Upload streams as a file (name, url mandatory columns)"),
+                getWidget(streams)
               ]));
   }
 
-  List<Widget> getWidget(List<RadioStation> streams) {
+  Widget getWidget(List<RadioStation> streams) {
     if (streams.isNotEmpty) {
-      return streams
-          .map((stream) => RadioTile(
-              radio: stream, radioStations: [...streams], from: 'STREAMS'))
-          .toList();
+      return Column(children: [
+        ...streams
+            .sublist(startIndex,
+                streams.length - 1 > endIndex ? endIndex : streams.length - 1)
+            .map((stream) => RadioTile(
+                radio: stream, radioStations: [...streams], from: 'STREAMS')),
+        Padding(
+            padding: EdgeInsetsGeometry.all(20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  startIndex >= 10
+                      ? GFButton(
+                          type: GFButtonType.transparent,
+                          text: 'Previous',
+                          textColor: Colors.black,
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            setState(() {
+                              startIndex = startIndex - 10;
+                              endIndex = endIndex - 10;
+                            });
+                          })
+                      : Container(),
+                  streams != null && streams.length >= endIndex
+                      ? GFButton(
+                          type: GFButtonType.transparent,
+                          text: 'Next',
+                          icon: Icon(Icons.arrow_forward),
+                          textColor: Colors.black,
+                          onPressed: () {
+                            setState(() {
+                              startIndex = startIndex + 10;
+                              endIndex = endIndex + 10;
+                            });
+                          })
+                      : Container(),
+                ]))
+      ]);
     } else {
-      [Center(child: Text("No Radio streams added by you."))];
+      return Center(child: Text("No Radio streams added by you."));
     }
-    return [Container()];
   }
 }
