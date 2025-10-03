@@ -55,6 +55,8 @@ dependencies:
   flutter_typeahead: ^5.2.0
   flutter_keyboard_visibility: ^6.0.0
   music_visualizer: ^1.0.4
+  file_picker: ^10.3.3
+  excel: ^4.0.6
 
 dev_dependencies:
   flutter_test:

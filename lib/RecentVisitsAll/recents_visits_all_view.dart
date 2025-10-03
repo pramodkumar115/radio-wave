@@ -70,7 +70,7 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
                 Text("Recent Visits",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 16,
                     )),
               ]),
               backgroundColor: Colors.grey.shade100,
@@ -96,6 +96,8 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
                   from: "RECENT_VISITS");
             }),
           ])
-        : Text("No history of radios yet");
+        : Center(child: Text("No history of radios yet",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)));
   }
 }

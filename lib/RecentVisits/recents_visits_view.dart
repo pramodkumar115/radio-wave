@@ -79,9 +79,11 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
               padding: EdgeInsets.all(20),
               child: Column(children: [
                 Text("No history of radios yet",
+                  
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
+                      
                     )),
                 GFButton(
                     text: "Search Radio Stations",

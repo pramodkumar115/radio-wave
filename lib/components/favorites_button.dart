@@ -42,15 +42,11 @@ class _FavoritesButtonState extends ConsumerState<FavoritesButton> {
 
   Widget showContent(List<String> favIds, RadioStation station) {
     return InkWell(
-      child: favIds.contains(station!.stationUuid!)
+      child: favIds.contains(station.stationUuid!)
           ? const Icon(Icons.favorite,
-              color: Color.fromRGBO(248, 1, 26, 1),
-              size: 30)
-            
+              color: Color.fromRGBO(248, 1, 26, 1), size: 30)
           : const Icon(Icons.favorite_border_outlined,
-              color: Color.fromARGB(255, 250, 3, 3),
-              size: 30
-            ),
+              color: Color.fromARGB(255, 250, 3, 3), size: 30),
       onTap: () => addToFavorites(favIds, widget.station),
     );
   }

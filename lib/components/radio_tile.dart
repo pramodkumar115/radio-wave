@@ -157,7 +157,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
             ]),
             subTitle: Text(widget.radio.country!),
             icon: SizedBox(
-                width: 130,
+                width: widget.from == 'STREAMS' ? 160 : 130,
                 child: Column(
                   children: [
                     Row(
