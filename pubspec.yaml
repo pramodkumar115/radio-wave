@@ -57,6 +57,8 @@ dependencies:
   music_visualizer: ^1.0.4
   file_picker: ^10.3.3
   excel: ^4.0.6
+  flutter_native_splash: ^2.4.4
+  animated_reorderable_list: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -85,3 +87,13 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png"
+
+flutter_native_splash:
+      color: "#ffffff" # Background color of the splash screen
+      image: assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png # Path to your splash image
+      android: true
+      ios: true
+      web: false
+      # You can also specify dark mode settings:
+      # image_dark: assets/splash_image_dark.png
+      # color_dark: "#000000"

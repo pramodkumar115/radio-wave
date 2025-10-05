@@ -331,7 +331,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
 
   void getNextOrPreviousStationDetail(
       String action, RadioStation current, int currentIndex) {
-    if (action == null || action.isEmpty) {
+    if (action.isEmpty) {
       selectedRadioStation = current;
     } else {
       if (action == 'NEXT' &&

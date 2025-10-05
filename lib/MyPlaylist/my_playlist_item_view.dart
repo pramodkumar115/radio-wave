@@ -65,7 +65,7 @@ class _MyPlaylistItemViewState extends State<MyPlaylistItemView> {
                       return RadioTile(
                           radio: radio,
                           radioStations: playListItem!.radioStations,
-                          from: 'PLAYLIST|${playListItem!.name}');
+                          from: 'PLAYLIST|${playListItem!.name}', isReorderClicked: false);
                     }).toList()))
                   ])
                 : Center(child: Text("No Radio Stations added"))));

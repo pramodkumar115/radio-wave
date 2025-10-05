@@ -46,7 +46,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
       if (filePath != null) {
         File file = File(filePath);
         var bytes = await file.readAsBytes();
-        print("bytes - ${bytes?.length}");
+        print("bytes - ${bytes.length}");
         _readExcelData(bytes);
       }
     } else {
@@ -174,7 +174,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
             .sublist(startIndex,
                 streams.length - 1 > endIndex ? endIndex : streams.length - 1)
             .map((stream) => RadioTile(
-                radio: stream, radioStations: [...streams], from: 'STREAMS')),
+                radio: stream, radioStations: [...streams], from: 'STREAMS', isReorderClicked: false)),
         Padding(
             padding: EdgeInsetsGeometry.all(20),
             child: Row(
@@ -193,7 +193,7 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
                             });
                           })
                       : Container(),
-                  streams != null && streams.length >= endIndex
+                  streams.length >= endIndex
                       ? GFButton(
                           type: GFButtonType.transparent,
                           text: 'Next',

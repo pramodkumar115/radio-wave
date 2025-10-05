@@ -100,13 +100,11 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal.shade50,
+        backgroundColor: Colors.teal.shade50,
         appBar: AppBar(
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text("Search", style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-            )),
+            Text("Search",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
           backgroundColor: Colors.grey.shade100,
         ),
@@ -258,7 +256,8 @@ class _SearchViewState extends State<SearchView> {
                     return RadioTile(
                         radio: radio,
                         radioStations: searchedRadioStations,
-                        from: "SEARCH");
+                        from: "SEARCH",
+                        isReorderClicked: false);
                   }),
                   Padding(
                       padding: EdgeInsetsGeometry.all(20),
@@ -278,8 +277,7 @@ class _SearchViewState extends State<SearchView> {
                                       });
                                     })
                                 : Container(),
-                            searchedRadioStations != null &&
-                                    searchedRadioStations.length >= 10
+                            searchedRadioStations.length >= 10
                                 ? GFButton(
                                     type: GFButtonType.transparent,
                                     text: 'Next',

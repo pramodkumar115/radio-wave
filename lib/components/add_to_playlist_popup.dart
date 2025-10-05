@@ -43,13 +43,13 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
     return SizedBox(
         height: screenHeight * 0.9,
         child: Container(
-            margin: EdgeInsets.all(24),
+            margin: EdgeInsets.all(10),
             child: Column(spacing: 10, children: [
-              SizedBox(height: 20),
               CreateNewPlaylistButton(items: items),
               Expanded(
                   child: ListView(children: [
                 ...items.map((item) => GFCheckboxListTile(
+                  type: GFCheckboxType.circle,
                     color: Colors.white,
                     value: selectedPlayListName == item.name,
                     onChanged: (value) {

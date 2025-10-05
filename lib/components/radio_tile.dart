@@ -16,14 +16,17 @@ import 'package:orbit_radio/model/radio_station.dart';
 import 'package:popover/popover.dart';
 
 class RadioTile extends ConsumerStatefulWidget {
-  const RadioTile(
+  const RadioTile( 
       {super.key,
       required this.radio,
       required this.radioStations,
-      required this.from});
+      required this.from,
+      required this.isReorderClicked,
+      });
   final RadioStation radio;
   final List<RadioStation> radioStations;
   final String from;
+  final bool isReorderClicked;
 
   @override
   ConsumerState<RadioTile> createState() => _RadioTileState();
@@ -94,7 +97,9 @@ class _RadioTileState extends ConsumerState<RadioTile> {
     final isPlaying = audioPlayerState.isPlaying;
 
     return GestureDetector(
+        behavior: HitTestBehavior.deferToChild,
         onTap: () {
+          print("In ontap gesture");
           if (widget.from != 'RADIO_PLAYER_POPUP') {
             showModalBottomSheet(
               context: context,
@@ -132,29 +137,36 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                     errorBuilder: (context, error, stackTrace) =>
                         Image.asset("assets/music.jpg"))),
             title: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text(widget.radio.name!, 
-              textAlign: TextAlign.start,
-              style: TextStyle(fontWeight:  FontWeight.bold,
-              decoration: TextDecoration.underline)),
-              isPlaying && isCurrentAudio
-                  ? SizedBox(
-                    height: 30,
-                    child: MusicVisualizer(
-                      barCount: 30,
-                      colors: [
-                        Colors.red[900]!,
-                        Colors.green[900]!,
-                        Colors.blue[900]!,
-                        Colors.brown[900]!
-                      ],
-                      duration: [900, 700, 600, 800, 500],
-                    ))
-                  : Container(),
-            ]),
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.isReorderClicked ? ReorderableDragStartListener(
+                    key: ValueKey<int>(
+                        widget.radioStations.indexOf(widget.radio)),
+                    index: widget.radioStations.indexOf(widget.radio),
+                    child: const Icon(Icons.drag_handle),
+                  ) : Container(),
+                  Text(widget.radio.name!,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline)),
+                  isPlaying && isCurrentAudio
+                      ? SizedBox(
+                          height: 30,
+                          child: MusicVisualizer(
+                            barCount: 30,
+                            colors: [
+                              Colors.red[900]!,
+                              Colors.green[900]!,
+                              Colors.blue[900]!,
+                              Colors.brown[900]!
+                            ],
+                            duration: [900, 700, 600, 800, 500],
+                          ))
+                      : Container(),
+                ]),
             subTitle: Text(widget.radio.country!),
             icon: SizedBox(
                 width: widget.from == 'STREAMS' ? 160 : 130,
@@ -178,7 +190,8 @@ class StreamActions extends StatelessWidget {
     return GestureDetector(
         child: InkWell(
             child: Icon(Icons.more_vert, // FUI(BoldRounded.MENU_DOTS_VERTICAL,
-                size: 30, color: Colors.black)),
+                size: 30,
+                color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,
@@ -217,8 +230,7 @@ class PlaylistActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: InkWell(
-            child: Icon(Icons.more_vert, 
-                size: 30, color: Colors.black)),
+            child: Icon(Icons.more_vert, size: 30, color: Colors.black)),
         onTap: () {
           showPopover(
               context: context,

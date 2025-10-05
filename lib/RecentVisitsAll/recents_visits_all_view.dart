@@ -89,11 +89,11 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
   Widget showContent(List<RadioStation>? stationsList) {
     return stationsList != null && stationsList.isNotEmpty
         ? ListView(children: [
-            ...stationsList!.map((radio) {
+            ...stationsList.map((radio) {
               return RadioTile(
                   radio: radio,
                   radioStations: stationsList,
-                  from: "RECENT_VISITS");
+                  from: "RECENT_VISITS", isReorderClicked: false);
             }),
           ])
         : Center(child: Text("No history of radios yet",

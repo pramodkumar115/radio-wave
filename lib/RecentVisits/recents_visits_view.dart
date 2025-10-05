@@ -73,7 +73,7 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
                 return RadioTile(
                     radio: radio,
                     radioStations: stationList,
-                    from: 'RECENT_VISITS');
+                    from: 'RECENT_VISITS', isReorderClicked: false);
               }).toList()))
           : Container(
               padding: EdgeInsets.all(20),

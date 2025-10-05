@@ -39,7 +39,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   }
 
   void createPlayList(List<PlayListJsonItem> playlistDataItems) async {
-    if (_nameController.text == null || _nameController.text.isEmpty) {
+    if (_nameController.text.isEmpty) {
       GFToast.showToast("Please enter name of the playlist", context);
     } else {
       if (widget.selected != null) {

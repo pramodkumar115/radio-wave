@@ -23,7 +23,7 @@ class _TopHitsViewState extends State<TopHitsView> {
     loadData();
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     var response = await getTopHitStationDetails();
     if (response.statusCode == 200) {
       List<dynamic> stationList = jsonDecode(response.body);

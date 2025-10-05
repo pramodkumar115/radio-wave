@@ -59,8 +59,8 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
         recentVisitedIds.removeAt(recentVisitedIds.indexOf(mediaItem.id));
       }
       recentVisitedIds.insert(0, mediaItem.id);
-      if (recentVisitedIds.length >= 10) {
-        recentVisitedIds.removeRange(10, recentVisitedIds.length);
+      if (recentVisitedIds.length >= 15) {
+        recentVisitedIds.removeRange(15, recentVisitedIds.length);
       }
             print("recentVisitedIds - $recentVisitedIds");
 
@@ -84,17 +84,15 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
     // Listen for changes to the currently playing item
     _player.sequenceStateStream.listen((sequenceState) {
-      if (sequenceState != null) {
-        final mediaItem = sequenceState.currentSource?.tag as MediaItem?;
-        final List<MediaItem?> seqList = List.empty(growable: true);
-        if (sequenceState.effectiveSequence.isNotEmpty) {
-          seqList.addAll(
-              sequenceState.effectiveSequence.map((s) => s.tag as MediaItem?));
-        }
-        state = state.copyWith(
-            currentMediaItem: mediaItem, playListMediaItems: seqList);
+      final mediaItem = sequenceState.currentSource?.tag as MediaItem?;
+      final List<MediaItem?> seqList = List.empty(growable: true);
+      if (sequenceState.effectiveSequence.isNotEmpty) {
+        seqList.addAll(
+            sequenceState.effectiveSequence.map((s) => s.tag as MediaItem?));
       }
-    });
+      state = state.copyWith(
+          currentMediaItem: mediaItem, playListMediaItems: seqList);
+        });
   }
 
   // Control methods

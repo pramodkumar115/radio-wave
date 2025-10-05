@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
+import 'package:orbit_radio/components/radio_tile_list_view.dart';
 import 'package:orbit_radio/model/radio_station.dart';
+import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 
 class FavouritesView extends ConsumerStatefulWidget {
   const FavouritesView({super.key});
@@ -60,16 +62,11 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
     });
     return Container(
         margin: const EdgeInsets.only(top: 50),
+        padding: EdgeInsets.all(10),
         child: _isLoading
             ? ListView(children: [Center(child: Text("Please wait"))])
             : ((radioList != null && radioList!.isNotEmpty)
-                ? ListView(
-                    children: radioList!.map((radio) {
-                    return RadioTile(
-                        radio: radio,
-                        radioStations: radioList!,
-                        from: 'FAVOURITES');
-                  }).toList())
+                ? RadioTileListView(radioStationList: radioList)
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

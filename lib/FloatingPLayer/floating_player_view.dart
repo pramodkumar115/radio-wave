@@ -1,4 +1,3 @@
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
@@ -26,7 +25,7 @@ class _FloatingPlayerViewState extends ConsumerState<FloatingPlayerView> {
 
     if (radio != null) {
       return RadioTile(
-          radio: radio, radioStations: radioStations, from: "FLOATING_PLAYER");
+          radio: radio, radioStations: radioStations, from: "FLOATING_PLAYER", isReorderClicked: false);
     } else {
       return Container();
     }
