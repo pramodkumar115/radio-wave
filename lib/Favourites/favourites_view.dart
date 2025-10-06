@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
+import 'package:orbit_radio/components/radio_tile_list_reorderable_view.dart';
 import 'package:orbit_radio/components/radio_tile_list_view.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
@@ -17,6 +21,7 @@ class FavouritesView extends ConsumerStatefulWidget {
 class _FavouritesViewState extends ConsumerState<FavouritesView> {
   List<RadioStation>? radioList;
   bool _isLoading = false;
+  bool isReorderClicked = false;
 
   @override
   void initState() {
@@ -36,16 +41,19 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
     favoritesUUIDs.when(
         data: (stationIds) async {
           debugPrint("In fav - $stationIds");
-          var addedStreamIds =
-              stationIds.where((s) => s.startsWith("ADDED")).toList();
-          final rList = await getStationsListForUUIDs(
-              stationIds.where((s) => !s.startsWith("ADDED")).toList());
-          final aList = await getAddedStreamsFromFile();
-          final addedList = aList
-              .where((a) => addedStreamIds.contains(a.stationUuid))
-              .toList();
+          List<RadioStation> aList = await getAddedStreamsFromFile();
+          List<RadioStation> list = List.empty(growable: true);
+
+          for (String radioId in stationIds) {
+            if (radioId.startsWith("ADDED")) {
+              list.addAll(
+                  aList.where((a) => radioId == a.stationUuid).toList());
+            } else {
+              list.addAll(await getStationsListForUUIDs([radioId]));
+            }
+          }
           setState(() {
-            radioList = [...rList, ...addedList];
+            radioList = [...list];
             _isLoading = false;
           });
         },
@@ -66,7 +74,64 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
         child: _isLoading
             ? ListView(children: [Center(child: Text("Please wait"))])
             : ((radioList != null && radioList!.isNotEmpty)
-                ? RadioTileListView(radioStationList: radioList)
+                ? Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 5,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: !isReorderClicked
+                          ? [
+                              GFButton(
+                                color: Colors.black,
+                                shape: GFButtonShape.pills,
+                                onPressed: () {
+                                  setState(() {
+                                    isReorderClicked = true;
+                                  });
+                                },
+                                text: "Reorder list",
+                              )
+                            ]
+                          : [
+                              GFButton(
+                                color: Colors.black,
+                                shape: GFButtonShape.pills,
+                                onPressed: () async {
+                                  print(jsonEncode(radioList));
+                                  List<String> ids = radioList!
+                                      .map((e) => e.stationUuid!)
+                                      .toList();
+                                  await ref
+                                      .watch(favoritesDataProvider.notifier)
+                                      .updateFavorites(ids);
+                                  loadData();
+                                  setState(() {
+                                    isReorderClicked = false;
+                                  });
+                                },
+                                text: "Save",
+                              ),
+                              GFButton(
+                                color: Colors.black,
+                                shape: GFButtonShape.pills,
+                                type: GFButtonType.outline,
+                                onPressed: () {
+                                  setState(() {
+                                    print(jsonEncode(radioList));
+                                    isReorderClicked = false;
+                                  });
+                                },
+                                text: "Cancel",
+                              )
+                            ],
+                    ),
+                    Expanded(
+                        child: isReorderClicked
+                            ? RadioTileListReorderableView(
+                                radioStationList: radioList)
+                            : RadioTileListView(radioStationList: radioList))
+                  ])
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
