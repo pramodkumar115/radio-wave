@@ -27,7 +27,7 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
 
   @override
   Widget build(BuildContext context) {
-    print("In recent");
+    // print("In recent");
 
     return FutureBuilder(
         future: loadData(),

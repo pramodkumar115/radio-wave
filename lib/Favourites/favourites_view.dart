@@ -37,10 +37,10 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
 
   void setStateWithData() {
     final favoritesUUIDs = ref.watch(favoritesDataProvider);
-    debugPrint("favoritesUUIDs - $favoritesUUIDs");
+    // debugPrint("favoritesUUIDs - $favoritesUUIDs");
     favoritesUUIDs.when(
         data: (stationIds) async {
-          debugPrint("In fav - $stationIds");
+          // debugPrint("In fav - $stationIds");
           List<RadioStation> aList = await getAddedStreamsFromFile();
           List<RadioStation> list = List.empty(growable: true);
 
@@ -98,7 +98,6 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                                 color: Colors.black,
                                 shape: GFButtonShape.pills,
                                 onPressed: () async {
-                                  print(jsonEncode(radioList));
                                   List<String> ids = radioList!
                                       .map((e) => e.stationUuid!)
                                       .toList();
@@ -118,7 +117,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                                 type: GFButtonType.outline,
                                 onPressed: () {
                                   setState(() {
-                                    print(jsonEncode(radioList));
+                                    // print(jsonEncode(radioList));
                                     isReorderClicked = false;
                                   });
                                 },

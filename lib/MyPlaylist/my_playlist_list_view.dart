@@ -24,7 +24,6 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
   Widget build(BuildContext context) {
     ref.read(playlistDataProvider.notifier).build();
     final playListData = ref.watch(playlistDataProvider);
-    debugPrint("favoritesUUIDs - $playListData");
     return playListData.when(data: (pListData) {
       setState(() {
         _isLoading = false;
@@ -35,14 +34,14 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
       return Center(child: Text("Error getting data"));
     }, loading: () {
       setState(() => _isLoading = true);
-      debugPrint("In loading");
+      // debugPrint("In loading");
       return CircularProgressIndicator();
     });
   }
 
   Widget showContent(
       BuildContext context, List<PlayListJsonItem> playlistJsonItems) {
-    debugPrint('playlist length - ${playlistJsonItems.length}');
+    // debugPrint('playlist length - ${playlistJsonItems.length}');
     return Container(
         margin: const EdgeInsets.only(top: 65),
         padding: EdgeInsets.all(6),
@@ -53,6 +52,7 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
             ? ListView(children: [Center(child: Text("Please wait"))])
             : ListView(children: [
                 CreateNewPlaylistButton(items: playlistJsonItems),
+                Divider(),
                 ...getWidget(playlistJsonItems)
               ]));
   }
@@ -60,10 +60,7 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
   List<Widget> getWidget(List<PlayListJsonItem> playlistJsonItems) {
     if (playlistJsonItems.isNotEmpty) {
       return playlistJsonItems
-          .map((pl) => Container(
-              margin: EdgeInsets.only(left: 10, right: 10),
-              child: PlaylistTile(
-                  playlistJsonItems: playlistJsonItems, playlistJsonItem: pl)))
+          .map((pl) => PlaylistTile(selectedPlaylistId: pl.id))
           .toList();
     } else {
       [Center(child: Text("No Playlists yet"))];

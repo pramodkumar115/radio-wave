@@ -104,7 +104,6 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     child:
                         const Icon(Icons.search, size: 30, color: Colors.black),
                     onTap: () {
-                      debugPrint("Came here");
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(

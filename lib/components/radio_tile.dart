@@ -81,10 +81,6 @@ class _RadioTileState extends ConsumerState<RadioTile> {
     if (widget.from == 'STREAMS') {
       widgets.add(StreamActions(onMenuClicked: onMenuClicked));
     }
-    if (widget.from.contains('PLAYLIST')) {
-      widgets.add(PlaylistActions(onMenuClicked: onMenuClicked));
-    }
-
     return widgets;
   }
 
@@ -99,7 +95,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
     return GestureDetector(
         behavior: HitTestBehavior.deferToChild,
         onTap: () {
-          print("In ontap gesture");
+          // print("In ontap gesture");
           if (widget.from != 'RADIO_PLAYER_POPUP') {
             showModalBottomSheet(
               context: context,
@@ -211,7 +207,7 @@ class StreamActions extends StatelessWidget {
                           onMenuClicked("EDIT", context);
                         }),
                   ])),
-              onPop: () => debugPrint('Popover was popped!'),
+              onPop: () {}, // debugPrint('Popover was popped!'),
               direction: PopoverDirection.bottom,
               backgroundColor: Colors.white,
               width: 200,
@@ -244,7 +240,7 @@ class PlaylistActions extends StatelessWidget {
                           Navigator.of(context).pop();
                         }),
                   ])),
-              onPop: () => debugPrint('Popover was popped!'),
+              onPop: () {}, // debugPrint('Popover was popped!'),
               direction: PopoverDirection.bottom,
               backgroundColor: Colors.white,
               width: 200,

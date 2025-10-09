@@ -44,7 +44,7 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
         canPop: false, // Allow pop if no unsaved changes
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
-            print("came in $didPop");
+            // print("came in $didPop");
           } else {
             Navigator.of(context).pop(true);
           }

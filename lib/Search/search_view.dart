@@ -77,7 +77,7 @@ class _SearchViewState extends State<SearchView> {
             response.body != null) {
           List<dynamic> stationList = jsonDecode(response.body);
           var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-          print("list - ${response.body}");
+          // print("list - ${response.body}");
           setState(() {
             searchedRadioStations.clear();
             searchedRadioStations.addAll(list);

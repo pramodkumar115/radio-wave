@@ -36,7 +36,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       List<RadioStation> radioStationsList) {
     var radioIds = radioStationsList.map((r) => r.stationUuid).toList();
     var playListIds = playListMediaItems?.map((r) => r!.id).toList();
-    debugPrint("playListMediaItems - ${playListMediaItems?.length}, ${widget.stationList.length}");
+    // debugPrint("playListMediaItems - ${playListMediaItems?.length}, ${widget.stationList.length}");
     if (playListIds != null && playListIds.isNotEmpty) {
       return radioIds.toSet().containsAll(playListIds) && playListIds.toSet().containsAll(radioIds);
     }
@@ -75,16 +75,16 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
   //   var recentVisitsNotifier = ref.read(recentVisitsDataProvider.notifier);
   //   recentVisitList.when(
   //       data: (recentVisitedStations) {
-  //         debugPrint("recent - $recentVisitedStations");
+  //         // debugPrint("recent - $recentVisitedStations");
   //         if (recentVisitedStations
   //             .where((st) => st.stationUuid == radioStation.stationUuid)
   //             .isNotEmpty) {
-  //           debugPrint("recent Inside - ${recentVisitedStations.length}");
+  //           // debugPrint("recent Inside - ${recentVisitedStations.length}");
   //           recentVisitedStations = recentVisitedStations
   //               .where((st) => st.stationUuid != radioStation.stationUuid)
   //               .toList();
   //         }
-  //         debugPrint("recent Outside - ${recentVisitedStations.length}");
+  //         // debugPrint("recent Outside - ${recentVisitedStations.length}");
   //         if (recentVisitedStations.length > 10) {
   //           recentVisitedStations.removeLast();
   //         }
@@ -118,7 +118,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     setState(() => _isLoading = true);
     if (isSamePlayList(
         audioPlayerState.playListMediaItems, widget.stationList)) {
-          print("is same playlist");
+          // print("is same playlist");
       // check if not the same station which is already playing
       if (audioPlayerState.currentMediaItem?.id != widget.stationId) {
         await playerNotifier.seek(widget.stationList.indexOf(stn!));
@@ -145,7 +145,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       setState(() => _isLoading = false);
     }
     Future.delayed(Duration.zero, () async {
-      debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
+      // debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
       if (!isCurrentAudio) {
         await playAudioPlayer(playerNotifier, stn);
       } else {
@@ -155,7 +155,7 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
           await playAudioPlayer(playerNotifier, stn);
         }
       }
-      debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
+      // debugPrint("$isCurrentAudio, $isPlaying, $selectedRadioId");
     });
   }
 

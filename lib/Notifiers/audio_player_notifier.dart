@@ -53,7 +53,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
     bool isPlaying = _player.playerState.playing;
     if (isPlaying && mediaItem != null) {
-      print("Came Here in set recent visits");
+      // print("Came Here in set recent visits");
       List<String> recentVisitedIds = await getRecentVisitsFromFile();
       if (recentVisitedIds.contains(mediaItem.id)) {
         recentVisitedIds.removeAt(recentVisitedIds.indexOf(mediaItem.id));
@@ -62,7 +62,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       if (recentVisitedIds.length >= 15) {
         recentVisitedIds.removeRange(15, recentVisitedIds.length);
       }
-            print("recentVisitedIds - $recentVisitedIds");
+            // print("recentVisitedIds - $recentVisitedIds");
 
       await saveRecentVisitsFile(recentVisitedIds);
       recentVisitsNotifier.build();
@@ -75,7 +75,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       final isPlaying = playerState.playing;
       state = state.copyWith(isPlaying: isPlaying);
       if (isPlaying) {
-        print("Came inside is playing true - ${_player.sequenceState.currentSource?.tag?.id}");
+        // print("Came inside is playing true - ${_player.sequenceState.currentSource?.tag?.id}");
         if (_player.sequenceState.currentSource != null) {
           setRecentVisits(_player.sequenceState.currentSource?.tag);
         }
@@ -97,7 +97,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
   // Control methods
   void play(int index) async {
-    debugPrint("index - $index");
+    // debugPrint("index - $index");
     await seek(index);
     await _player.play();
   }

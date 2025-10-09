@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
+import 'package:orbit_radio/commons/util.dart';
+import 'package:orbit_radio/components/radio_tile_list_reorderable_view.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
+import 'package:orbit_radio/model/radio_station.dart';
 
 class CreateEditPlaylist extends ConsumerStatefulWidget {
   const CreateEditPlaylist(
@@ -16,20 +22,26 @@ class CreateEditPlaylist extends ConsumerStatefulWidget {
 
 class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   final TextEditingController _nameController = TextEditingController();
-  int index = -1;
+  String playListId = "";
+  List<RadioStation> playListStations = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
     if (widget.selected != null) {
+      loadPlayListStations();
       setState(() {
         _nameController.text = widget.selected!.name;
-        if (widget.selected != null) {
-          setState(
-              () => index = widget.playlistDataItems.indexOf(widget.selected!));
-        }
+        // index = widget.playlistDataItems.indexOf(widget.selected!);
       });
     }
+  }
+
+  Future<void> loadPlayListStations() async {
+    var stations = await getStationsListForUUIDs(widget.selected!.stationIds);
+    setState(() {
+      playListStations.addAll(stations);
+    });
   }
 
   @override
@@ -43,10 +55,13 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
       GFToast.showToast("Please enter name of the playlist", context);
     } else {
       if (widget.selected != null) {
+        var index = playlistDataItems.indexOf(widget.selected!);
         playlistDataItems[index].name = _nameController.text;
       } else {
-        playlistDataItems
-            .add(PlayListJsonItem(name: _nameController.text, stationIds: []));
+        playlistDataItems.add(PlayListJsonItem(
+            id: "PLAYLIST_${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}",
+            name: _nameController.text,
+            stationIds: []));
       }
       await ref
           .watch(playlistDataProvider.notifier)
@@ -63,6 +78,8 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
+    // PlayListJsonItem currentPlayListItem = widget.playlistDataItems[index];
+
     return SingleChildScrollView(
         // Make the content scrollable
         child: Padding(
@@ -72,7 +89,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                   .bottom, // Adjust padding based on keyboard height
             ),
             child: SizedBox(
-                height: screenHeight * 0.2,
+                height: screenHeight * 0.9,
                 width: screenWidth,
                 child: Container(
                     margin: EdgeInsets.all(24),
@@ -86,15 +103,47 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                               border: OutlineInputBorder(),
                               labelText: 'Playlist Name'),
                         ),
-                        GFButton(
-                            text: "Create / Save",
-                            color: Colors.black,
-                            fullWidthButton: true,
-                            size: 60,
-                            type: GFButtonType.solid,
-                            shape: GFButtonShape.pills,
-                            onPressed: () =>
-                                createPlayList(widget.playlistDataItems))
+                        Expanded(
+                            child: RadioTileListReorderableView(
+                                radioStationList: playListStations)),
+                        Row(spacing: 10, children: [
+                          widget.selected != null
+                              ? GFButton(
+                                  text: "Delete",
+                                  color: Colors.black,
+                                  // fullWidthButton: true,
+                                  size: 40,
+                                  type: GFButtonType.outline,
+                                  shape: GFButtonShape.pills,
+                                  onPressed: () {
+                                    var filtered = widget.playlistDataItems
+                                        .where((element) =>
+                                            element.id != widget.selected!.id)
+                                        .toList();
+                                    createPlayList(filtered);
+                                  })
+                              : Container(),
+                          GFButton(
+                              text: "Save",
+                              color: Colors.black,
+                              // fullWidthButton: true,
+                              size: 40,
+                              type: GFButtonType.solid,
+                              shape: GFButtonShape.pills,
+                              onPressed: () {
+                                if (playListStations.isNotEmpty &&
+                                    widget.selected != null) {
+                                  var index = widget.playlistDataItems
+                                      .indexOf(widget.selected!);
+                                  // print(jsonEncode(playListStations));
+                                  widget.playlistDataItems[index].stationIds =
+                                      playListStations
+                                          .map((e) => e.stationUuid!)
+                                          .toList();
+                                }
+                                createPlayList(widget.playlistDataItems);
+                              })
+                        ])
                       ],
                     )))));
   }

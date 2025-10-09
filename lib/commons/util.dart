@@ -19,7 +19,7 @@ Future<String?> getCountryFromCoordinates(
       return placemarks.first.country;
     }
   } catch (e) {
-    // print("Error during reverse geocoding: $e");
+    // // print("Error during reverse geocoding: $e");
   }
   return null;
 }
@@ -33,7 +33,7 @@ Future<Position?> getCurrentLocation() async {
   if (!serviceEnabled) {
     // Location services are not enabled don't continue
     // accessing the position and request users to enable the location services.
-    // print('Location services are disabled.');
+    // // print('Location services are disabled.');
     return null;
   }
 
@@ -41,25 +41,13 @@ Future<Position?> getCurrentLocation() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      // print('Location permissions are denied');
       return null;
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    // print(
-    // 'Location permissions are permanently denied, we cannot request permissions.');
     return null;
   }
-
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
   return await Geolocator.getCurrentPosition();
 }
 
@@ -83,14 +71,14 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
     String filesDataString = await readFile("playlist.json");
     List<dynamic> filesData = json.decode(filesDataString);
     List<PlayListJsonItem> list = List.empty(growable: true);
-    
-    for (var i =0; i < filesData.length; i++) {
+
+    for (var i = 0; i < filesData.length; i++) {
       var f = filesData[i];
       var item = PlayListJsonItem(
+          id: f["id"],
           name: f["name"],
-          stationIds: jsonDecode(f["stationIds"]).cast<String>()
-      );
-      debugPrint("item - $item");
+          stationIds: jsonDecode(f["stationIds"]).cast<String>());
+      // debugPrint("item - ${jsonEncode(item)}");
       list.add(item);
     }
     return list;
@@ -99,21 +87,19 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
 }
 
 Future<void> savePlaylistFile(List<PlayListJsonItem> playListData) async {
-  debugPrint(
-      "playListData - ${playListData.toString()}, ${json.encode(playListData)}");
   writeData("playlist.json", json.encode(playListData));
 }
+
 Future<List<RadioStation>> getAddedStreamsFromFile() async {
   bool fileExists = await checkIfFileExists("addedstreams.json");
   if (fileExists) {
     String filesDataString = await readFile("addedstreams.json");
     List<dynamic> filesData = json.decode(filesDataString);
     List<RadioStation> list = List.empty(growable: true);
-    
-    for (var i =0; i < filesData.length; i++) {
+
+    for (var i = 0; i < filesData.length; i++) {
       var f = filesData[i];
       var item = RadioStation.fromJson(f);
-      debugPrint("Added item - $item");
       list.add(item);
     }
     return list;
@@ -122,8 +108,6 @@ Future<List<RadioStation>> getAddedStreamsFromFile() async {
 }
 
 Future<void> saveAddedStreamsFile(List<RadioStation> playListData) async {
-  debugPrint(
-      "addedstreams - ${playListData.toString()}, ${json.encode(playListData)}");
   writeData("addedstreams.json", json.encode(playListData));
 }
 
@@ -156,7 +140,7 @@ Future<List<RadioStation>> getStationsListForUUIDs(List<String> uuids) async {
       }
     }
     if (kDebugMode) {
-      // print(uniqueList);
+      // // print(uniqueList);
     }
     return uniqueList;
   } else {
@@ -186,24 +170,24 @@ String getStationCountry(String? country) {
   }
 }
 
- RadioStation convertMediaItemToRadio(MediaItem currentMediaItem) {
-    return RadioStation(
-        stationUuid: currentMediaItem.id,
-        country: currentMediaItem.artist,
-        name: currentMediaItem.album,
-        favicon: currentMediaItem.artUri?.toString(),
-        tags: currentMediaItem.genre);
-  }
+RadioStation convertMediaItemToRadio(MediaItem currentMediaItem) {
+  return RadioStation(
+      stationUuid: currentMediaItem.id,
+      country: currentMediaItem.artist,
+      name: currentMediaItem.album,
+      favicon: currentMediaItem.artUri?.toString(),
+      tags: currentMediaItem.genre);
+}
 
 List<RadioStation> converMediaItemsToRadioList(
-      List<MediaItem?>? playListMediaItems) {
-    List<RadioStation> stations = List.empty(growable: true);
-    if (playListMediaItems != null) {
-      for (var i = 0; i < playListMediaItems.length; i++) {
-        if (playListMediaItems[i] != null) {
-          stations.add(convertMediaItemToRadio(playListMediaItems[i]!));
-        }
+    List<MediaItem?>? playListMediaItems) {
+  List<RadioStation> stations = List.empty(growable: true);
+  if (playListMediaItems != null) {
+    for (var i = 0; i < playListMediaItems.length; i++) {
+      if (playListMediaItems[i] != null) {
+        stations.add(convertMediaItemToRadio(playListMediaItems[i]!));
       }
     }
-    return stations;
   }
+  return stations;
+}

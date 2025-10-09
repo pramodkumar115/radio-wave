@@ -321,7 +321,7 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
         final current = getSelectedRadioStation(
             widget.radioStationsList, currentStation.stationUuid!);
         final currentIndex = widget.radioStationsList.indexOf(current!);
-        debugPrint("${current.name} - $currentIndex");
+        // debugPrint("${current.name} - $currentIndex");
         setState(() {
           getNextOrPreviousStationDetail(action, current, currentIndex);
         });

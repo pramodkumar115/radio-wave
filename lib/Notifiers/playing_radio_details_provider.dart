@@ -5,7 +5,7 @@ class PlayingRadioNotifier extends StateNotifier<PlayingRadioDetail> {
   PlayingRadioNotifier() : super(PlayingRadioDetail(isPlaying: false, stationUuid: ""));
 
   void updateRadioDetails(PlayingRadioDetail details) {
-    // print("Details in update provider - $details");
+    // // print("Details in update provider - $details");
     state.isPlaying = details.isPlaying;
     state.stationUuid = details.stationUuid;
   }

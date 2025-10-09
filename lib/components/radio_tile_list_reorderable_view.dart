@@ -16,15 +16,10 @@ class RadioTileListReorderableView extends StatefulWidget {
 
 class _RadioTileListReorderableViewState
     extends State<RadioTileListReorderableView> {
-  //List<RadioStation>? radioList = List.empty(growable: true);
   bool isReorderClicked = false;
   @override
   void initState() {
     super.initState();
-    // if (widget.radioStationList != null &&
-    //     widget.radioStationList!.isNotEmpty) {
-    //   radioList?.addAll(widget.radioStationList!);
-    // }
   }
 
   @override
@@ -35,7 +30,7 @@ class _RadioTileListReorderableViewState
         padding: EdgeInsets.all(0),
         longPressDraggable: true,
         sliverGridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1, childAspectRatio: 5.3),
+            crossAxisCount: 1, childAspectRatio: 4.8),
         enterTransition: [SlideInDown()],
         exitTransition: [SlideInUp()],
         insertDuration: const Duration(milliseconds: 0),
