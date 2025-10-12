@@ -1,12 +1,10 @@
 // player_notifier.dart
-import 'package:flutter/cupertino.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:riverpod/legacy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:orbit_radio/model/radio_media_item.dart';
-import 'package:riverpod/riverpod.dart';
 
 // The state of our player
 class PlayerState {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
-import 'package:orbit_radio/components/create_new_playlist_button.dart';
-import 'package:orbit_radio/components/playlist_tile.dart';
+import 'package:orbit_radio/MyPlaylist/create_new_playlist_button.dart';
+import 'package:orbit_radio/MyPlaylist/playlist_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 
 class MyPlaylistListView extends ConsumerStatefulWidget {

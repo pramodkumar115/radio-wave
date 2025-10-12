@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +23,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   final TextEditingController _nameController = TextEditingController();
   String playListId = "";
   List<RadioStation> playListStations = List.empty(growable: true);
+  List<RadioStation> selectedRadios = List.empty(growable: true);
 
   @override
   void initState() {
@@ -105,7 +105,8 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                         ),
                         Expanded(
                             child: RadioTileListReorderableView(
-                                radioStationList: playListStations)),
+                                radioStationList: playListStations,
+                                selectedRadios: selectedRadios)),
                         Row(spacing: 10, children: [
                           widget.selected != null
                               ? GFButton(
@@ -116,11 +117,24 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                                   type: GFButtonType.outline,
                                   shape: GFButtonShape.pills,
                                   onPressed: () {
-                                    var filtered = widget.playlistDataItems
-                                        .where((element) =>
-                                            element.id != widget.selected!.id)
-                                        .toList();
-                                    createPlayList(filtered);
+                                    if (playListStations.isNotEmpty &&
+                                        widget.selected != null) {
+                                      var index = widget.playlistDataItems
+                                          .indexOf(widget.selected!);
+                                      widget.playlistDataItems[index]
+                                              .stationIds =
+                                          playListStations
+                                              .where((element) =>
+                                                  !selectedRadios
+                                                      .contains(element))
+                                              .map((element) =>
+                                                  element.stationUuid!)
+                                              .toList();
+                                    }
+                                    ref
+                                        .watch(playlistDataProvider.notifier)
+                                        .updatePlayList(
+                                            widget.playlistDataItems);
                                   })
                               : Container(),
                           GFButton(
@@ -135,7 +149,6 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                                     widget.selected != null) {
                                   var index = widget.playlistDataItems
                                       .indexOf(widget.selected!);
-                                  // print(jsonEncode(playListStations));
                                   widget.playlistDataItems[index].stationIds =
                                       playListStations
                                           .map((e) => e.stationUuid!)

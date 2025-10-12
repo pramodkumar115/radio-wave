@@ -6,7 +6,7 @@ import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/Search/search_view.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/commons/util.dart';
-import 'package:orbit_radio/components/create_edit_playlist.dart';
+import 'package:orbit_radio/MyPlaylist/create_edit_playlist.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
@@ -50,7 +50,7 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
     final playlistItems = ref.watch(playlistDataProvider);
     return playlistItems.when(
         data: (items) {
-          if (items != null && items.isNotEmpty) {
+          if (items.isNotEmpty) {
             var playlistJsonItem = items
                 .firstWhereOrNull((e) => e.id == widget.selectedPlaylistId);
             return showContent(playlistJsonItem, items);
@@ -91,7 +91,7 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
     ).then((confirmed) async {
       if (confirmed != null && confirmed) {
         var filtered = items
-            .where((element) => element.id != playListJsonItem!.id)
+            .where((element) => element.id != playListJsonItem.id)
             .toList();
         await ref.watch(playlistDataProvider.notifier).updatePlayList(filtered);
         Navigator.pop(context);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orbit_radio/components/create_edit_stream.dart';
+import 'package:orbit_radio/MyAddedStreams/create_edit_stream.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 
 class CreateNewStreamButton extends StatefulWidget {

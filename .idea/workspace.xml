@@ -7,20 +7,20 @@
     <list default="true" id="1ba6b5ca-edca-4295-aa22-768dcf599f55" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values-night/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values-night/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Base.lproj/LaunchScreen.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Favourites/favourites_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Favourites/favourites_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Notifiers/audio_player_notifier.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Notifiers/audio_player_notifier.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/add_to_playlist_popup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/add_to_playlist_popup.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/MyAddedStreams/my_added_streams_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyAddedStreams/my_added_streams_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_item_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_item_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyPlaylist/my_playlist_list_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/RadioPlayer/radio_player_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/RadioPlayer/radio_player_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/add_to_playlist_button.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/add_to_playlist_popup.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/create_edit_playlist.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/create_edit_stream.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/create_new_playlist_button.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/create_new_stream_button.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/playlist_tile.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/components/radio_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/radio_tile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/radio_tile_list_reorderable_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/radio_tile_list_reorderable_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,6 +51,7 @@
   "keyToString": {
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
     "last_opened_file_path": "/Users/pramodkumar/projects/learn-flutter/orbit_radio"
   }
 }]]></component>

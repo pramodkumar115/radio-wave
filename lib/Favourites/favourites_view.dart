@@ -1,15 +1,12 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
-import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/components/radio_tile_list_reorderable_view.dart';
 import 'package:orbit_radio/components/radio_tile_list_view.dart';
 import 'package:orbit_radio/model/radio_station.dart';
-import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 
 class FavouritesView extends ConsumerStatefulWidget {
   const FavouritesView({super.key});
@@ -128,7 +125,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                     Expanded(
                         child: isReorderClicked
                             ? RadioTileListReorderableView(
-                                radioStationList: radioList)
+                                radioStationList: radioList, selectedRadios: [])
                             : RadioTileListView(radioStationList: radioList))
                   ])
                 : Column(

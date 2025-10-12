@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:orbit_radio/Notifiers/addedstreams_state_notifier.dart';
-import 'package:orbit_radio/components/create_new_stream_button.dart';
+import 'package:orbit_radio/MyAddedStreams/create_new_stream_button.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 

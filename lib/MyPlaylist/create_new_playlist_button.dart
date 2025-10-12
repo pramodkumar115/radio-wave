@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orbit_radio/components/create_edit_playlist.dart';
+import 'package:orbit_radio/MyPlaylist/create_edit_playlist.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
 
 class CreateNewPlaylistButton extends StatefulWidget {

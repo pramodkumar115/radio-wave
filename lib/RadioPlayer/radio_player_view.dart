@@ -7,7 +7,7 @@ import 'package:orbit_radio/Notifiers/audio_player_notifier.dart';
 import 'package:orbit_radio/Notifiers/favorites_state_notifier.dart';
 import 'package:orbit_radio/RadioPlayer/radio_player_helper.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
-import 'package:orbit_radio/components/add_to_playlist_button.dart';
+import 'package:orbit_radio/MyPlaylist/add_to_playlist_button.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
 import 'package:orbit_radio/model/radio_station.dart';
