@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
@@ -125,7 +124,10 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                     Expanded(
                         child: isReorderClicked
                             ? RadioTileListReorderableView(
-                                radioStationList: radioList, selectedRadios: [])
+                                radioStationList: radioList,
+                                selectedRadios: [],
+                                setSelectedRadios: () {},
+                              )
                             : RadioTileListView(radioStationList: radioList))
                   ])
                 : Column(

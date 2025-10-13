@@ -1,4 +1,6 @@
+import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
@@ -10,10 +12,8 @@ import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 
 class CreateEditPlaylist extends ConsumerStatefulWidget {
-  const CreateEditPlaylist(
-      {super.key, required this.playlistDataItems, required this.selected});
-  final List<PlayListJsonItem> playlistDataItems;
-  final PlayListJsonItem? selected;
+  const CreateEditPlaylist({super.key, required this.selectedPlayListId});
+  final String? selectedPlayListId;
 
   @override
   ConsumerState<CreateEditPlaylist> createState() => _CreateEditPlaylistState();
@@ -21,26 +21,25 @@ class CreateEditPlaylist extends ConsumerStatefulWidget {
 
 class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   final TextEditingController _nameController = TextEditingController();
-  String playListId = "";
-  List<RadioStation> playListStations = List.empty(growable: true);
+  PlayListJsonItem? selectedPLaylist;
   List<RadioStation> selectedRadios = List.empty(growable: true);
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.selected != null) {
-      loadPlayListStations();
-      setState(() {
-        _nameController.text = widget.selected!.name;
-        // index = widget.playlistDataItems.indexOf(widget.selected!);
-      });
+  Future<PlayListItem?> loadPlayListStations(
+      String playListId, List<PlayListJsonItem> playListJsonItems) async {
+    if (playListJsonItems.isNotEmpty) {
+      PlayListJsonItem? selected =
+          playListJsonItems.firstWhereOrNull((e) => e.id == playListId);
+      var stations = await getStationsListForUUIDs(selected!.stationIds);
+      return PlayListItem(
+          id: selected.id, name: selected.name, radioStations: stations);
     }
+    return null;
   }
 
-  Future<void> loadPlayListStations() async {
-    var stations = await getStationsListForUUIDs(widget.selected!.stationIds);
+  void setSelectedRadios(List<RadioStation> radios) {
+    print("radios - $radios");
     setState(() {
-      playListStations.addAll(stations);
+      selectedRadios = radios;
     });
   }
 
@@ -54,9 +53,12 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
     if (_nameController.text.isEmpty) {
       GFToast.showToast("Please enter name of the playlist", context);
     } else {
-      if (widget.selected != null) {
-        var index = playlistDataItems.indexOf(widget.selected!);
-        playlistDataItems[index].name = _nameController.text;
+      if (widget.selectedPlayListId != null) {
+        PlayListJsonItem? selectedItem = playlistDataItems
+            .firstWhereOrNull((e) => e.id == widget.selectedPlayListId);
+        if (selectedItem != null) {
+          selectedItem.name = _nameController.text;
+        }
       } else {
         playlistDataItems.add(PlayListJsonItem(
             id: "PLAYLIST_${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}",
@@ -78,10 +80,17 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    // PlayListJsonItem currentPlayListItem = widget.playlistDataItems[index];
+    final playListJsonItems = ref.watch(playlistDataProvider);
+    return playListJsonItems.when(
+      data: (items) => showContent(context, screenHeight, screenWidth, items),
+      error: (error, stackTrace) => Center(child: Text("No PLaylist")),
+      loading: () => CircularProgressIndicator(),
+    );
+  }
 
+  SingleChildScrollView showContent(BuildContext context, double screenHeight,
+      double screenWidth, List<PlayListJsonItem> items) {
     return SingleChildScrollView(
-        // Make the content scrollable
         child: Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context)
@@ -94,70 +103,85 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                 child: Container(
                     margin: EdgeInsets.all(24),
                     width: screenWidth,
-                    child: Column(
-                      spacing: 20,
-                      children: [
-                        TextField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Playlist Name'),
-                        ),
-                        Expanded(
-                            child: RadioTileListReorderableView(
-                                radioStationList: playListStations,
-                                selectedRadios: selectedRadios)),
-                        Row(spacing: 10, children: [
-                          widget.selected != null
-                              ? GFButton(
-                                  text: "Delete",
-                                  color: Colors.black,
-                                  // fullWidthButton: true,
-                                  size: 40,
-                                  type: GFButtonType.outline,
-                                  shape: GFButtonShape.pills,
-                                  onPressed: () {
-                                    if (playListStations.isNotEmpty &&
-                                        widget.selected != null) {
-                                      var index = widget.playlistDataItems
-                                          .indexOf(widget.selected!);
-                                      widget.playlistDataItems[index]
-                                              .stationIds =
-                                          playListStations
-                                              .where((element) =>
-                                                  !selectedRadios
-                                                      .contains(element))
-                                              .map((element) =>
-                                                  element.stationUuid!)
-                                              .toList();
-                                    }
-                                    ref
-                                        .watch(playlistDataProvider.notifier)
-                                        .updatePlayList(
-                                            widget.playlistDataItems);
-                                  })
-                              : Container(),
-                          GFButton(
-                              text: "Save",
-                              color: Colors.black,
-                              // fullWidthButton: true,
-                              size: 40,
-                              type: GFButtonType.solid,
-                              shape: GFButtonShape.pills,
-                              onPressed: () {
-                                if (playListStations.isNotEmpty &&
-                                    widget.selected != null) {
-                                  var index = widget.playlistDataItems
-                                      .indexOf(widget.selected!);
-                                  widget.playlistDataItems[index].stationIds =
-                                      playListStations
-                                          .map((e) => e.stationUuid!)
-                                          .toList();
-                                }
-                                createPlayList(widget.playlistDataItems);
-                              })
-                        ])
-                      ],
-                    )))));
+                    child: FutureBuilder(
+                        future: loadPlayListStations(
+                            widget.selectedPlayListId!, items),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Container();
+                          } else {
+                            PlayListItem playListItem = snapshot.data!;
+                            _nameController.text = playListItem.name;
+                            return Column(spacing: 20, children: [
+                              TextField(
+                                controller: _nameController,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Playlist Name'),
+                              ),
+                              Expanded(
+                                  child: RadioTileListReorderableView(
+                                      radioStationList:
+                                          playListItem.radioStations,
+                                      selectedRadios: selectedRadios,
+                                      setSelectedRadios: setSelectedRadios)),
+                              Row(spacing: 10, children: [
+                                selectedRadios.isNotEmpty
+                                    ? GFButton(
+                                        text: "Delete",
+                                        color: Colors.black,
+                                        // fullWidthButton: true,
+                                        size: 40,
+                                        type: GFButtonType.outline,
+                                        shape: GFButtonShape.pills,
+                                        onPressed: () =>
+                                            deleteStation(playListItem, items))
+                                    : Container(),
+                                GFButton(
+                                    text: "Save",
+                                    color: Colors.black,
+                                    size: 40,
+                                    type: GFButtonType.solid,
+                                    shape: GFButtonShape.pills,
+                                    onPressed: () => save(playListItem, items))
+                              ])
+                            ]);
+                          }
+                        })))));
+  }
+
+  void deleteStation(PlayListItem playListItem, List<PlayListJsonItem> items) {
+    if (playListItem.radioStations.isNotEmpty) {
+      PlayListJsonItem? selected =
+          items.firstWhereOrNull((e) => e.id == playListItem.id);
+      var selectedRadiosIdsToDelete = selectedRadios.map((e) => e.stationUuid);
+
+      // selected!.stationIds = playListItem.radioStations
+      //     .where((element) => !selectedRadios.contains(element))
+      //     .map((element) => element.stationUuid!)
+      //     .toList();
+      selected!.stationIds = selected!.stationIds
+          .where((element) => !selectedRadiosIdsToDelete.contains(element))
+          .toList();
+    }
+    ref.watch(playlistDataProvider.notifier).updatePlayList(items);
+  }
+
+  void save(PlayListItem playListItem, List<PlayListJsonItem> items) {
+    print(jsonEncode(playListItem.radioStations));
+    if (playListItem.radioStations.isNotEmpty) {
+      PlayListJsonItem? selected =
+          items.firstWhereOrNull((e) => e.id == playListItem.id);
+      print("--------------------------");
+      print(jsonEncode(selected));
+      print("--------------------------");
+
+      if (selected != null) {
+        selected.stationIds =
+            playListItem.radioStations.map((e) => e.stationUuid!).toList();
+      }
+    }
+    print(jsonEncode(items));
+    createPlayList(items);
   }
 }

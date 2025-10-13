@@ -78,7 +78,8 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
           id: f["id"],
           name: f["name"],
           stationIds: jsonDecode(f["stationIds"]).cast<String>());
-      // debugPrint("item - ${jsonEncode(item)}");
+      debugPrint("item - ${jsonEncode(item)}");
+      print("------");
       list.add(item);
     }
     return list;
@@ -125,27 +126,43 @@ Future<void> saveRecentVisitsFile(List<String> recentVisitsUUIDs) async {
   writeData("recentVisits.json", json.encode(recentVisitsUUIDs));
 }
 
-Future<List<RadioStation>> getStationsListForUUIDs(List<String> uuids) async {
+Future<List<RadioStation>> getStationsListForUUIDs(List<String>? uuids) async {
+  if (uuids == null) {
+    return [];
+  }
+
+  List<RadioStation> aList = await getAddedStreamsFromFile();
+  List<RadioStation> list = List.empty(growable: true);
+
+  List<String> sourceIds =
+      uuids.where((element) => !element.startsWith("ADDED")).toList();
+
+  List<RadioStation> sourceList = List.empty(growable: true);
+
   var response = await http.get(Uri.parse(
-      '${constants.BASE_URL}stations/byuuid?uuids=${uuids.join(",")}'));
+      '${constants.BASE_URL}stations/byuuid?uuids=${sourceIds.join(",")}'));
   if (response.statusCode == 200) {
     List<dynamic> stationList = jsonDecode(response.body);
-    var list = stationList.map((d) => RadioStation.fromJson(d)).toList();
-    list.sort((a, b) => a.votes! > b.votes! ? 1 : -1);
-    List<RadioStation> uniqueList = List.empty(growable: true);
-    for (int i = 0; i < list.length; i++) {
-      RadioStation element = list[i];
-      if (uniqueList.where((data) => data.name == element.name).isEmpty) {
-        uniqueList.add(element);
-      }
-    }
-    if (kDebugMode) {
-      // // print(uniqueList);
-    }
-    return uniqueList;
-  } else {
-    throw Exception('Failed to load album');
+    sourceList
+        .addAll(stationList.map((d) => RadioStation.fromJson(d)).toList());
   }
+
+  for (String radioId in uuids) {
+    if (radioId.startsWith("ADDED")) {
+      list.addAll(aList.where((a) => radioId == a.stationUuid).toList());
+    } else {
+      list.addAll(
+          sourceList.where((element) => element.stationUuid == radioId));
+    }
+  }
+  List<RadioStation> uniqueList = List.empty(growable: true);
+  for (int i = 0; i < list.length; i++) {
+    RadioStation element = list[i];
+    if (uniqueList.where((data) => data.name == element.name).isEmpty) {
+      uniqueList.add(element);
+    }
+  }
+  return uniqueList;
 }
 
 String getStationName(String? s) {

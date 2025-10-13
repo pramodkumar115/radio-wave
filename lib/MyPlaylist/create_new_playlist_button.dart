@@ -34,7 +34,6 @@ class _CreateNewPlaylistButtonState extends State<CreateNewPlaylistButton> {
             isScrollControlled: true,
             isDismissible: true,
             backgroundColor: Colors.white,
-            builder: (context) => CreateEditPlaylist(
-                playlistDataItems: widget.items, selected: null)));
+            builder: (context) => CreateEditPlaylist(selectedPlayListId: null)));
   }
 }

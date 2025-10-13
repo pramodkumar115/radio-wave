@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,23 +28,6 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<List<RadioStation>> getStations(
-      PlayListJsonItem? playlistJsonItem) async {
-    List<RadioStation> returnable = List.empty(growable: true);
-    if (playlistJsonItem != null) {
-      var stationsIds = playlistJsonItem.stationIds;
-      List<RadioStation> aList = await getAddedStreamsFromFile();
-      for (var id in stationsIds) {
-        if (id.startsWith("ADDED")) {
-          returnable.add(aList.firstWhere((e) => e.stationUuid == id));
-        } else {
-          returnable.addAll(await getStationsListForUUIDs([id]));
-        }
-      }
-    }
-    return returnable;
   }
 
   @override
@@ -103,6 +88,8 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
 
   Widget showContent(PlayListJsonItem? playListJsonItem,
       List<PlayListJsonItem> playlistJsonItems) {
+        print("JSON ITEM -------");
+        print(jsonEncode(playListJsonItem));
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -125,8 +112,7 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
                             isDismissible: true,
                             backgroundColor: Colors.white,
                             builder: (context) => CreateEditPlaylist(
-                                playlistDataItems: playlistJsonItems,
-                                selected: playListJsonItem));
+                                selectedPlayListId: playListJsonItem?.id));
                       }))
             ],
             title: Row(
@@ -139,7 +125,8 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
               ],
             )),
         body: FutureBuilder(
-            future: getStations(playListJsonItem),
+            future: getStationsListForUUIDs(
+                playListJsonItem?.stationIds), // getStations(playListJsonItem),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var radioStations = snapshot.data;
@@ -165,24 +152,24 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
                           ])
                         : Center(
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                            Text("No Radio Stations added."),
-                            GFButton(
-                                text: "Search Radio Stations",
-                                type: GFButtonType.solid,
-                                icon: const Icon(Icons.search,
-                                    color: Colors.white, size: 20),
-                                color: Colors.blueGrey,
-                                fullWidthButton: true,
-                                shape: GFButtonShape.pills,
-                                onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                          builder: (context) =>
-                                              const SearchView()),
-                                    ))
-                          ])));
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                Text("No Radio Stations added."),
+                                GFButton(
+                                    text: "Search Radio Stations",
+                                    type: GFButtonType.solid,
+                                    icon: const Icon(Icons.search,
+                                        color: Colors.white, size: 20),
+                                    color: Colors.blueGrey,
+                                    fullWidthButton: true,
+                                    shape: GFButtonShape.pills,
+                                    onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                              builder: (context) =>
+                                                  const SearchView()),
+                                        ))
+                              ])));
               } else {
                 return GFShimmer(child: emptyCardBlock);
               }
