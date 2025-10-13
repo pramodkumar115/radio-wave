@@ -9,6 +9,8 @@ import 'package:orbit_radio/model/radio_station.dart';
 import 'file-helper-util.dart';
 import 'package:http/http.dart' as http;
 import './constants.dart' as constants;
+import 'package:intl/intl.dart';
+
 
 Future<String?> getCountryFromCoordinates(
     double latitude, double longitude) async {
@@ -75,7 +77,7 @@ Future<List<PlayListJsonItem>> getPlayListsFromFile() async {
     for (var i = 0; i < filesData.length; i++) {
       var f = filesData[i];
       var item = PlayListJsonItem(
-          id: f["id"],
+          id: f["id"] ?? "PLAYLIST_${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}_$i",
           name: f["name"],
           stationIds: jsonDecode(f["stationIds"]).cast<String>());
       debugPrint("item - ${jsonEncode(item)}");
