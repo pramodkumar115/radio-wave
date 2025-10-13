@@ -35,28 +35,13 @@ class RadioTile extends ConsumerStatefulWidget {
 class _RadioTileState extends ConsumerState<RadioTile> {
   void onMenuClicked(String? value, BuildContext context) {
     Navigator.pop(context);
-    if (value == 'DELETE_FROM_PLAYLIST') {
-      var playlistName = widget.from.split("|")[1];
-      var playListAsync = ref.watch(playlistDataProvider);
-      playListAsync.when(
-          data: (dataSet) {
-            PlayListJsonItem? selectedPlaylist = dataSet
-                .firstWhereOrNull((element) => element.name == playlistName);
-            if (selectedPlaylist != null) {
-              selectedPlaylist.stationIds = selectedPlaylist.stationIds
-                  .where((element) => element != widget.radio.stationUuid!)
-                  .toList();
-            }
-            ref.read(playlistDataProvider.notifier).updatePlayList(dataSet);
-          },
-          error: (error, stackTrace) => Center(child: Text('Error: $error')),
-          loading: () {});
-    }
     if (value == 'DELETE_FROM_ADDED_STREAMS') {
-      ref.read(addedStreamsDataProvider.notifier).updateAddedStreams(widget
+      var list = widget
           .radioStations
           .where((r) => r.stationUuid != widget.radio.stationUuid!)
-          .toList());
+          .toList();
+          print(list.length);
+      ref.read(addedStreamsDataProvider.notifier).updateAddedStreams(list);
     }
     if (value == 'EDIT') {
       showModalBottomSheet(
@@ -198,46 +183,13 @@ class StreamActions extends StatelessWidget {
                         child: Text("Delete"),
                         onTap: () {
                           onMenuClicked("DELETE_FROM_ADDED_STREAMS", context);
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
                         }),
                     const Divider(),
                     InkWell(
                         child: Text("Edit"),
                         onTap: () {
                           onMenuClicked("EDIT", context);
-                        }),
-                  ])),
-              onPop: () {}, // debugPrint('Popover was popped!'),
-              direction: PopoverDirection.bottom,
-              backgroundColor: Colors.white,
-              width: 200,
-              height: 80,
-              arrowHeight: 15,
-              arrowWidth: 30);
-        });
-  }
-}
-
-class PlaylistActions extends StatelessWidget {
-  const PlaylistActions({super.key, required this.onMenuClicked});
-  final Function onMenuClicked;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        child: InkWell(
-            child: Icon(Icons.more_vert, size: 30, color: Colors.black)),
-        onTap: () {
-          showPopover(
-              context: context,
-              bodyBuilder: (context) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListView(padding: const EdgeInsets.all(8), children: [
-                    InkWell(
-                        child: Text("Delete"),
-                        onTap: () {
-                          onMenuClicked("DELETE_FROM_PLAYLIST", context);
-                          Navigator.of(context).pop();
                         }),
                   ])),
               onPop: () {}, // debugPrint('Popover was popped!'),
