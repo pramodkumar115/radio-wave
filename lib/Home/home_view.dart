@@ -17,12 +17,12 @@ class _HomeTabViewState extends ConsumerState<HomeTabView> {
   Widget build(BuildContext context) {
     final country = ref.watch(countryProvider);
     return Container(
-          margin: const EdgeInsets.only(top: 50),
-          padding: EdgeInsets.all(10),
-          child: ListView(children: [
-            const TopHitsView(),
-            const RecentVisitsView(),
-            country != "" ? const CountryFamousStationsView() : Container()
-          ]));
+        margin: const EdgeInsets.only(top: 50),
+        padding: EdgeInsets.all(10),
+        child: ListView(children: [
+          country != "" ? const CountryFamousStationsView() : Container(),
+          const RecentVisitsView(),
+          const TopHitsView(),
+        ]));
   }
 }

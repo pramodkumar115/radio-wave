@@ -10,10 +10,12 @@ class RadioTileListReorderableView extends StatefulWidget {
       {super.key,
       required this.radioStationList,
       required this.selectedRadios,
-      required this.setSelectedRadios});
+      required this.setSelectedRadios,
+      required this.showCheckBox});
   final List<RadioStation>? radioStationList;
   final List<RadioStation> selectedRadios;
   final Function setSelectedRadios;
+  final bool showCheckBox;
 
   @override
   State<RadioTileListReorderableView> createState() =>
@@ -70,7 +72,7 @@ class _RadioTileListReorderableViewState
                 description: Text(radio.country!),
                 icon: Row(
                   children: [
-                    Checkbox(
+                    widget.showCheckBox ? Checkbox(
                         value: widget.selectedRadios
                             .where((e) => e.stationUuid == radio.stationUuid)
                             .isNotEmpty,
@@ -81,7 +83,7 @@ class _RadioTileListReorderableViewState
                             widget.selectedRadios.remove(radio);
                           }
                           widget.setSelectedRadios(widget.selectedRadios);
-                        }),
+                        }) : Container(),
                     ReorderableDragStartListener(
                       key: ValueKey<int>(
                           widget.radioStationList!.indexOf(radio)),

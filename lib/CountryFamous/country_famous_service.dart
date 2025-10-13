@@ -5,16 +5,14 @@ import '../commons/constants.dart' as constants;
 
 Future<dynamic> getCountryFamousStationDetails(String country) async {
   return await http
-      .get(Uri.parse('${constants.BASE_URL}stations/bycountry/$country?limit=10'));
+      .get(Uri.parse('${constants.BASE_URL}stations/bycountry/$country?limit=20'));
 }
 
 Future<String?> getUserCurrentCountry() async {
   Position? posn = await getCurrentLocation();
-  // // print("Positon details - $posn, ");
   if (posn != null) {
     String? country =
         await getCountryFromCoordinates(posn.latitude, posn.longitude);
-    // // print("Positon details - $posn, $country");
     return country;
   }
   return null;

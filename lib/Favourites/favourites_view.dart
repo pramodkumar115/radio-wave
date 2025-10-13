@@ -105,6 +105,7 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                                   radioStationList: radioList,
                                   selectedRadios: [],
                                   setSelectedRadios: () {},
+                                  showCheckBox: false,
                                 )
                               : RadioTileListView(radioStationList: radioList))
                     ]) : Column(

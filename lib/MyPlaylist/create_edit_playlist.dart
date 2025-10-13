@@ -25,7 +25,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   List<RadioStation> selectedRadios = List.empty(growable: true);
 
   Future<PlayListItem?> loadPlayListStations(
-      String playListId, List<PlayListJsonItem> playListJsonItems) async {
+      String? playListId, List<PlayListJsonItem> playListJsonItems) async {
     if (playListJsonItems.isNotEmpty) {
       PlayListJsonItem? selected =
           playListJsonItems.firstWhereOrNull((e) => e.id == playListId);
@@ -98,20 +98,20 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                   .bottom, // Adjust padding based on keyboard height
             ),
             child: SizedBox(
-                height: screenHeight * 0.9,
+                height: widget.selectedPlayListId != null ? screenHeight * 0.9 : screenHeight * 0.5,
                 width: screenWidth,
                 child: Container(
                     margin: EdgeInsets.all(24),
                     width: screenWidth,
                     child: FutureBuilder(
                         future: loadPlayListStations(
-                            widget.selectedPlayListId!, items),
+                            widget.selectedPlayListId, items),
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Container();
-                          } else {
-                            PlayListItem playListItem = snapshot.data!;
+                          
+                            PlayListItem? playListItem = snapshot.data;
+                            if (playListItem != null) {
                             _nameController.text = playListItem.name;
+                            }
                             return Column(spacing: 20, children: [
                               TextField(
                                 controller: _nameController,
@@ -119,12 +119,13 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Playlist Name'),
                               ),
-                              Expanded(
+                              playListItem != null ? Expanded(
                                   child: RadioTileListReorderableView(
                                       radioStationList:
                                           playListItem.radioStations,
                                       selectedRadios: selectedRadios,
-                                      setSelectedRadios: setSelectedRadios)),
+                                      setSelectedRadios: setSelectedRadios,
+                                      showCheckBox: true)) : Container(),
                               Row(spacing: 10, children: [
                                 selectedRadios.isNotEmpty
                                     ? GFButton(
@@ -146,20 +147,15 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                                     onPressed: () => save(playListItem, items))
                               ])
                             ]);
-                          }
+                          
                         })))));
   }
 
-  void deleteStation(PlayListItem playListItem, List<PlayListJsonItem> items) {
-    if (playListItem.radioStations.isNotEmpty) {
+  void deleteStation(PlayListItem? playListItem, List<PlayListJsonItem> items) {
+    if (playListItem != null && playListItem.radioStations.isNotEmpty) {
       PlayListJsonItem? selected =
           items.firstWhereOrNull((e) => e.id == playListItem.id);
       var selectedRadiosIdsToDelete = selectedRadios.map((e) => e.stationUuid);
-
-      // selected!.stationIds = playListItem.radioStations
-      //     .where((element) => !selectedRadios.contains(element))
-      //     .map((element) => element.stationUuid!)
-      //     .toList();
       selected!.stationIds = selected!.stationIds
           .where((element) => !selectedRadiosIdsToDelete.contains(element))
           .toList();
@@ -167,9 +163,9 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
     ref.watch(playlistDataProvider.notifier).updatePlayList(items);
   }
 
-  void save(PlayListItem playListItem, List<PlayListJsonItem> items) {
-    print(jsonEncode(playListItem.radioStations));
-    if (playListItem.radioStations.isNotEmpty) {
+  void save(PlayListItem? playListItem, List<PlayListJsonItem> items) {
+    print(jsonEncode(playListItem?.radioStations));
+    if (playListItem != null && playListItem.radioStations.isNotEmpty) {
       PlayListJsonItem? selected =
           items.firstWhereOrNull((e) => e.id == playListItem.id);
       print("--------------------------");
