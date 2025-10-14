@@ -156,7 +156,7 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
       PlayListJsonItem? selected =
           items.firstWhereOrNull((e) => e.id == playListItem.id);
       var selectedRadiosIdsToDelete = selectedRadios.map((e) => e.stationUuid);
-      selected!.stationIds = selected!.stationIds
+      selected!.stationIds = selected.stationIds
           .where((element) => !selectedRadiosIdsToDelete.contains(element))
           .toList();
     }
@@ -164,20 +164,16 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
   }
 
   void save(PlayListItem? playListItem, List<PlayListJsonItem> items) {
-    print(jsonEncode(playListItem?.radioStations));
+    
     if (playListItem != null && playListItem.radioStations.isNotEmpty) {
       PlayListJsonItem? selected =
           items.firstWhereOrNull((e) => e.id == playListItem.id);
-      print("--------------------------");
-      print(jsonEncode(selected));
-      print("--------------------------");
-
       if (selected != null) {
         selected.stationIds =
             playListItem.radioStations.map((e) => e.stationUuid!).toList();
       }
     }
-    print(jsonEncode(items));
+    
     createPlayList(items);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/RecentVisitsAll/recents_visits_all_view.dart';
 import 'package:orbit_radio/Search/search_view.dart';
@@ -35,7 +36,7 @@ class _RecentVisitsViewState extends ConsumerState<RecentVisitsView> {
           if (snapshot.hasData) {
             return showContent(snapshot.data);
           } else {
-            return GFShimmer(child: emptyCardBlock);
+            return SkeletonListTile();
           }
         });
   }

@@ -49,7 +49,7 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
               Expanded(
                   child: ListView(children: [
                 ...items.map((item) => GFCheckboxListTile(
-                  type: GFCheckboxType.circle,
+                    type: GFCheckboxType.circle,
                     color: Colors.white,
                     value: selectedPlayListName == item.name,
                     onChanged: (value) {
@@ -89,9 +89,10 @@ class _AddToPlaylistTileState extends ConsumerState<AddToPlaylistPopup> {
                             await ref
                                 .read(playlistDataProvider.notifier)
                                 .updatePlayList(items);
-
-                            GFToast.showToast("Added to playlist", context);
-                            Navigator.pop(context);
+                            if (context.mounted) {
+                              GFToast.showToast("Added to playlist", context);
+                              Navigator.pop(context);
+                            }
                           }
                         }
                       })

@@ -68,16 +68,12 @@ class _MyAddedStreamsViewState extends ConsumerState<MyAddedStreamsView> {
       // print("Max Rows: ${excel.tables[table]!.maxRows}");
       List<RadioStation> stations = List.empty(growable: true);
       var firstRow = excel.tables[table]!.rows[0];
-      int slNoIndex = -1,
-          nameIndex = -1,
+      int nameIndex = -1,
           urlIndex = -1,
           countryIndex = -1,
           favIconIndex = -1;
       for (var cell in firstRow) {
         var cellValue = cell?.value.toString().toLowerCase() ?? "";
-        if (cellValue == 'sl no') {
-          slNoIndex = firstRow.indexOf(cell);
-        }
         if (cellValue == 'name') {
           nameIndex = firstRow.indexOf(cell);
         }

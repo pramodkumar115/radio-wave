@@ -11,7 +11,6 @@ import 'package:orbit_radio/MyPlaylist/add_to_playlist_button.dart';
 import 'package:orbit_radio/MyAddedStreams/create_edit_stream.dart';
 import 'package:orbit_radio/components/favorites_button.dart';
 import 'package:orbit_radio/components/play_stop_button.dart';
-import 'package:orbit_radio/model/playlist_item.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 import 'package:popover/popover.dart';
 
@@ -90,11 +89,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
               backgroundColor: Colors.grey.shade100,
               builder: (BuildContext context) {
                 List<RadioStation> radioStnList = List.empty(growable: true);
-                // if (audioPlayerState.playListMediaItems != null && audioPlayerState.playListMediaItems!.isNotEmpty) {
-                //   radioStnList = converMediaItemsToRadioList((audioPlayerState.playListMediaItems));
-                // } else {
                 radioStnList.addAll(widget.radioStations);
-                // }
                 return RadioPlayerView(
                     radioStationsList: radioStnList,
                     selectedRadioId: widget.radio.stationUuid!);
@@ -111,7 +106,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                 blurRadius: 1, // How blurry the shadow is
                 spreadRadius: 1,
                 offset: Offset(1, 1)),
-            margin: EdgeInsets.all(2),
+            margin: EdgeInsets.all(3),
             avatar: GFAvatar(
                 backgroundColor: Colors.white,
                 child: Image.network(widget.radio.favicon!,
@@ -137,7 +132,7 @@ class _RadioTileState extends ConsumerState<RadioTile> {
                       ? SizedBox(
                           height: 30,
                           child: MusicVisualizer(
-                            barCount: 30,
+                            barCount: 20,
                             colors: [
                               Colors.red[900]!,
                               Colors.green[900]!,

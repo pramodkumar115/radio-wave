@@ -74,7 +74,9 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditStream> {
         _urlController.text = "";
         _favIconController.text = "";
       });
-      Navigator.pop(context);
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 

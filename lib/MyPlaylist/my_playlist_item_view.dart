@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/Search/search_view.dart';
@@ -171,7 +172,7 @@ class _MyPlaylistItemViewState extends ConsumerState<MyPlaylistItemView> {
                                         ))
                               ])));
               } else {
-                return GFShimmer(child: emptyCardBlock);
+                return SkeletonListView();
               }
             }));
   }

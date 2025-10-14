@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:orbit_radio/CountryFamous/country_famous_service.dart';
 import 'package:orbit_radio/Notifiers/country_state_notifier.dart';
 import 'package:orbit_radio/RadioStations/radio_station_list.dart';
-import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/model/radio_station.dart';
 
 class CountryFamousStationsView extends ConsumerStatefulWidget {
@@ -20,17 +18,12 @@ class CountryFamousStationsView extends ConsumerStatefulWidget {
 
 class _CountryFamousStationsViewState
     extends ConsumerState<CountryFamousStationsView> {
-  List<RadioStation> topHitStations = List.empty(growable: true);
-
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      loadData();
-    });
   }
 
-  Future<void> loadData() async {
+  Future<List<RadioStation>> loadData() async {
     final country = ref.watch(countryProvider);
     var response = await getCountryFamousStationDetails(country);
     if (response.statusCode == 200) {
@@ -44,12 +37,7 @@ class _CountryFamousStationsViewState
           uniqueList.add(element);
         }
       }
-      if (kDebugMode) {
-        // // print(uniqueList);
-      }
-      setState(() {
-        topHitStations.addAll(uniqueList);
-      });
+      return uniqueList;
     } else {
       throw Exception('Failed to load album');
     }
@@ -57,14 +45,20 @@ class _CountryFamousStationsViewState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-          const Text("Famous stations near you", 
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Text("Famous stations near you",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          topHitStations.isNotEmpty
-              ? RadioStationListView(stationList: topHitStations)
-              : GFShimmer(child: emptyBlock)
-        ]);
+      FutureBuilder(
+        future: loadData(),
+        builder: (context, snapshot) {
+          return Skeleton(
+              isLoading: snapshot.connectionState == ConnectionState.waiting,
+              skeleton: SkeletonListTile(),
+              child: snapshot.data != null && snapshot.data!.isNotEmpty
+                  ? RadioStationListView(stationList: snapshot.data!)
+                  : Text("No radio stations to show for now"));
+        },
+      )
+    ]);
   }
 }

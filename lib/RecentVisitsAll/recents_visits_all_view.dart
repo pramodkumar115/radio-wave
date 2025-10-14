@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/commons/shimmer.dart';
@@ -81,7 +82,7 @@ class _RecentsVisitsAllViewState extends ConsumerState<RecentsVisitsAllView> {
                   if (snapshot.hasData) {
                     return showContent(snapshot.data);
                   } else {
-                    return GFShimmer(child: emptyCardBlock);
+                    return SkeletonListView();
                   }
                 })));
   }

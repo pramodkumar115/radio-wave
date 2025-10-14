@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -36,9 +38,15 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
       List<RadioStation> radioStationsList) {
     var radioIds = radioStationsList.map((r) => r.stationUuid).toList();
     var playListIds = playListMediaItems?.map((r) => r!.id).toList();
-    // debugPrint("playListMediaItems - ${playListMediaItems?.length}, ${widget.stationList.length}");
-    if (playListIds != null && playListIds.isNotEmpty) {
-      return radioIds.toSet().containsAll(playListIds) && playListIds.toSet().containsAll(radioIds);
+    if (radioIds.length == playListIds?.length) {
+      if (playListIds != null && playListIds.isNotEmpty) {
+        for (var i = 0; i < radioIds.length; i++) {
+          if (radioIds[i] != playListIds[i]) {
+            return false;
+          }
+        }
+        return true;
+      }
     }
     return false;
   }
@@ -64,9 +72,11 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
           : const Icon(Icons.stop_sharp,
               color: Color.fromARGB(255, 0, 29, 10), size: 40);
     } else {
-      return const Icon(Icons.play_arrow,
-          color: Color.fromARGB(255, 0, 29, 10),
-          size: 40,); // const Icon(Icons.play_arrow));
+      return const Icon(
+        Icons.play_arrow,
+        color: Color.fromARGB(255, 0, 29, 10),
+        size: 40,
+      ); // const Icon(Icons.play_arrow));
     }
   }
 
@@ -84,6 +94,8 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     final playerNotifier = ref.read(audioPlayerProvider.notifier);
     final audioPlayerState = ref.watch(audioPlayerProvider);
     var stn = getSelectedRadioStation(widget.stationList, widget.stationId);
+    print("All - ${jsonEncode(widget.stationList)}");
+    print("stn - ${jsonEncode(stn)}");
     setState(() => _isLoading = true);
     if (isSamePlayList(
         audioPlayerState.playListMediaItems, widget.stationList)) {
