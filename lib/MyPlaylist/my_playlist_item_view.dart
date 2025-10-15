@@ -7,12 +7,10 @@ import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:orbit_radio/Notifiers/playlist_state_notifier.dart';
 import 'package:orbit_radio/Search/search_view.dart';
-import 'package:orbit_radio/commons/shimmer.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:orbit_radio/MyPlaylist/create_edit_playlist.dart';
 import 'package:orbit_radio/components/radio_tile.dart';
 import 'package:orbit_radio/model/playlist_item.dart';
-import 'package:orbit_radio/model/radio_station.dart';
 
 class MyPlaylistItemView extends ConsumerStatefulWidget {
   const MyPlaylistItemView({super.key, required this.selectedPlaylistId});
