@@ -106,7 +106,7 @@ class _SearchViewState extends State<SearchView> {
             Text("Search",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
-          backgroundColor: Colors.grey.shade100,
+          //backgroundColor: Colors.grey.shade100,
         ),
         body: Column(children: [
           // Row(
@@ -249,8 +249,7 @@ class _SearchViewState extends State<SearchView> {
                       ),
                     ],
                   )),
-          searchedRadioStations.isNotEmpty
-              ? Expanded(
+          Expanded(
                   child: ListView(children: [
                   ...searchedRadioStations.map((radio) {
                     return RadioTile(
@@ -292,7 +291,7 @@ class _SearchViewState extends State<SearchView> {
                                 : Container(),
                           ]))
                 ]))
-              : Container(),
+              ,
         ]));
   }
 

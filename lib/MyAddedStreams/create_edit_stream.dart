@@ -127,10 +127,10 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditStream> {
                               labelText: 'Icon Url if any'),
                         ),
                         GFButton(
-                            text: "Create / Save",
+                            text: "Save",
                             color: Colors.black,
                             fullWidthButton: true,
-                            size: 60,
+                            size: 40,
                             type: GFButtonType.solid,
                             shape: GFButtonShape.pills,
                             onPressed: () => createStream(widget.streams))

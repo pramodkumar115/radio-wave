@@ -45,13 +45,17 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                 return radioList != null && radioList.isNotEmpty
                     ? Column(children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           spacing: 5,
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: !isReorderClicked
-                              ? [
-                                  GFButton(
+                          children: [
+                            Text("Favourites",
+                                style: TextStyle(
+                                  color: Colors.red.shade700,
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                            !isReorderClicked
+                                ? GFButton(
                                     color: Colors.black,
                                     shape: GFButtonShape.pills,
                                     onPressed: () {
@@ -61,38 +65,39 @@ class _FavouritesViewState extends ConsumerState<FavouritesView> {
                                     },
                                     text: "Reorder list",
                                   )
-                                ]
-                              : [
-                                  GFButton(
-                                    color: Colors.black,
-                                    shape: GFButtonShape.pills,
-                                    onPressed: () async {
-                                      List<String> ids = radioList
-                                          .map((e) => e.stationUuid!)
-                                          .toList();
-                                      await ref
-                                          .watch(favoritesDataProvider.notifier)
-                                          .updateFavorites(ids);
+                                : Row(spacing: 5, children: [
+                                    GFButton(
+                                      color: Colors.black,
+                                      shape: GFButtonShape.pills,
+                                      onPressed: () async {
+                                        List<String> ids = radioList
+                                            .map((e) => e.stationUuid!)
+                                            .toList();
+                                        await ref
+                                            .watch(
+                                                favoritesDataProvider.notifier)
+                                            .updateFavorites(ids);
 
-                                      setState(() {
-                                        isReorderClicked = false;
-                                      });
-                                    },
-                                    text: "Save",
-                                  ),
-                                  GFButton(
-                                    color: Colors.black,
-                                    shape: GFButtonShape.pills,
-                                    type: GFButtonType.outline,
-                                    onPressed: () {
-                                      setState(() {
-                                        // print(jsonEncode(radioList));
-                                        isReorderClicked = false;
-                                      });
-                                    },
-                                    text: "Cancel",
-                                  )
-                                ],
+                                        setState(() {
+                                          isReorderClicked = false;
+                                        });
+                                      },
+                                      text: "Save",
+                                    ),
+                                    GFButton(
+                                      color: Colors.black,
+                                      shape: GFButtonShape.pills,
+                                      type: GFButtonType.outline,
+                                      onPressed: () {
+                                        setState(() {
+                                          // print(jsonEncode(radioList));
+                                          isReorderClicked = false;
+                                        });
+                                      },
+                                      text: "Cancel",
+                                    )
+                                  ])
+                          ],
                         ),
                         Expanded(
                             child: isReorderClicked

@@ -41,7 +41,6 @@ class _MyPlaylistListViewState extends ConsumerState<MyPlaylistListView> {
 
   Widget showContent(
       BuildContext context, List<PlayListJsonItem> playlistJsonItems) {
-    // debugPrint('playlist length - ${playlistJsonItems.length}');
     return Container(
         margin: const EdgeInsets.only(top: 65),
         padding: EdgeInsets.all(6),

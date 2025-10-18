@@ -67,13 +67,14 @@ class _CreateEditPlaylistState extends ConsumerState<CreateEditPlaylist> {
                         future: loadPlayListStations(
                             widget.selectedPlayListId, items),
                         builder: (context, snapshot) {
-                          print(snapshot.connectionState);
-                          return snapshot.data != null
-                              ? EditCreatePlayListWidget(
+                          return Skeleton(
+                              isLoading: snapshot.connectionState ==
+                                  ConnectionState.waiting,
+                              skeleton: SkeletonListView(),
+                              child: EditCreatePlayListWidget(
                                   playListItem: snapshot.data,
                                   items: items,
-                                  context: context)
-                              : Container();
+                                  context: context));
                         })))));
   }
 }
@@ -101,8 +102,9 @@ class _EditCreatePlayListWidgetState
   @override
   void initState() {
     super.initState();
+    print("widget.playListItem - ${widget.playListItem}");
     if (widget.playListItem != null) {
-      _nameController = TextEditingController(text: widget.playListItem!.name);
+      _nameController = TextEditingController(text: widget.playListItem?.name);
     } else {
       _nameController = TextEditingController();
     }
