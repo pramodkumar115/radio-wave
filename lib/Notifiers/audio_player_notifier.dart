@@ -1,4 +1,5 @@
 // player_notifier.dart
+import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:orbit_radio/Notifiers/recent_visits_notifier.dart';
 import 'package:orbit_radio/commons/util.dart';
 import 'package:riverpod/legacy.dart';
@@ -37,17 +38,18 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   late final AudioPlayer _player;
 
   // Initialize the player and set up listeners
-  Future<void> initPlayer(List<PlayingRadioUriMediaItem> mediaItemList, int? index) async {
+  Future<void> initPlayer(
+      List<PlayingRadioUriMediaItem> mediaItemList, int? index) async {
     List<AudioSource> playlist = mediaItemList
-        .map((radioMediaItem) =>
-            AudioSource.uri(Uri.parse(radioMediaItem.uriString!), tag: radioMediaItem.mediaItem))
+        .map((radioMediaItem) => AudioSource.uri(
+            Uri.parse(radioMediaItem.uriString!),
+            tag: radioMediaItem.mediaItem))
         .toList();
     await _player.setAudioSources(playlist, initialIndex: index ?? 0);
   }
 
   Future<void> setRecentVisits(MediaItem? mediaItem) async {
     final recentVisitsNotifier = RecentVisitsNotifier();
-    
 
     bool isPlaying = _player.playerState.playing;
     if (isPlaying && mediaItem != null) {
@@ -60,7 +62,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       if (recentVisitedIds.length >= 15) {
         recentVisitedIds.removeRange(15, recentVisitedIds.length);
       }
-            // print("recentVisitedIds - $recentVisitedIds");
+      // print("recentVisitedIds - $recentVisitedIds");
 
       await saveRecentVisitsFile(recentVisitedIds);
       recentVisitsNotifier.build();
@@ -90,14 +92,26 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       }
       state = state.copyWith(
           currentMediaItem: mediaItem, playListMediaItems: seqList);
-        });
+    });
+
+    _player.errorStream.listen((data) async {
+      print("Error data while playing - $data");
+      print("------------ First one");
+      await _player.seekToNext();
+      await _player.play();
+      print("------------ Next one");
+    });
   }
 
   // Control methods
   void play(int index) async {
     // debugPrint("index - $index");
     await seek(index);
-    await _player.play();
+    try {
+      await _player.play();
+    } catch (e) {
+      print("ERROR ------ $e");
+    }
   }
 
   Future<void> seek(int index) async {
@@ -132,6 +146,5 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 // The provider to be used by the UI
 final audioPlayerProvider =
     StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
-      
   return PlayerNotifier();
 });

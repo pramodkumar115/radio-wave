@@ -320,7 +320,11 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                                     padding: EdgeInsets.only(top: 20),
                                     child: Column(children: [
                                       Container(
-                                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 10,
+                                              left: 20,
+                                              right: 20),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -355,12 +359,14 @@ class _RadioPlayerViewState extends ConsumerState<RadioPlayerView> {
                             );
                           },
                           child: Row(
+                            spacing: 5,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.arrow_upward),
                                 Text(
                                   "Currently Playing Radio List",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline),
                                   textAlign: TextAlign.center,
                                 )
                               ]))))

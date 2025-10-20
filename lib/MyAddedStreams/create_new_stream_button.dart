@@ -12,35 +12,32 @@ class CreateNewStreamButton extends StatefulWidget {
 class _CreateNewPlaylistButtonState extends State<CreateNewStreamButton> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: Container(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
-            // margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
+    return FloatingActionButton.small(
+      backgroundColor: Colors.redAccent,
+      focusColor: Colors.green,
+      onPressed: () => showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          isDismissible: true,
+          backgroundColor: Colors.white,
+          builder: (context) =>
+              CreateEditStream(streams: widget.items, selected: null)),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 5,
+          children: [
+            Icon(
+              Icons.add_box_rounded,
               color: Colors.white,
             ),
-            child: Row(
-              spacing: 10,
-              children: [
-                Icon(
-                  Icons.add_circle,
-                  color: Colors.red,
-                ),
-                Text(
-                "Create New Stream",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red),
-              )
-              ],
-            )),
-        onTap: () => showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            isDismissible: true,
-            backgroundColor: Colors.white,
-            builder: (context) =>
-                CreateEditStream(streams: widget.items, selected: null)));
+            Text(
+              "Create New Stream",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            )
+          ]),
+    );
   }
 }

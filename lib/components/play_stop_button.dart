@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,7 +85,11 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     await Future.delayed(Duration.zero);
     if (stn != null) {
       final index = widget.stationList.indexOf(stn);
-      playerNotifier.play(index);
+      try {
+        playerNotifier.play(index);
+      } catch (e) {
+        print("ERROR ----- $e");
+      }
     }
   }
 
@@ -94,8 +98,6 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
     final playerNotifier = ref.read(audioPlayerProvider.notifier);
     final audioPlayerState = ref.watch(audioPlayerProvider);
     var stn = getSelectedRadioStation(widget.stationList, widget.stationId);
-    print("All - ${jsonEncode(widget.stationList)}");
-    print("stn - ${jsonEncode(stn)}");
     setState(() => _isLoading = true);
     if (isSamePlayList(
         audioPlayerState.playListMediaItems, widget.stationList)) {
@@ -133,7 +135,13 @@ class _PlayStopButtonState extends ConsumerState<PlayStopButton> {
           await playAudioPlayer(playerNotifier, stn);
         }
       }
+      Timer(
+        Duration(seconds: 5),
+        () => setState(() {
+              _isLoading = false;
+            }));
     });
+    
   }
 
   Widget showContent(List<String> favIds, String stationId) {
